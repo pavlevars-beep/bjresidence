@@ -30,6 +30,16 @@ export const sr = {
       transit: "Odlična povezanost prevozom",
     },
   },
+  quickDistances: {
+    title: "Od BJ Residence do:",
+    note: "Orijentaciono vreme, u zavisnosti od saobraćaja.",
+    items: [
+      { name: "Centar grada", time: "20–25 min" },
+      { name: "Novi Beograd", time: "25–35 min" },
+      { name: "Zemun", time: "35–40 min" },
+      { name: "Autokomanda", time: "10 min" },
+    ],
+  },
   why: {
     eyebrow: "Zašto BJ Residence",
     title: "Razlozi da se osećate kao kod kuće",
@@ -134,9 +144,9 @@ export const sr = {
       title: "Odlična povezanost prevozom",
       note: "Orijentaciono vreme autobusom — zavisi od saobraćaja i tačne stanice.",
       destinations: [
-        { name: "Centar grada", line: "26", time: "~20 min" },
-        { name: "Novi Beograd", line: "18", time: "~25 min" },
-        { name: "Beograd na vodi", line: "26 + šetnja", time: "~35 min" },
+        { name: "Centar grada", line: "26", time: "20–25 min" },
+        { name: "Novi Beograd", line: "18", time: "25–35 min" },
+        { name: "Beograd na vodi", line: "26 + šetnja", time: "~20 min" },
       ],
     },
     courtyard: {
@@ -326,6 +336,16 @@ export const en: Dictionary = {
       transit: "Excellent public transport links",
     },
   },
+  quickDistances: {
+    title: "From BJ Residence to:",
+    note: "Approximate travel time, depending on traffic.",
+    items: [
+      { name: "City Center", time: "20–25 min" },
+      { name: "New Belgrade", time: "25–35 min" },
+      { name: "Zemun", time: "35–40 min" },
+      { name: "Autokomanda", time: "10 min" },
+    ],
+  },
   why: {
     eyebrow: "Why BJ Residence",
     title: "Reasons to feel at home",
@@ -430,9 +450,9 @@ export const en: Dictionary = {
       title: "Excellent public transport links",
       note: "Approximate travel time by bus — depends on traffic and the exact stop.",
       destinations: [
-        { name: "City centre", line: "26", time: "~20 min" },
-        { name: "Novi Beograd", line: "18", time: "~25 min" },
-        { name: "Beograd na Vodi", line: "26 + walk", time: "~35 min" },
+        { name: "City centre", line: "26", time: "20–25 min" },
+        { name: "Novi Beograd", line: "18", time: "25–35 min" },
+        { name: "Beograd na Vodi", line: "26 + walk", time: "~20 min" },
       ],
     },
     courtyard: {
