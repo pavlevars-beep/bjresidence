@@ -207,7 +207,6 @@ export const sr = {
       "Tišina nakon 23 časa",
       "Zabrana pušenja u prostorijama",
       "Pažljivo korišćenje inventara",
-      "Prijava gostiju uz prethodni dogovor",
     ],
   },
   faq: {
@@ -513,7 +512,6 @@ export const en: Dictionary = {
       "Quiet hours after 11 PM",
       "No smoking indoors",
       "Careful use of furniture and equipment",
-      "Guests announced in advance",
     ],
   },
   faq: {

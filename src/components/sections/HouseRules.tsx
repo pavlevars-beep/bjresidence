@@ -1,12 +1,12 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { BellOff, CigaretteOff, ClipboardCheck, Handshake, ShieldCheck, Volume1 } from "lucide-react";
+import { CigaretteOff, ClipboardCheck, Handshake, ShieldCheck, Volume1 } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { useLanguage } from "@/i18n/LanguageContext";
 
-const icons = [Handshake, ShieldCheck, Volume1, CigaretteOff, ClipboardCheck, BellOff];
+const icons = [Handshake, ShieldCheck, Volume1, CigaretteOff, ClipboardCheck];
 
 export function HouseRules() {
   const { dict } = useLanguage();
@@ -25,7 +25,7 @@ export function HouseRules() {
                 initial={{ opacity: 0, y: 14 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-40px" }}
-                transition={{ duration: 0.4, delay: (i % 6) * 0.05 }}
+                transition={{ duration: 0.4, delay: i * 0.05 }}
                 className="flex items-center gap-4 rounded-2xl bg-white/60 p-5 shadow-soft"
               >
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-olive-dark/10 text-olive-dark">
