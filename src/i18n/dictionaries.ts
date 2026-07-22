@@ -124,12 +124,24 @@ export const sr = {
   location: {
     eyebrow: "Lokacija",
     title: "Braće Jerković 112, Beograd",
+    distance: "~7 km od Trga Republike",
     highlights: [
       "Oko 50 m od glavne ulice",
-      "Odlična povezanost prevozom",
-      "Mirno i tiho okruženje",
-      "Dobra povezanost sa Voždovcem, Autokomandom, centrom i drugim delovima grada",
+      "Mirno naselje",
+      "Prodavnice, pekare, apoteke i marketi na nekoliko minuta peške",
     ],
+    transit: {
+      title: "Odlična povezanost prevozom",
+      lines: [
+        { number: "26", desc: "direktno do centra grada" },
+        { number: "18", desc: "Novi Beograd, Zemun" },
+        { number: "50", desc: "Miljakovac, Zvezdara i povezivanje sa drugim linijama" },
+      ],
+    },
+    courtyard: {
+      title: "Dvorište sa zelenilom za sedenje",
+      desc: "Redak sadržaj za ovakav tip smeštaja — miran prostor na otvorenom za odmor i druženje.",
+    },
     mapButton: "Otvori lokaciju na Google Maps",
   },
   booking: {
@@ -407,12 +419,24 @@ export const en: Dictionary = {
   location: {
     eyebrow: "Location",
     title: "Braće Jerković 112, Belgrade",
+    distance: "~7 km from Trg Republike (Republic Square)",
     highlights: [
       "About 50 m from the main street",
-      "Excellent public transport links",
-      "Calm and quiet surroundings",
-      "Good connection to Voždovac, Autokomanda, the city centre and other parts of the city",
+      "Quiet neighborhood",
+      "Shops, bakeries, pharmacies and markets just a few minutes on foot",
     ],
+    transit: {
+      title: "Excellent public transport links",
+      lines: [
+        { number: "26", desc: "direct to the city centre" },
+        { number: "18", desc: "Novi Beograd, Zemun" },
+        { number: "50", desc: "Miljakovac, Zvezdara, and connections to other lines" },
+      ],
+    },
+    courtyard: {
+      title: "Courtyard with greenery to sit in",
+      desc: "Uncommon for this type of housing — a quiet outdoor space to relax and unwind.",
+    },
     mapButton: "Open location on Google Maps",
   },
   booking: {
