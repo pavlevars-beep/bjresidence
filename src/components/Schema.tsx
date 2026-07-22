@@ -8,7 +8,7 @@ export function LodgingSchema() {
     description: "Organizovan zajednički smeštaj za radnike, studente i ljude na privremenom boravku u Beogradu.",
     address: {
       "@type": "PostalAddress",
-      streetAddress: "Braće Jerković 112",
+      streetAddress: "Braće Jerković 112g",
       addressLocality: "Beograd",
       addressCountry: "RS",
     },

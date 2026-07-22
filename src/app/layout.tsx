@@ -18,10 +18,10 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://bjresidence.rs"),
   title: "BJ Residence — Worker Living | Beograd",
   description:
-    "Uredan i miran zajednički smeštaj u Beogradu, Braće Jerković 112. Namenjeno radnicima, studentima i ljudima na privremenom boravku.",
+    "Uredan i miran zajednički smeštaj u Beogradu, Braće Jerković 112g. Namenjeno radnicima, studentima i ljudima na privremenom boravku.",
   openGraph: {
     title: "BJ Residence — Worker Living",
-    description: "Uredan i miran zajednički smeštaj u Beogradu, Braće Jerković 112.",
+    description: "Uredan i miran zajednički smeštaj u Beogradu, Braće Jerković 112g.",
     url: "https://bjresidence.rs",
     siteName: "BJ Residence",
     images: [{ url: "/images/og/og-image.svg", width: 1200, height: 630 }],
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "BJ Residence — Worker Living",
-    description: "Uredan i miran zajednički smeštaj u Beogradu, Braće Jerković 112.",
+    description: "Uredan i miran zajednički smeštaj u Beogradu, Braće Jerković 112g.",
     images: ["/images/og/og-image.svg"],
   },
   robots: { index: true, follow: true },

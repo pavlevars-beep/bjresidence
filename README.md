@@ -1,6 +1,6 @@
 # BJ Residence — Worker Living
 
-Sajt za BJ Residence, organizovan zajednički smeštaj na adresi Braće Jerković 112, Beograd.
+Sajt za BJ Residence, organizovan zajednički smeštaj na adresi Braće Jerković 112g, Beograd.
 
 ## Tehnologije
 
@@ -76,10 +76,17 @@ pricing: {
 
 ### Placeholder slike
 
-Sve slike u `public/images/` su generisane SVG ilustracije u boji brenda — služe kao vizuelni
-placeholder dok ne budu zamenjene pravim fotografijama. Zamenite fajlove istog imena (ili
-ažurirajte putanje u `src/config/site.ts` → `gallery.categories`) pravim `.jpg`/`.webp` fotografijama
-istog naziva i odnosa stranica.
+Slike smeštaja u `public/images/gallery/` i `public/images/hero/` su generisane SVG ilustracije u
+boji brenda — služe kao vizuelni placeholder dok ne budu zamenjene pravim fotografijama smeštaja.
+Zamenite fajlove istog imena (ili ažurirajte putanje u `src/config/site.ts` → `gallery.categories`)
+pravim `.jpg`/`.webp` fotografijama istog naziva i odnosa stranica.
+
+### Fotografije Beograda
+
+`public/images/belgrade/` sadrži dve stvarne fotografije grada (ušće Save i Dunava, i Beograd na
+vodi), korišćene u sekciji Lokacija. Preuzete su sa Wikimedia Commons pod CC BY-SA licencom, zato
+sekcija ima vidljiv, sitan kredit ("Foto: Lošmi, Kallerna / Wikimedia Commons"). Ako ih zamenite
+sopstvenim fotografijama, taj kredit više nije potreban — uklonite ga u `src/components/sections/Location.tsx`.
 
 ## Forma za rezervaciju
 

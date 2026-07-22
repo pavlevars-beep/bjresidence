@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
 import { Check, Leaf, MapPin } from "lucide-react";
 import { Container } from "@/components/ui/Container";
@@ -59,6 +60,27 @@ export function Location() {
           />
         </Reveal>
       </Container>
+
+      <Container className="mt-12">
+        <Reveal delay={0.15}>
+          <div className="relative aspect-[21/9] w-full overflow-hidden rounded-3xl shadow-card">
+            <Image
+              src="/images/belgrade/beograd-na-vodi.jpg"
+              alt="Beograd na vodi — silueta Beogradske kule i obala Save"
+              fill
+              className="object-cover"
+              sizes="(max-width: 1024px) 100vw, 1152px"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-ink/60 via-ink/5 to-transparent" />
+            <p className="absolute bottom-4 left-5 text-sm font-medium text-cream sm:bottom-5 sm:left-6 sm:text-base">
+              Beograd na vodi
+            </p>
+          </div>
+        </Reveal>
+        <p className="mt-3 text-right text-[11px] text-ink/35">
+          Foto: Lošmi, Kallerna / Wikimedia Commons (CC BY-SA)
+        </p>
+      </Container>
     </section>
   );
 }
@@ -88,29 +110,17 @@ function TransitDiagram({
       <p className="text-sm font-semibold uppercase tracking-wide text-ink/50">{title}</p>
 
       <div className="relative mt-4 h-56 w-full overflow-hidden rounded-2xl bg-cream/70 sm:h-64">
-        <svg viewBox="0 0 400 300" className="h-full w-full" role="img" aria-hidden="true">
-          {/* stylized city backdrop — Sava & Dunav confluence, low opacity for texture/realism */}
-          <g opacity={0.5}>
-            <rect width={400} height={300} fill="#D8D5CE" opacity={0.3} />
-            <path
-              d="M -20,10 C 60,60 110,110 150,160 C 190,210 230,250 420,300"
-              stroke="#8FA8AD"
-              strokeWidth={30}
-              fill="none"
-              opacity={0.4}
-              strokeLinecap="round"
-            />
-            <path
-              d="M 420,20 C 340,55 280,90 240,140"
-              stroke="#8FA8AD"
-              strokeWidth={22}
-              fill="none"
-              opacity={0.35}
-              strokeLinecap="round"
-            />
-            <circle cx={240} cy={140} r={26} fill="#A9C1C6" opacity={0.35} />
-          </g>
-
+        {/* real photo of the Sava/Dunav confluence, low opacity — adds texture without pretending to be a survey map */}
+        <Image
+          src="/images/belgrade/sava-danube-confluence.jpg"
+          alt=""
+          fill
+          aria-hidden="true"
+          className="object-cover opacity-30"
+          sizes="(max-width: 1024px) 100vw, 576px"
+        />
+        <div className="absolute inset-0 bg-cream/50" />
+        <svg viewBox="0 0 400 300" className="absolute inset-0 h-full w-full" role="img" aria-hidden="true">
           {ARCS.map((arc, i) => (
             <motion.path
               key={i}

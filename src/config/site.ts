@@ -22,8 +22,8 @@ export const siteConfig = {
   },
 
   location: {
-    address: "Braće Jerković 112, Beograd",
-    googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=Bra%C4%87e+Jerkovi%C4%87+112%2C+Beograd",
+    address: "Braće Jerković 112g, Beograd",
+    googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=Bra%C4%87e+Jerkovi%C4%87+112g%2C+Beograd",
   },
 
   capacity: {

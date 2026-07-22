@@ -2,7 +2,7 @@ export const sr = {
   meta: {
     title: "BJ Residence — Worker Living | Beograd",
     description:
-      "Uredan i miran zajednički smeštaj u Beogradu, Braće Jerković 112. Namenjeno radnicima, studentima i ljudima na privremenom boravku.",
+      "Uredan i miran zajednički smeštaj u Beogradu, Braće Jerković 112g. Namenjeno radnicima, studentima i ljudima na privremenom boravku.",
   },
   nav: {
     home: "Početna",
@@ -123,7 +123,7 @@ export const sr = {
   },
   location: {
     eyebrow: "Lokacija",
-    title: "Braće Jerković 112, Beograd",
+    title: "Braće Jerković 112g, Beograd",
     distance: "~7 km od Trga Republike",
     highlights: [
       "Oko 50 m od glavne ulice",
@@ -298,7 +298,7 @@ export const en: Dictionary = {
   meta: {
     title: "BJ Residence — Worker Living | Belgrade",
     description:
-      "Clean, quiet shared living in Belgrade, Braće Jerković 112. Built for workers, students and people staying temporarily in the city.",
+      "Clean, quiet shared living in Belgrade, Braće Jerković 112g. Built for workers, students and people staying temporarily in the city.",
   },
   nav: {
     home: "Home",
@@ -419,7 +419,7 @@ export const en: Dictionary = {
   },
   location: {
     eyebrow: "Location",
-    title: "Braće Jerković 112, Belgrade",
+    title: "Braće Jerković 112g, Belgrade",
     distance: "~7 km from Trg Republike (Republic Square)",
     highlights: [
       "About 50 m from the main street",
