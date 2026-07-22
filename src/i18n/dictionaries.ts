@@ -132,10 +132,11 @@ export const sr = {
     ],
     transit: {
       title: "Odlična povezanost prevozom",
-      lines: [
-        { number: "26", desc: "direktno do centra grada" },
-        { number: "18", desc: "Novi Beograd, Zemun" },
-        { number: "50", desc: "Miljakovac, Zvezdara i povezivanje sa drugim linijama" },
+      note: "Orijentaciono vreme autobusom — zavisi od saobraćaja i tačne stanice.",
+      destinations: [
+        { name: "Centar grada", line: "26", time: "~20 min" },
+        { name: "Novi Beograd", line: "18", time: "~25 min" },
+        { name: "Beograd na vodi", line: "26 + šetnja", time: "~35 min" },
       ],
     },
     courtyard: {
@@ -427,10 +428,11 @@ export const en: Dictionary = {
     ],
     transit: {
       title: "Excellent public transport links",
-      lines: [
-        { number: "26", desc: "direct to the city centre" },
-        { number: "18", desc: "Novi Beograd, Zemun" },
-        { number: "50", desc: "Miljakovac, Zvezdara, and connections to other lines" },
+      note: "Approximate travel time by bus — depends on traffic and the exact stop.",
+      destinations: [
+        { name: "City centre", line: "26", time: "~20 min" },
+        { name: "Novi Beograd", line: "18", time: "~25 min" },
+        { name: "Beograd na Vodi", line: "26 + walk", time: "~35 min" },
       ],
     },
     courtyard: {

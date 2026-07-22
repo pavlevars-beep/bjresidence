@@ -52,25 +52,34 @@ export function Location() {
         </Reveal>
 
         <Reveal delay={0.1}>
-          <TransitDiagram title={dict.location.transit.title} lines={dict.location.transit.lines} />
+          <TransitDiagram
+            title={dict.location.transit.title}
+            note={dict.location.transit.note}
+            destinations={dict.location.transit.destinations}
+          />
         </Reveal>
       </Container>
     </section>
   );
 }
 
+// Origin pin sits south of the river confluence (Voždovac); endpoints are placed
+// in roughly the right compass direction from it — a stylized illustration, not a
+// literal survey map.
 const ARCS = [
-  { d: "M70,150 C 150,60 250,60 340,72", endX: 340, endY: 72 },
-  { d: "M70,150 C 180,150 260,150 340,150", endX: 340, endY: 150 },
-  { d: "M70,150 C 150,240 250,240 340,228", endX: 340, endY: 228 },
+  { d: "M90,240 C 130,150 150,90 150,55", endX: 150, endY: 55 }, // Novi Beograd — across the river, NW
+  { d: "M90,240 C 170,190 220,120 258,80", endX: 258, endY: 80 }, // Centar grada — near the confluence
+  { d: "M90,240 C 200,220 270,150 305,108", endX: 305, endY: 108 }, // Beograd na vodi — riverside, close to centar
 ];
 
 function TransitDiagram({
   title,
-  lines,
+  note,
+  destinations,
 }: {
   title: string;
-  lines: readonly { number: string; desc: string }[];
+  note: string;
+  destinations: readonly { name: string; line: string; time: string }[];
 }) {
   const shouldReduceMotion = useReducedMotion();
 
@@ -80,6 +89,28 @@ function TransitDiagram({
 
       <div className="relative mt-4 h-56 w-full overflow-hidden rounded-2xl bg-cream/70 sm:h-64">
         <svg viewBox="0 0 400 300" className="h-full w-full" role="img" aria-hidden="true">
+          {/* stylized city backdrop — Sava & Dunav confluence, low opacity for texture/realism */}
+          <g opacity={0.5}>
+            <rect width={400} height={300} fill="#D8D5CE" opacity={0.3} />
+            <path
+              d="M -20,10 C 60,60 110,110 150,160 C 190,210 230,250 420,300"
+              stroke="#8FA8AD"
+              strokeWidth={30}
+              fill="none"
+              opacity={0.4}
+              strokeLinecap="round"
+            />
+            <path
+              d="M 420,20 C 340,55 280,90 240,140"
+              stroke="#8FA8AD"
+              strokeWidth={22}
+              fill="none"
+              opacity={0.35}
+              strokeLinecap="round"
+            />
+            <circle cx={240} cy={140} r={26} fill="#A9C1C6" opacity={0.35} />
+          </g>
+
           {ARCS.map((arc, i) => (
             <motion.path
               key={i}
@@ -102,11 +133,11 @@ function TransitDiagram({
 
           {/* central pin, pulsing */}
           <motion.circle
-            cx={70}
-            cy={150}
+            cx={90}
+            cy={240}
             r={22}
             fill="#59624F"
-            style={{ transformOrigin: "70px 150px" }}
+            style={{ transformOrigin: "90px 240px" }}
             initial={{ scale: 1, opacity: 0.25 }}
             animate={
               shouldReduceMotion
@@ -117,8 +148,8 @@ function TransitDiagram({
               shouldReduceMotion ? { duration: 0 } : { duration: 2.6, repeat: Infinity, ease: "easeOut" }
             }
           />
-          <circle cx={70} cy={150} r={11} fill="#59624F" />
-          <circle cx={70} cy={150} r={4} fill="#F7F4EE" />
+          <circle cx={90} cy={240} r={11} fill="#59624F" />
+          <circle cx={90} cy={240} r={4} fill="#F7F4EE" />
 
           {/* endpoints */}
           {ARCS.map((arc, i) => (
@@ -127,7 +158,7 @@ function TransitDiagram({
               cx={arc.endX}
               cy={arc.endY}
               r={9}
-              fill="#59624F"
+              fill="#A9784E"
               initial={{ scale: shouldReduceMotion ? 1 : 0, opacity: shouldReduceMotion ? 1 : 0 }}
               whileInView={{ scale: 1, opacity: 1 }}
               viewport={{ once: true }}
@@ -141,22 +172,27 @@ function TransitDiagram({
       </div>
 
       <ul className="mt-5 space-y-3">
-        {lines.map((line, i) => (
+        {destinations.map((d, i) => (
           <motion.li
-            key={line.number}
+            key={d.name}
             initial={{ opacity: 0, x: -8 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.4, delay: i * 0.08 }}
-            className="flex items-center gap-3 text-sm text-ink/80"
+            className="flex items-center justify-between gap-3 text-sm text-ink/80"
           >
-            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-olive-dark text-xs font-bold text-cream">
-              {line.number}
+            <span className="flex items-center gap-3">
+              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-olive-dark text-[11px] font-bold text-cream">
+                {d.line.split(" ")[0]}
+              </span>
+              {d.name}
             </span>
-            {line.desc}
+            <span className="shrink-0 font-semibold text-wood">{d.time}</span>
           </motion.li>
         ))}
       </ul>
+
+      <p className="mt-4 text-xs text-ink/45">{note}</p>
     </div>
   );
 }
