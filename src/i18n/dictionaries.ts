@@ -27,7 +27,7 @@ export const sr = {
       wifi: "Wi-Fi",
       kitchen: "Kuhinja",
       laundry: "Veš-mašina",
-      transit: "Blizina linija 18 i 26",
+      transit: "Odlična povezanost prevozom",
     },
   },
   why: {
@@ -45,7 +45,7 @@ export const sr = {
       },
       {
         title: "Dobra povezanost sa gradom",
-        desc: "Autobuske linije 18 i 26 u neposrednoj blizini povezuju vas sa centrom.",
+        desc: "Odlična povezanost prevozom povezuje vas sa centrom i drugim delovima grada.",
       },
       {
         title: "Potpuno opremljen prostor",
@@ -126,7 +126,7 @@ export const sr = {
     title: "Braće Jerković 112, Beograd",
     highlights: [
       "Oko 50 m od glavne ulice",
-      "Autobuske linije 18 i 26 u neposrednoj blizini",
+      "Odlična povezanost prevozom",
       "Mirno i tiho okruženje",
       "Dobra povezanost sa Voždovcem, Autokomandom, centrom i drugim delovima grada",
     ],
@@ -205,7 +205,11 @@ export const sr = {
       },
       {
         q: "Da li postoji parking?",
-        a: "Da, obezbeđeno je parking mesto za goste.",
+        a: "Parking postoji, ali je predmet posebnog dogovora — moguć je uz doplatu, u zavisnosti od trenutne dostupnosti.",
+      },
+      {
+        q: "Koje autobuske linije prolaze u blizini?",
+        a: "U neposrednoj blizini prolaze linije 18, 26 i 50.",
       },
       {
         q: "Da li je moguć duži boravak?",
@@ -306,7 +310,7 @@ export const en: Dictionary = {
       wifi: "Wi-Fi",
       kitchen: "Kitchen",
       laundry: "Washing machine",
-      transit: "Close to lines 18 & 26",
+      transit: "Excellent public transport links",
     },
   },
   why: {
@@ -324,7 +328,7 @@ export const en: Dictionary = {
       },
       {
         title: "Good connection to the city",
-        desc: "Bus lines 18 and 26 nearby connect you to the city centre.",
+        desc: "Excellent public transport links connect you to the centre and other parts of the city.",
       },
       {
         title: "Fully equipped space",
@@ -405,7 +409,7 @@ export const en: Dictionary = {
     title: "Braće Jerković 112, Belgrade",
     highlights: [
       "About 50 m from the main street",
-      "Bus lines 18 and 26 nearby",
+      "Excellent public transport links",
       "Calm and quiet surroundings",
       "Good connection to Voždovac, Autokomanda, the city centre and other parts of the city",
     ],
@@ -484,7 +488,11 @@ export const en: Dictionary = {
       },
       {
         q: "Is there parking?",
-        a: "Yes, a parking spot is available for guests.",
+        a: "Parking is available, but arranged separately — possible for an extra fee, depending on current availability.",
+      },
+      {
+        q: "Which bus lines are nearby?",
+        a: "Lines 18, 26 and 50 pass close by.",
       },
       {
         q: "Is a longer stay possible?",
