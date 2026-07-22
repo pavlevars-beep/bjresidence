@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { formatBookingInquiry, sendTelegramMessage } from "@/lib/telegram";
 
 export interface BookingPayload {
   moveInDate: string;
@@ -12,8 +13,9 @@ export interface BookingPayload {
 }
 
 /**
- * Mock booking endpoint. Swap the body of this handler to forward `payload`
- * to an email service, Supabase table, Google Sheet, or CRM webhook.
+ * Booking inquiry endpoint. Notifies the owner on Telegram (if configured) and
+ * logs the inquiry. Swap/extend this handler to also forward `payload` to an
+ * email service, Supabase table, Google Sheet, or CRM webhook.
  */
 export async function POST(request: Request) {
   const payload = (await request.json()) as Partial<BookingPayload>;
@@ -24,6 +26,11 @@ export async function POST(request: Request) {
 
   // eslint-disable-next-line no-console
   console.log("[booking-inquiry]", payload);
+
+  await sendTelegramMessage(formatBookingInquiry(payload)).catch((err) => {
+    // eslint-disable-next-line no-console
+    console.error("[booking-inquiry] telegram notify failed:", err);
+  });
 
   return NextResponse.json({ ok: true });
 }

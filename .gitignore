@@ -21,6 +21,9 @@ yarn-error.log*
 .env*.local
 .env
 
+# runtime availability override written by the Telegram bot
+/data
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { motion } from "framer-motion";
 import { CheckCircle2, Phone, MessageCircle } from "lucide-react";
 import { Container } from "@/components/ui/Container";
@@ -22,6 +22,18 @@ const durationKeyMap: Record<(typeof siteConfig.stayDurations)[number]["id"], "1
 export function BookingForm() {
   const { dict } = useLanguage();
   const [status, setStatus] = useState<Status>("idle");
+  const [availability, setAvailability] = useState(siteConfig.availability);
+
+  useEffect(() => {
+    fetch("/api/availability")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data) setAvailability(data);
+      })
+      .catch(() => {
+        // keep the siteConfig default if the request fails
+      });
+  }, []);
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -152,9 +164,9 @@ export function BookingForm() {
             <MessageCircle size={18} /> {dict.booking.whatsappUs}
           </LinkButton>
 
-          {siteConfig.availability.hasFreeSpots && (
+          {availability.hasFreeSpots && (
             <p className="mt-2 text-center text-sm text-olive-dark">
-              {dict.booking.availabilityLabel}: {siteConfig.availability.freeSpots} / {siteConfig.capacity.totalSpots}
+              {dict.booking.availabilityLabel}: {availability.freeSpots} / {siteConfig.capacity.totalSpots}
             </p>
           )}
         </div>
