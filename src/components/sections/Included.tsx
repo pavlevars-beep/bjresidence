@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 import {
   Archive,
   BedDouble,
-  Car,
   ChefHat,
   Flame,
   Layers,
@@ -39,7 +38,6 @@ const icons = [
   ShowerHead,
   WashingMachine,
   Archive,
-  Car,
   Sparkles,
 ];
 

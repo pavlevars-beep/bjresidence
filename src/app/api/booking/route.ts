@@ -4,7 +4,6 @@ export interface BookingPayload {
   moveInDate: string;
   duration: string;
   guests: number;
-  parking: boolean;
   firstName: string;
   phone: string;
   email: string;

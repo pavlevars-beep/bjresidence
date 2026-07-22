@@ -24,7 +24,6 @@ export const sr = {
     facts: {
       spots: "6 mesta",
       privateSpace: "Privatni prostor za svakog gosta",
-      parking: "Parking mesto",
       wifi: "Wi-Fi",
       kitchen: "Kuhinja",
       laundry: "Veš-mašina",
@@ -51,10 +50,6 @@ export const sr = {
       {
         title: "Potpuno opremljen prostor",
         desc: "Kuhinja, kupatilo i veš-mašina su spremni za svakodnevno korišćenje.",
-      },
-      {
-        title: "Parking mesto",
-        desc: "Obezbeđeno mesto za vozilo, bez traženja parkinga po ulici.",
       },
       {
         title: "Čisto i održavano",
@@ -120,7 +115,6 @@ export const sr = {
       "Kupatilo",
       "Veš-mašina",
       "Prostor za odlaganje",
-      "Parking mesto",
       "Redovno održavanje zajedničkih prostorija",
     ],
     priceNote: "Cena zavisi od trajanja boravka, broja osoba i trenutne dostupnosti.",
@@ -146,9 +140,6 @@ export const sr = {
       moveInDate: "Datum useljenja",
       duration: "Planirano trajanje boravka",
       guests: "Broj osoba",
-      parking: "Potreban vam je parking?",
-      parkingYes: "Da",
-      parkingNo: "Ne",
       firstName: "Ime i prezime",
       phone: "Telefon",
       email: "Email",
@@ -312,7 +303,6 @@ export const en: Dictionary = {
     facts: {
       spots: "6 spots",
       privateSpace: "Private space for every guest",
-      parking: "Parking spot",
       wifi: "Wi-Fi",
       kitchen: "Kitchen",
       laundry: "Washing machine",
@@ -339,10 +329,6 @@ export const en: Dictionary = {
       {
         title: "Fully equipped space",
         desc: "Kitchen, bathroom and washing machine are ready for daily use.",
-      },
-      {
-        title: "Parking spot",
-        desc: "A dedicated parking space, no searching for street parking.",
       },
       {
         title: "Clean and maintained",
@@ -408,7 +394,6 @@ export const en: Dictionary = {
       "Bathroom",
       "Washing machine",
       "Storage space",
-      "Parking spot",
       "Regular upkeep of shared areas",
     ],
     priceNote: "Price depends on the length of stay, number of people and current availability.",
@@ -434,9 +419,6 @@ export const en: Dictionary = {
       moveInDate: "Move-in date",
       duration: "Planned length of stay",
       guests: "Number of people",
-      parking: "Do you need parking?",
-      parkingYes: "Yes",
-      parkingNo: "No",
       firstName: "Full name",
       phone: "Phone",
       email: "Email",

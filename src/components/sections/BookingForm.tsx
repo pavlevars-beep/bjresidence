@@ -22,7 +22,6 @@ const durationKeyMap: Record<(typeof siteConfig.stayDurations)[number]["id"], "1
 export function BookingForm() {
   const { dict } = useLanguage();
   const [status, setStatus] = useState<Status>("idle");
-  const [parking, setParking] = useState(false);
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -34,7 +33,6 @@ export function BookingForm() {
       moveInDate: form.get("moveInDate"),
       duration: form.get("duration"),
       guests: Number(form.get("guests")),
-      parking,
       firstName: form.get("firstName"),
       phone: form.get("phone"),
       email: form.get("email"),
@@ -50,7 +48,6 @@ export function BookingForm() {
       if (!res.ok) throw new Error("failed");
       setStatus("success");
       formEl.reset();
-      setParking(false);
     } catch {
       setStatus("error");
     }
@@ -107,29 +104,6 @@ export function BookingForm() {
                 />
               </Field>
 
-              <Field label={dict.booking.fields.parking}>
-                <div className="flex h-[46px] items-center gap-4">
-                  <label className="flex items-center gap-2 text-sm text-ink/75">
-                    <input
-                      type="radio"
-                      name="parkingChoice"
-                      checked={parking}
-                      onChange={() => setParking(true)}
-                    />
-                    {dict.booking.fields.parkingYes}
-                  </label>
-                  <label className="flex items-center gap-2 text-sm text-ink/75">
-                    <input
-                      type="radio"
-                      name="parkingChoice"
-                      checked={!parking}
-                      onChange={() => setParking(false)}
-                    />
-                    {dict.booking.fields.parkingNo}
-                  </label>
-                </div>
-              </Field>
-
               <Field label={dict.booking.fields.firstName}>
                 <input type="text" name="firstName" required className={inputClass} />
               </Field>
@@ -138,7 +112,7 @@ export function BookingForm() {
                 <input type="tel" name="phone" required className={inputClass} />
               </Field>
 
-              <Field label={dict.booking.fields.email} className="sm:col-span-2">
+              <Field label={dict.booking.fields.email}>
                 <input type="email" name="email" required className={inputClass} />
               </Field>
 

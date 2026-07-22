@@ -1,12 +1,12 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Car, Home, MapPinned, Sparkles, TramFront, User } from "lucide-react";
+import { Home, MapPinned, Sparkles, TramFront, User } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { useLanguage } from "@/i18n/LanguageContext";
 
-const icons = [User, MapPinned, TramFront, Home, Car, Sparkles];
+const icons = [User, MapPinned, TramFront, Home, Sparkles];
 
 export function WhyUs() {
   const { dict } = useLanguage();

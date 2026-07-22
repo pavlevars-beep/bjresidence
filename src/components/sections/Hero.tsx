@@ -2,12 +2,12 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { Bus, Car, DoorClosed, Users, Utensils, Wifi, WashingMachine } from "lucide-react";
+import { Bus, DoorClosed, Users, Utensils, Wifi, WashingMachine } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { LinkButton } from "@/components/ui/Button";
 import { useLanguage } from "@/i18n/LanguageContext";
 
-const factIcons = [Users, DoorClosed, Car, Wifi, Utensils, WashingMachine, Bus] as const;
+const factIcons = [Users, DoorClosed, Wifi, Utensils, WashingMachine, Bus] as const;
 
 export function Hero() {
   const { dict } = useLanguage();
