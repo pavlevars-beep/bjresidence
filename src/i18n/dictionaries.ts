@@ -153,6 +153,7 @@ export const sr = {
       title: "Dvorište sa zelenilom za sedenje",
       desc: "Redak sadržaj za ovakav tip smeštaja — miran prostor na otvorenom za odmor i druženje.",
     },
+    aerialCaption: "Zgrada sa svetlim krovom — tu se nalazimo",
     mapButton: "Otvori lokaciju na Google Maps",
   },
   booking: {
@@ -458,6 +459,7 @@ export const en: Dictionary = {
       title: "Courtyard with greenery to sit in",
       desc: "Uncommon for this type of housing — a quiet outdoor space to relax and unwind.",
     },
+    aerialCaption: "The building with the light roof — that's us",
     mapButton: "Open location on Google Maps",
   },
   booking: {

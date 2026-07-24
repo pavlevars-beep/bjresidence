@@ -8,6 +8,7 @@ import { LinkButton } from "@/components/ui/Button";
 import { Reveal } from "@/components/ui/Reveal";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { siteConfig } from "@/config/site";
+import { LocationAerial } from "./LocationAerial";
 
 export function Location() {
   const { dict } = useLanguage();
@@ -42,11 +43,15 @@ export function Location() {
             </div>
           </div>
 
+          <div className="mt-6 max-w-xs">
+            <LocationAerial caption={dict.location.aerialCaption} />
+          </div>
+
           <LinkButton
             href={siteConfig.location.googleMapsUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-8"
+            className="mt-6"
           >
             {dict.location.mapButton}
           </LinkButton>
