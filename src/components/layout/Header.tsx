@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
@@ -43,10 +44,20 @@ export function Header() {
       )}
     >
       <Container className="flex items-center justify-between py-3">
-        <Link href="/#home" className="flex flex-col leading-tight">
-          <span className="text-lg font-bold tracking-tight text-ink">BJ Residence</span>
-          <span className="text-[11px] font-medium uppercase tracking-[0.2em] text-wood">
-            Worker Living
+        <Link href="/#home" className="flex items-center gap-2.5">
+          <Image
+            src="/images/brand/icon-mark.png"
+            alt="BJ Residence"
+            width={40}
+            height={40}
+            priority
+            className="h-9 w-9 sm:h-10 sm:w-10"
+          />
+          <span className="flex flex-col leading-tight">
+            <span className="text-lg font-bold tracking-tight text-ink">BJ Residence</span>
+            <span className="text-[11px] font-medium uppercase tracking-[0.2em] text-wood">
+              Worker Living
+            </span>
           </span>
         </Link>
 

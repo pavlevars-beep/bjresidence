@@ -88,6 +88,22 @@ vodi), korišćene u sekciji Lokacija. Preuzete su sa Wikimedia Commons pod CC B
 sekcija ima vidljiv, sitan kredit ("Foto: Lošmi, Kallerna / Wikimedia Commons"). Ako ih zamenite
 sopstvenim fotografijama, taj kredit više nije potreban — uklonite ga u `src/components/sections/Location.tsx`.
 
+### Logo
+
+`public/images/brand/icon-mark.png` je simbol iz logotipa (kućica + grančica, providna pozadina) —
+koristi se u headeru i footeru pored teksta "BJ Residence". `src/app/icon.png` i
+`src/app/apple-icon.png` su generisani iz istog simbola (favicon i ikonica za početni ekran na
+telefonu). `public/images/og/og-image.png` koristi pun logotip (simbol + naziv + slogan).
+
+Slogan u samom logotipu ("Vaš prostor, vaš mir") razlikuje se od teksta "Worker Living" koji se
+koristi u ostatku sajta (header, footer, meta opis) — logo je zadržan kao slika sa svojim
+originalnim sloganom, dok tekst na sajtu ostaje "Worker Living" dok se ne odluči drugačije. Ako
+želite da ih uskladite, promenite `siteConfig.brand.tagline` i odgovarajuće tekstove u
+`src/i18n/dictionaries.ts`.
+
+Ako ikada dobijete logo i kao pravi vektor (SVG/AI/Figma), zamenite `icon-mark.png` njegovim SVG
+izvozom — bilo bi oštrije na svim rezolucijama i manje kao fajl.
+
 ## Forma za rezervaciju
 
 Forma šalje POST zahtev na `/api/booking` (`src/app/api/booking/route.ts`). Trenutno je to mock
@@ -190,8 +206,8 @@ komponentama.
 - `robots.txt`: `src/app/robots.ts`
 - `sitemap.xml`: `src/app/sitemap.ts`
 - JSON-LD `LodgingBusiness` schema: `src/components/Schema.tsx`
-- OG slika (placeholder): `public/images/og/og-image.svg` — zamenite pravom `.jpg`/`.png` slikom
-  1200×630 kada bude dostupna, i ažurirajte putanju u `layout.tsx`.
+- OG slika: `public/images/og/og-image.png` (1200×630), generisana od pravog logotipa. Ako
+  redizajnirate logo, ponovo generišite ovu sliku (logo centriran na `#F7F4EE` pozadini).
 
 ## Sledeći koraci (predlog)
 

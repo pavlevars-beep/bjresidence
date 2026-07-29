@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { Mail, MapPin, Phone } from "lucide-react";
 import { Container } from "@/components/ui/Container";
@@ -24,10 +25,21 @@ export function Footer() {
     <footer className="border-t border-ink/10 bg-ink text-cream/80">
       <Container className="grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-4">
         <div>
-          <p className="text-lg font-bold text-cream">{siteConfig.brand.name}</p>
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-wood">
-            {siteConfig.brand.tagline}
-          </p>
+          <div className="flex items-center gap-2.5">
+            <Image
+              src="/images/brand/icon-mark.png"
+              alt=""
+              width={36}
+              height={36}
+              className="h-9 w-9"
+            />
+            <div>
+              <p className="text-lg font-bold text-cream">{siteConfig.brand.name}</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-wood">
+                {siteConfig.brand.tagline}
+              </p>
+            </div>
+          </div>
           <p className="mt-4 max-w-xs text-sm leading-relaxed text-cream/60">{dict.footer.description}</p>
         </div>
 

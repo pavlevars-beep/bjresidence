@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     description: "Uredan i miran zajednički smeštaj u Beogradu, Braće Jerković 112g.",
     url: "https://bjresidence.rs",
     siteName: "BJ Residence",
-    images: [{ url: "/images/og/og-image.svg", width: 1200, height: 630 }],
+    images: [{ url: "/images/og/og-image.png", width: 1200, height: 630 }],
     locale: "sr_RS",
     type: "website",
   },
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "BJ Residence — Worker Living",
     description: "Uredan i miran zajednički smeštaj u Beogradu, Braće Jerković 112g.",
-    images: ["/images/og/og-image.svg"],
+    images: ["/images/og/og-image.png"],
   },
   robots: { index: true, follow: true },
 };
