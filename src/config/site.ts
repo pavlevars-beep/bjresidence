@@ -47,20 +47,20 @@ export const siteConfig = {
       {
         id: "bedrooms",
         images: [
-          { src: "/images/gallery/bedroom-1.svg", captionKey: "bedrooms.img1" },
-          { src: "/images/gallery/bedroom-2.svg", captionKey: "bedrooms.img2" },
+          { src: "/images/gallery/bedroom-1.jpg", captionKey: "bedrooms.img1" },
+          { src: "/images/gallery/bedroom-2.jpg", captionKey: "bedrooms.img2" },
         ],
       },
       {
         id: "kitchen",
         images: [
-          { src: "/images/gallery/kitchen-1.svg", captionKey: "kitchen.img1" },
-          { src: "/images/gallery/kitchen-2.svg", captionKey: "kitchen.img2" },
+          { src: "/images/gallery/kitchen-1.jpg", captionKey: "kitchen.img1" },
+          { src: "/images/gallery/kitchen-2.jpg", captionKey: "kitchen.img2" },
         ],
       },
       {
         id: "bathroom",
-        images: [{ src: "/images/gallery/bathroom-1.svg", captionKey: "bathroom.img1" }],
+        images: [{ src: "/images/gallery/bathroom-1.jpg", captionKey: "bathroom.img1" }],
       },
       {
         id: "storage",
@@ -69,8 +69,8 @@ export const siteConfig = {
       {
         id: "details",
         images: [
-          { src: "/images/gallery/details-1.svg", captionKey: "details.img1" },
-          { src: "/images/gallery/details-2.svg", captionKey: "details.img2" },
+          { src: "/images/gallery/details-1.jpg", captionKey: "details.img1" },
+          { src: "/images/gallery/details-2.jpg", captionKey: "details.img2" },
         ],
       },
     ],
