@@ -206,7 +206,7 @@ export const sr = {
     items: [
       "Poštovanje drugih stanara",
       "Održavanje lične i zajedničke higijene",
-      "Tišina nakon 23 časa",
+      "Tišina nakon 22 časa",
       "Zabrana pušenja u prostorijama",
       "Pažljivo korišćenje inventara",
     ],
@@ -513,7 +513,7 @@ export const en: Dictionary = {
     items: [
       "Respect for other residents",
       "Personal and shared hygiene upkeep",
-      "Quiet hours after 11 PM",
+      "Quiet hours after 10 PM",
       "No smoking indoors",
       "Careful use of furniture and equipment",
     ],
