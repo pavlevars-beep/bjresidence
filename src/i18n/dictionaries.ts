@@ -23,7 +23,7 @@ export const sr = {
     ctaPrimary: "Proveri dostupnost",
     ctaSecondary: "Pogledaj smeštaj",
     facts: {
-      spots: "6 mesta",
+      spots: "4 mesta",
       privateSpace: "Privatni prostor za svakog gosta",
       wifi: "Wi-Fi",
       kitchen: "Kuhinja",
@@ -191,7 +191,7 @@ export const sr = {
     title: "Smeštaj za zaposlene i projektne timove",
     text: "BJ Residence može biti praktično rešenje za firme koje traže uredan, stabilan i organizovan smeštaj za zaposlene u Beogradu.",
     highlights: [
-      "Smeštaj za do 6 osoba",
+      "Smeštaj za do 4 osobe",
       "Mogućnost dužeg zakupa",
       "Jedan kontakt i jednostavna organizacija",
       "Parking mesto",
@@ -221,7 +221,7 @@ export const sr = {
       },
       {
         q: "Koliko osoba boravi u prostoru?",
-        a: "Prostor je organizovan za do 6 osoba, svako sa sopstvenim ličnim prostorom.",
+        a: "Prostor je organizovan za do 4 osobe, svako sa sopstvenim ličnim prostorom.",
       },
       {
         q: "Da li su režije uključene?",
@@ -330,7 +330,7 @@ export const en: Dictionary = {
     ctaPrimary: "Check availability",
     ctaSecondary: "See the space",
     facts: {
-      spots: "6 spots",
+      spots: "4 spots",
       privateSpace: "Private space for every guest",
       wifi: "Wi-Fi",
       kitchen: "Kitchen",
@@ -498,7 +498,7 @@ export const en: Dictionary = {
     title: "Housing for employees and project teams",
     text: "BJ Residence can be a practical solution for companies looking for clean, stable and organized housing for employees in Belgrade.",
     highlights: [
-      "Accommodation for up to 6 people",
+      "Accommodation for up to 4 people",
       "Option for longer-term lease",
       "One point of contact, simple coordination",
       "Parking spot",
@@ -528,7 +528,7 @@ export const en: Dictionary = {
       },
       {
         q: "How many people stay in the space?",
-        a: "The space is organized for up to 6 people, each with their own personal space.",
+        a: "The space is organized for up to 4 people, each with their own personal space.",
       },
       {
         q: "Are utilities included?",

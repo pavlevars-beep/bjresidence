@@ -26,7 +26,7 @@ export const siteConfig = {
   },
 
   capacity: {
-    totalSpots: 6,
+    totalSpots: 4,
   },
 
   // Pricing display is optional and can be toggled off without touching any component.
