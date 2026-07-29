@@ -245,7 +245,7 @@ export const sr = {
       },
       {
         q: "Da li se potpisuje ugovor?",
-        a: "Detalji dogovora i dokumentacije se usaglašavaju prilikom rezervacije.",
+        a: "Da, potpisuje se ugovor, uz priloge sa spiskom inventara i kućnim redom.",
       },
       {
         q: "Da li je smeštaj dostupan firmama?",
@@ -552,7 +552,7 @@ export const en: Dictionary = {
       },
       {
         q: "Is a contract signed?",
-        a: "Agreement details and documentation are arranged at the time of booking.",
+        a: "Yes, a contract is signed, with an inventory list and house rules attached.",
       },
       {
         q: "Is the accommodation available to companies?",
