@@ -3,7 +3,7 @@ export const sr = {
   meta: {
     title: "BJ Residence | Beograd",
     description:
-      "Uredan i miran zajednički smeštaj u Beogradu, Braće Jerković 112g. Namenjeno radnicima, studentima i ljudima na privremenom boravku.",
+      "Uredan i miran zajednički smeštaj u Beogradu, Braće Jerković 112g. Namenjeno zaposlenima, studentima i ljudima na privremenom boravku.",
   },
   nav: {
     home: "Početna",
@@ -19,7 +19,7 @@ export const sr = {
     eyebrow: "BJ Residence · Vaš prostor, vaš mir",
     title: "Uredan smeštaj za miran boravak u Beogradu",
     subtitle:
-      "BJ Residence pruža organizovan zajednički smeštaj za radnike, studente i ljude koji privremeno borave u gradu.",
+      "BJ Residence pruža organizovan zajednički smeštaj za zaposlene, studente i ljude koji privremeno borave u gradu.",
     ctaPrimary: "Proveri dostupnost",
     ctaSecondary: "Pogledaj smeštaj",
     facts: {
@@ -217,7 +217,7 @@ export const sr = {
     items: [
       {
         q: "Kome je smeštaj namenjen?",
-        a: "Radnicima, studentima i ljudima koji privremeno borave u Beogradu zbog posla, prakse ili drugih obaveza.",
+        a: "Zaposlenima, studentima i ljudima koji privremeno borave u Beogradu zbog posla, prakse ili drugih obaveza.",
       },
       {
         q: "Koliko osoba boravi u prostoru?",
@@ -268,7 +268,7 @@ export const sr = {
     ctaSecondary: "Kontaktiraj nas",
   },
   footer: {
-    description: "Uredan i organizovan zajednički smeštaj za radnike, studente i ljude na privremenom boravku u Beogradu.",
+    description: "Uredan i organizovan zajednički smeštaj za zaposlene, studente i ljude na privremenom boravku u Beogradu.",
     sections: "Sekcije",
     contact: "Kontakt",
     legal: "Pravne informacije",
@@ -310,7 +310,7 @@ export const en: Dictionary = {
   meta: {
     title: "BJ Residence | Belgrade",
     description:
-      "Clean, quiet shared living in Belgrade, Braće Jerković 112g. Built for workers, students and people staying temporarily in the city.",
+      "Clean, quiet shared living in Belgrade, Braće Jerković 112g. Built for employees, students and people staying temporarily in the city.",
   },
   nav: {
     home: "Home",
@@ -326,7 +326,7 @@ export const en: Dictionary = {
     eyebrow: "BJ Residence · Your Space, Your Peace",
     title: "Clean, quiet living for a calm stay in Belgrade",
     subtitle:
-      "BJ Residence offers organized shared accommodation for workers, students and people staying temporarily in the city.",
+      "BJ Residence offers organized shared accommodation for employees, students and people staying temporarily in the city.",
     ctaPrimary: "Check availability",
     ctaSecondary: "See the space",
     facts: {
@@ -524,7 +524,7 @@ export const en: Dictionary = {
     items: [
       {
         q: "Who is this accommodation for?",
-        a: "Workers, students and people staying temporarily in Belgrade for work, internships or similar reasons.",
+        a: "Employees, students and people staying temporarily in Belgrade for work, internships or similar reasons.",
       },
       {
         q: "How many people stay in the space?",
@@ -575,7 +575,7 @@ export const en: Dictionary = {
     ctaSecondary: "Contact us",
   },
   footer: {
-    description: "Clean, organized shared housing for workers, students and people staying temporarily in Belgrade.",
+    description: "Clean, organized shared housing for employees, students and people staying temporarily in Belgrade.",
     sections: "Sections",
     contact: "Contact",
     legal: "Legal",

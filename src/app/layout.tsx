@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://bjresidence.rs"),
   title: "BJ Residence | Beograd",
   description:
-    "Uredan i miran zajednički smeštaj u Beogradu, Braće Jerković 112g. Namenjeno radnicima, studentima i ljudima na privremenom boravku.",
+    "Uredan i miran zajednički smeštaj u Beogradu, Braće Jerković 112g. Namenjeno zaposlenima, studentima i ljudima na privremenom boravku.",
   openGraph: {
     title: "BJ Residence",
     description: "Uredan i miran zajednički smeštaj u Beogradu, Braće Jerković 112g.",

@@ -5,7 +5,7 @@ export function LodgingSchema() {
     "@context": "https://schema.org",
     "@type": "LodgingBusiness",
     name: siteConfig.brand.name,
-    description: "Organizovan zajednički smeštaj za radnike, studente i ljude na privremenom boravku u Beogradu.",
+    description: "Organizovan zajednički smeštaj za zaposlene, studente i ljude na privremenom boravku u Beogradu.",
     address: {
       "@type": "PostalAddress",
       streetAddress: "Braće Jerković 112g",
