@@ -150,10 +150,6 @@ export const sr = {
         { name: "Beograd na vodi", line: "26 + šetnja", time: "~20 min" },
       ],
     },
-    courtyard: {
-      title: "Dvorište sa zelenilom za sedenje",
-      desc: "Redak sadržaj za ovakav tip smeštaja — miran prostor na otvorenom za odmor i druženje.",
-    },
     aerialCaption: "Zgrada sa svetlim krovom — tu se nalazimo",
     mapButton: "Otvori lokaciju na Google Maps",
   },
@@ -456,10 +452,6 @@ export const en: Dictionary = {
         { name: "Novi Beograd", line: "18", time: "25–35 min" },
         { name: "Beograd na Vodi", line: "26 + walk", time: "~20 min" },
       ],
-    },
-    courtyard: {
-      title: "Courtyard with greenery to sit in",
-      desc: "Uncommon for this type of housing — a quiet outdoor space to relax and unwind.",
     },
     aerialCaption: "The building with the light roof — that's us",
     mapButton: "Open location on Google Maps",

@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
-import { Check, Leaf, MapPin } from "lucide-react";
+import { Check, MapPin } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { LinkButton } from "@/components/ui/Button";
 import { Reveal } from "@/components/ui/Reveal";
@@ -34,14 +34,6 @@ export function Location() {
               </li>
             ))}
           </ul>
-
-          <div className="mt-6 flex items-start gap-3 rounded-2xl border border-olive-dark/15 bg-olive-dark/5 p-4">
-            <Leaf size={20} className="mt-0.5 shrink-0 text-olive-dark" />
-            <div>
-              <p className="text-sm font-semibold text-ink">{dict.location.courtyard.title}</p>
-              <p className="mt-1 text-sm text-ink/65">{dict.location.courtyard.desc}</p>
-            </div>
-          </div>
 
           <div className="mt-6 max-w-xs">
             <LocationAerial caption={dict.location.aerialCaption} />
