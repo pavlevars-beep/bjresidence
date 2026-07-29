@@ -1,6 +1,7 @@
 export const sr = {
+  tagline: "Vaš prostor, vaš mir",
   meta: {
-    title: "BJ Residence — Worker Living | Beograd",
+    title: "BJ Residence | Beograd",
     description:
       "Uredan i miran zajednički smeštaj u Beogradu, Braće Jerković 112g. Namenjeno radnicima, studentima i ljudima na privremenom boravku.",
   },
@@ -15,7 +16,7 @@ export const sr = {
     checkAvailability: "Proveri dostupnost",
   },
   hero: {
-    eyebrow: "BJ Residence · Worker Living",
+    eyebrow: "BJ Residence · Vaš prostor, vaš mir",
     title: "Uredan smeštaj za miran boravak u Beogradu",
     subtitle:
       "BJ Residence pruža organizovan zajednički smeštaj za radnike, studente i ljude koji privremeno borave u gradu.",
@@ -92,7 +93,7 @@ export const sr = {
     close: "Zatvori",
   },
   personalUnit: {
-    eyebrow: "Vaša jedinica",
+    eyebrow: "Vaš prostor, vaš mir",
     title: "Vaš lični prostor unutar zajedničkog smeštaja",
     text: "Svako mesto je projektovano kao mala, organizovana jedinica koja omogućava privatnost, urednost i dovoljno prostora za lične stvari.",
     features: [
@@ -305,8 +306,9 @@ export const sr = {
 export type Dictionary = typeof sr;
 
 export const en: Dictionary = {
+  tagline: "Your Space, Your Peace",
   meta: {
-    title: "BJ Residence — Worker Living | Belgrade",
+    title: "BJ Residence | Belgrade",
     description:
       "Clean, quiet shared living in Belgrade, Braće Jerković 112g. Built for workers, students and people staying temporarily in the city.",
   },
@@ -321,7 +323,7 @@ export const en: Dictionary = {
     checkAvailability: "Check availability",
   },
   hero: {
-    eyebrow: "BJ Residence · Worker Living",
+    eyebrow: "BJ Residence · Your Space, Your Peace",
     title: "Clean, quiet living for a calm stay in Belgrade",
     subtitle:
       "BJ Residence offers organized shared accommodation for workers, students and people staying temporarily in the city.",
@@ -398,7 +400,7 @@ export const en: Dictionary = {
     close: "Close",
   },
   personalUnit: {
-    eyebrow: "Your unit",
+    eyebrow: "Your Space, Your Peace",
     title: "Your personal space within a shared residence",
     text: "Every spot is designed as a small, organized unit that provides privacy, order and enough room for personal belongings.",
     features: [

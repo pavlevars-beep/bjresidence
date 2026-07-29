@@ -36,7 +36,7 @@ export function Footer() {
             <div>
               <p className="text-lg font-bold text-cream">{siteConfig.brand.name}</p>
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-wood">
-                {siteConfig.brand.tagline}
+                {dict.tagline}
               </p>
             </div>
           </div>

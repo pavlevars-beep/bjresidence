@@ -56,7 +56,7 @@ export function Header() {
           <span className="flex flex-col leading-tight">
             <span className="text-lg font-bold tracking-tight text-ink">BJ Residence</span>
             <span className="text-[11px] font-medium uppercase tracking-[0.2em] text-wood">
-              Worker Living
+              {dict.tagline}
             </span>
           </span>
         </Link>

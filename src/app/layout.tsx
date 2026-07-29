@@ -16,11 +16,11 @@ const jakarta = Plus_Jakarta_Sans({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://bjresidence.rs"),
-  title: "BJ Residence — Worker Living | Beograd",
+  title: "BJ Residence | Beograd",
   description:
     "Uredan i miran zajednički smeštaj u Beogradu, Braće Jerković 112g. Namenjeno radnicima, studentima i ljudima na privremenom boravku.",
   openGraph: {
-    title: "BJ Residence — Worker Living",
+    title: "BJ Residence",
     description: "Uredan i miran zajednički smeštaj u Beogradu, Braće Jerković 112g.",
     url: "https://bjresidence.rs",
     siteName: "BJ Residence",
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "BJ Residence — Worker Living",
+    title: "BJ Residence",
     description: "Uredan i miran zajednički smeštaj u Beogradu, Braće Jerković 112g.",
     images: ["/images/og/og-image.png"],
   },

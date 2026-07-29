@@ -6,7 +6,6 @@
 export const siteConfig = {
   brand: {
     name: "BJ Residence",
-    tagline: "Worker Living",
   },
 
   contact: {

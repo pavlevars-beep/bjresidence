@@ -1,4 +1,4 @@
-# BJ Residence — Worker Living
+# BJ Residence
 
 Sajt za BJ Residence, organizovan zajednički smeštaj na adresi Braće Jerković 112g, Beograd.
 
@@ -95,11 +95,11 @@ koristi se u headeru i footeru pored teksta "BJ Residence". `src/app/icon.png` i
 `src/app/apple-icon.png` su generisani iz istog simbola (favicon i ikonica za početni ekran na
 telefonu). `public/images/og/og-image.png` koristi pun logotip (simbol + naziv + slogan).
 
-Slogan u samom logotipu ("Vaš prostor, vaš mir") razlikuje se od teksta "Worker Living" koji se
-koristi u ostatku sajta (header, footer, meta opis) — logo je zadržan kao slika sa svojim
-originalnim sloganom, dok tekst na sajtu ostaje "Worker Living" dok se ne odluči drugačije. Ako
-želite da ih uskladite, promenite `siteConfig.brand.tagline` i odgovarajuće tekstove u
-`src/i18n/dictionaries.ts`.
+Slogan "Vaš prostor, vaš mir" (iz logotipa) je zvanični slogan sajta — nema više "Worker Living"
+nigde. Koristi se u headeru/footeru (`dict.tagline` u `src/i18n/dictionaries.ts`), u hero eyebrow-u
+i kao nadnaslov sekcije "Vaš lični prostor", ali namerno ne svuda (npr. `<title>` taga ostaje kratak
+i informativan radi SEO-a). Da promenite gde se slogan pojavljuje, pretražite `dict.tagline` po
+`src/i18n/dictionaries.ts` i `src/components/`.
 
 Ako ikada dobijete logo i kao pravi vektor (SVG/AI/Figma), zamenite `icon-mark.png` njegovim SVG
 izvozom — bilo bi oštrije na svim rezolucijama i manje kao fajl.
