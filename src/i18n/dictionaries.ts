@@ -112,7 +112,7 @@ export const sr = {
     title: "Sve što vam je potrebno za svakodnevni boravak",
     note: "Tačan paket i uslovi se potvrđuju prilikom rezervacije.",
     items: [
-      "Krevet i dušek",
+      "Premium krevet i dušek",
       "Posteljina",
       "Wi-Fi",
       "Grejanje",
@@ -419,7 +419,7 @@ export const en: Dictionary = {
     title: "Everything you need for everyday living",
     note: "The exact package and terms are confirmed at the time of booking.",
     items: [
-      "Bed and mattress",
+      "Premium bed and mattress",
       "Bedding",
       "Wi-Fi",
       "Heating",
