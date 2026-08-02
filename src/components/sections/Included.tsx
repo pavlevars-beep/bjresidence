@@ -70,6 +70,10 @@ export function Included() {
           })}
         </div>
 
+        <p className="mx-auto mt-12 max-w-xl text-center text-lg font-medium italic tracking-tight text-olive-dark sm:text-xl">
+          {dict.included.positioning}
+        </p>
+
         {siteConfig.pricing.showPrice && (
           <p className="mt-10 text-center text-lg font-semibold text-olive-dark">
             {dict.included.priceFrom} {siteConfig.pricing.amount}
