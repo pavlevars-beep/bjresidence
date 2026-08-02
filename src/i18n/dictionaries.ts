@@ -68,6 +68,24 @@ export const sr = {
       },
     ],
   },
+  manifesto: {
+    eyebrow: "O nama",
+    title: "Zašto postojimo",
+    intro: [
+      "BJ Residence nije nastao zato što je nedostajao još jedan smeštaj.",
+      "Nastao je zato što smo verovali da ljudi koji rade daleko od svojih kuća zaslužuju više od kreveta u zajedničkoj sobi.",
+    ],
+    needsIntro: "Posle dugog radnog dana svakom čoveku treba isto.",
+    needs: ["Mir.", "Tišina.", "Čist prostor."],
+    needsDesc:
+      "Mesto gde može da spusti stvari, pozove porodicu, popije kafu i bude sam sa svojim mislima.",
+    belief: [
+      "Ne verujemo da dostojanstvo treba da bude rezervisano samo za skupe hotele.",
+      "Verujemo da i pristupačan smeštaj može biti uredan, topao i napravljen sa pažnjom.",
+    ],
+    closingIntro: "Zato je svaki detalj u BJ Residence izabran sa namerom.",
+    closing: ["Ne da izgleda skupo.", "Već da se čovek oseća dobro."],
+  },
   gallery: {
     eyebrow: "Prikaz smeštaja",
     title: "Pogledajte kako izgleda prostor",
@@ -370,6 +388,23 @@ export const en: Dictionary = {
         desc: "Shared areas are cleaned and maintained on a regular basis.",
       },
     ],
+  },
+  manifesto: {
+    eyebrow: "About us",
+    title: "Why we exist",
+    intro: [
+      "BJ Residence wasn't created because the city needed one more place to stay.",
+      "It was created because we believed that people working far from home deserve more than a bed in a shared room.",
+    ],
+    needsIntro: "After a long day at work, everyone needs the same thing.",
+    needs: ["Peace.", "Quiet.", "A clean space."],
+    needsDesc: "A place to set your things down, call your family, have a coffee, and be alone with your thoughts.",
+    belief: [
+      "We don't believe dignity should be reserved for expensive hotels.",
+      "We believe affordable housing can be tidy, warm and made with care.",
+    ],
+    closingIntro: "That's why every detail at BJ Residence was chosen with intention.",
+    closing: ["Not to look expensive.", "But so people feel good."],
   },
   gallery: {
     eyebrow: "The accommodation",

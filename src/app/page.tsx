@@ -1,6 +1,7 @@
 import { Hero } from "@/components/sections/Hero";
 import { QuickDistances } from "@/components/sections/QuickDistances";
 import { WhyUs } from "@/components/sections/WhyUs";
+import { Manifesto } from "@/components/sections/Manifesto";
 import { Gallery } from "@/components/sections/Gallery";
 import { PersonalUnit } from "@/components/sections/PersonalUnit";
 import { Included } from "@/components/sections/Included";
@@ -17,6 +18,7 @@ export default function HomePage() {
       <Hero />
       <QuickDistances />
       <WhyUs />
+      <Manifesto />
       <Gallery />
       <PersonalUnit />
       <Included />
