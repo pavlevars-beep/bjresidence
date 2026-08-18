@@ -11,7 +11,7 @@ export function ResidenceInfoSection({
   const set = <K extends keyof ResidenceInfo>(key: K, v: ResidenceInfo[K]) => onChange({ ...value, [key]: v });
 
   return (
-    <SectionCard title="Korisne informacije" description="Traka na dnu /info table.">
+    <SectionCard title="Korisne informacije" description="Traka na dnu /infopult table.">
       <div className="flex flex-col gap-6">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
           <div className="sm:w-44 sm:shrink-0">

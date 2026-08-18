@@ -1,5 +1,5 @@
 /**
- * Date/time formatting for the /info kiosk board. Always resolves against the
+ * Date/time formatting for the /infopult kiosk board. Always resolves against the
  * Europe/Belgrade timezone explicitly via Intl's `timeZone` option, so the
  * display stays correct even if the tablet's own OS timezone is misconfigured.
  */

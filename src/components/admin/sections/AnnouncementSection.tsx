@@ -13,7 +13,7 @@ export function AnnouncementSection({
   return (
     <SectionCard
       title="Važna informacija"
-      description="Prikazuje se kao istaknuta traka na /info dok je aktivna."
+      description="Prikazuje se kao istaknuta traka na /infopult dok je aktivna."
       headerRight={<Toggle checked={value.enabled} onChange={(v) => set("enabled", v)} label="Uključeno" />}
     >
       <div className="grid gap-4 sm:grid-cols-2">

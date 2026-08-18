@@ -13,7 +13,7 @@ export function CleaningSection({
   return (
     <SectionCard
       title="Sledeće čišćenje"
-      description="Prikazuje se na /info kad je uključeno i datum nije prošao."
+      description="Prikazuje se na /infopult kad je uključeno i datum nije prošao."
       headerRight={<Toggle checked={value.enabled} onChange={(v) => set("enabled", v)} label="Uključeno" />}
     >
       <div className="grid gap-4 sm:grid-cols-3">

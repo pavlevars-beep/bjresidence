@@ -57,12 +57,12 @@ export function AdminDashboard({ initialConfig }: { initialConfig: InfoBoardConf
           </div>
           <div className="flex items-center gap-2">
             <Link
-              href="/info"
+              href="/infopult"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-medium text-ink/60 hover:bg-ink/5"
             >
-              <ExternalLink size={15} /> Otvori /info
+              <ExternalLink size={15} /> Otvori /infopult
             </Link>
             <button
               onClick={handleLogout}

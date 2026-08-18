@@ -32,27 +32,27 @@ npm run lint    # ESLint provera
 src/
   app/
     (site)/              postojeći sajt: početna, /privacy, /terms (Header/Footer/WhatsApp/CTA layout)
-    info/                /info — kiosk info tabla (bez sajt navigacije, vidi "Info Board")
+    infopult/            /infopult — kiosk info tabla (bez sajt navigacije, vidi "Info Board")
     admin/                /admin — prijava + upravljanje Info Board sadržajem
     api/booking/          prima upite sa forme, šalje Telegram notifikaciju
     api/availability/      vraća trenutnu dostupnost (čita je BookingForm)
     api/telegram/webhook/  prima komande od Telegram bota (/dostupnost)
-    api/info-board/        javni GET config + weather/traffic proxy za /info
+    api/info-board/        javni GET config + weather/traffic proxy za /infopult
     api/admin/              login/logout + zaštićen GET/PUT za Info Board config
     layout.tsx             koren layout (html/body/fontovi) — bez sajt navigacije
   components/
     layout/               Header, Footer, WhatsApp dugme, mobilni sticky CTA (koristi (site) layout)
     sections/               svih sekcija sajta (Hero, Gallery, BookingForm, FAQ...)
     ui/                     reusable elementi (Button, Container, SectionHeading, Reveal)
-    info-board/             komponente /info table (WeatherCard, CleaningCard, QRCard...)
+    info-board/             komponente /infopult table (WeatherCard, CleaningCard, QRCard...)
     admin/                  komponente /admin panela (login, sekcije forme)
   config/
     site.ts                JEDINO mesto za kontakt podatke, adresu, kapacitet, cenu, dostupnost, galeriju
   i18n/
     dictionaries.ts         kompletan SR i EN tekst sajta
     LanguageContext.tsx      React context za prebacivanje jezika sajta (localStorage)
-    info-board-dictionary.ts SR/EN tekst za /info (odvojeno od sajta, svoj jezički izbor)
-    InfoBoardLanguageContext.tsx  isto što LanguageContext, ali za /info
+    info-board-dictionary.ts SR/EN tekst za /infopult (odvojeno od sajta, svoj jezički izbor)
+    InfoBoardLanguageContext.tsx  isto što LanguageContext, ali za /infopult
   lib/
     telegram.ts             slanje poruka botu
     availability-store.ts   čitanje/pisanje trenutne dostupnosti (data/availability.json)
@@ -210,9 +210,9 @@ Railway, Render, Docker). Ako deploy-ujete na potpuno serverless platformu gde f
 trajan između zahteva, zamenite `src/lib/availability-store.ts` sa pravom bazom (Supabase, Vercel KV
 ili slično) — funkcije `getAvailability`/`setAvailability` su jedino mesto koje treba izmeniti.
 
-## Info Board (/info tabla na tabletu + /admin)
+## Info Board (/infopult tabla na tabletu + /admin)
 
-`/info` je digitalna informativna tabla namenjena tabletu montiranom u hodniku BJ Residence
+`/infopult` je digitalna informativna tabla namenjena tabletu montiranom u hodniku BJ Residence
 (landscape orijentacija, otvara se preko kiosk browsera kao [Fully Kiosk
 Browser](https://www.fully-kiosk.com/)). Nema navigaciju sajta, ne skroluje se na uobičajenim
 tablet rezolucijama i sam se osvežava — jednom otvorena, tableta se ne mora dirati.
@@ -225,18 +225,23 @@ Sadržaj (čišćenje, obaveštenje, "ove nedelje", saobraćaj, Wi-Fi/kontakt, Q
 U `.env.local` (i u environment promenljivama hostinga posle deploy-a) popunite:
 
 ```
-ADMIN_PASSWORD=neka-jaka-lozinka
-ADMIN_SESSION_SECRET=neki-drugi-dugacak-nasumican-string
+ADMIN_PASSWORD=maslina-4018-breza
+ADMIN_SESSION_SECRET=69b78c53b08bbec4970a01fdb738581cb85f533397221e4913f9a7f2f3b6118b
 ```
 
-Bez ova dva, `/admin` odbija prijavu (i login forma to jasno kaže).
+(Ovo su primer vrednosti generisane za vas — možete ih zadržati ili zameniti svojim. Samo
+`ADMIN_PASSWORD` je ono što kucate pri prijavi na `/admin`; `ADMIN_SESSION_SECRET` je tehnički
+podatak koji server koristi da potpiše sesiju posle prijave, njega nikad ne kucate.)
+
+Bez ova dva, `/admin` odbija prijavu (i login forma to jasno kaže). Isti `ADMIN_PASSWORD` važi za
+ceo `/admin` panel — nema odvojenih naloga po sekciji.
 
 ### Korišćenje
 
 1. Otvorite `https://VAS-DOMEN.com/admin`, prijavite se sa `ADMIN_PASSWORD`.
 2. Popunite/izmenite sekcije (čišćenje, obaveštenje, "ove nedelje", saobraćaj, Wi-Fi/mir/kontakt,
    QR) i kliknite **Sačuvaj izmene**.
-3. Na tabletu otvorite `https://VAS-DOMEN.com/info` u kiosk browseru (podesite ga da se automatski
+3. Na tabletu otvorite `https://VAS-DOMEN.com/infopult` u kiosk browseru (podesite ga da se automatski
    pokreće i osvežava posle restarta uređaja/struje). Izmene iz admina se pojave na tabletu u roku
    od oko 45 sekundi, bez ručnog osvežavanja.
 4. Isključene ili prazne sekcije (npr. nema aktivnog obaveštenja, nema stavki za ovu nedelju) se
@@ -245,18 +250,33 @@ Bez ova dva, `/admin` odbija prijavu (i login forma to jasno kaže).
 Jezik na tableti (`SR`/`EN`, dole desno) je nezavisan od jezika glavnog sajta i pamti se lokalno u
 tom browseru.
 
+**Šta je automatsko, a šta ručno unosite:**
+
+- **Automatsko, ništa ne dirate** — vreme (temperatura, prognoza) i vremenska prognoza za sutra.
+  Osvežava se samo.
+- **Automatsko posle jednog podešavanja** — saobraćaj/vreme vožnje. Jednom upišete procenu (npr.
+  "Centar" → 22 min) i to ostaje, tabla to ne traži ponovo. Ako kasnije podesite Google API ključ
+  (vidi ispod), postaje uživo umesto procene — ali nije obavezno.
+- **Ručno unosite kad se nešto promeni** — čišćenje (datum/vreme), važna obaveštenja, i eventualno
+  "ove nedelje" stavke. To je jedino što stvarno pratite iz nedelje u nedelju.
+
 ### Vreme (weather)
 
-Koristi [Open-Meteo](https://open-meteo.com/) — besplatno, bez API ključa, bez registracije, preko
-`src/app/api/info-board/weather/route.ts`. Ništa dodatno nije potrebno da bi vremenska prognoza
-radila.
+Koristi [Open-Meteo](https://open-meteo.com/) — potpuno besplatno, bez API ključa, bez registracije
+i bez ikakve pretplate, preko `src/app/api/info-board/weather/route.ts`. Ne treba vam nalog nigde
+niti kartica za plaćanje — samo radi, odmah.
 
 ### Saobraćaj (traffic)
 
-Kartica "Saobraćaj sada" prikazuje procenjeno vreme vožnje po odredištu, koje unosite u
-`/admin` (npr. "Centar" → 22 min). Ako podesite `GOOGLE_MAPS_API_KEY` (server-side, nikad se ne
-šalje ka tableti/browseru), kartica automatski koristi Google Distance Matrix API za saobraćajem-
-svesno vreme vožnje uživo umesto te procene — ključ nije obavezan, sajt radi ispravno i bez njega.
+Kartica "Saobraćaj sada" prikazuje procenjeno vreme vožnje po odredištu, koje **jednom** unesete u
+`/admin` (npr. "Centar" → 22 min) — to je besplatno i dovoljno za svakodnevnu upotrebu, tabla ga ne
+traži ponovo. Ako kasnije poželite vreme vožnje uživo (koje se menja sa saobraćajem tokom dana), to
+zahteva Google Maps Distance Matrix API: nalog na [Google Cloud
+Console](https://console.cloud.google.com/), povezanu karticu za naplatu (Google traži karticu čak
+i za besplatni deo — trenutno daju mesečni besplatni kredit koji za jednu tablu s par odredišta
+praktično nikad ne potrošite, ali kartica mora biti povezana). Ako podesite `GOOGLE_MAPS_API_KEY`
+(server-side, nikad se ne šalje ka tableti/browseru), kartica automatski pređe na to uživo vreme —
+ključ nije obavezan, sajt radi ispravno i bez njega, sa unetom procenom.
 
 ### Napomena o skladištenju
 
@@ -290,7 +310,7 @@ komponentama.
 4. **Domen i deploy** — deploy na Vercel (ili sličan hosting), povezati pravi domen, ažurirati
    `metadataBase` URL u `src/app/layout.tsx` i URL-ove u `robots.ts`/`sitemap.ts`.
 5. **Google Maps embed** — ako se obezbedi API ključ, zameniti statični placeholder u sekciji
-   lokacije pravom interaktivnom mapom. (Za saobraćaj na `/info` tabli, `GOOGLE_MAPS_API_KEY` je već
+   lokacije pravom interaktivnom mapom. (Za saobraćaj na `/infopult` tabli, `GOOGLE_MAPS_API_KEY` je već
    podržan — vidi sekciju "Info Board" iznad.)
 6. **Analytics** — dodati Google Analytics / Plausible po potrebi.
 7. **Info Board na pravoj bazi** — ako pređete na Supabase/sličnu bazu za dostupnost (tačka 3), po
