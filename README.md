@@ -30,25 +30,41 @@ npm run lint    # ESLint provera
 
 ```
 src/
-  app/                 stranice (Next.js App Router): početna, /privacy, /terms
-    api/booking/        prima upite sa forme, šalje Telegram notifikaciju
-    api/availability/    vraća trenutnu dostupnost (čita je BookingForm)
-    api/telegram/webhook/ prima komande od Telegram bota (/dostupnost)
+  app/
+    (site)/              postojeći sajt: početna, /privacy, /terms (Header/Footer/WhatsApp/CTA layout)
+    info/                /info — kiosk info tabla (bez sajt navigacije, vidi "Info Board")
+    admin/                /admin — prijava + upravljanje Info Board sadržajem
+    api/booking/          prima upite sa forme, šalje Telegram notifikaciju
+    api/availability/      vraća trenutnu dostupnost (čita je BookingForm)
+    api/telegram/webhook/  prima komande od Telegram bota (/dostupnost)
+    api/info-board/        javni GET config + weather/traffic proxy za /info
+    api/admin/              login/logout + zaštićen GET/PUT za Info Board config
+    layout.tsx             koren layout (html/body/fontovi) — bez sajt navigacije
   components/
-    layout/             Header, Footer, WhatsApp dugme, mobilni sticky CTA
-    sections/            svih 11 sekcija sajta (Hero, Gallery, BookingForm, FAQ...)
-    ui/                  reusable elementi (Button, Container, SectionHeading, Reveal)
+    layout/               Header, Footer, WhatsApp dugme, mobilni sticky CTA (koristi (site) layout)
+    sections/               svih sekcija sajta (Hero, Gallery, BookingForm, FAQ...)
+    ui/                     reusable elementi (Button, Container, SectionHeading, Reveal)
+    info-board/             komponente /info table (WeatherCard, CleaningCard, QRCard...)
+    admin/                  komponente /admin panela (login, sekcije forme)
   config/
-    site.ts              JEDINO mesto za kontakt podatke, adresu, kapacitet, cenu, dostupnost, galeriju
+    site.ts                JEDINO mesto za kontakt podatke, adresu, kapacitet, cenu, dostupnost, galeriju
   i18n/
-    dictionaries.ts       kompletan SR i EN tekst sajta
-    LanguageContext.tsx    React context za prebacivanje jezika (čuva izbor u localStorage)
+    dictionaries.ts         kompletan SR i EN tekst sajta
+    LanguageContext.tsx      React context za prebacivanje jezika sajta (localStorage)
+    info-board-dictionary.ts SR/EN tekst za /info (odvojeno od sajta, svoj jezički izbor)
+    InfoBoardLanguageContext.tsx  isto što LanguageContext, ali za /info
   lib/
-    telegram.ts           slanje poruka botu
-    availability-store.ts čitanje/pisanje trenutne dostupnosti (data/availability.json)
+    telegram.ts             slanje poruka botu
+    availability-store.ts   čitanje/pisanje trenutne dostupnosti (data/availability.json)
+    admin-auth.ts            provera lozinke + potpisana sesija za /admin
+    info-board.ts             tipovi + podrazumevane vrednosti Info Board konfiguracije
+    info-board-store.ts       čitanje/pisanje Info Board konfiguracije (data/info-board.json)
+    weather-codes.ts           mapiranje WMO kodova vremena na ikonicu/tekst
+    board-format.ts            formatiranje datuma/vremena za Europe/Belgrade
+    use-polled-resource.ts     hook za periodično osvežavanje sa localStorage keš-om
 public/
-  images/                placeholder SVG slike (hero, galerija, lokacija, OG slika)
-.env.local.example       šablon za TELEGRAM_* environment promenljive (vidi "Telegram bot")
+  images/                  placeholder SVG slike (hero, galerija, lokacija, OG slika)
+.env.local.example         šablon za TELEGRAM_*/ADMIN_*/GOOGLE_MAPS_API_KEY (vidi "Telegram bot", "Info Board")
 ```
 
 ## Menjanje sadržaja
@@ -194,6 +210,61 @@ Railway, Render, Docker). Ako deploy-ujete na potpuno serverless platformu gde f
 trajan između zahteva, zamenite `src/lib/availability-store.ts` sa pravom bazom (Supabase, Vercel KV
 ili slično) — funkcije `getAvailability`/`setAvailability` su jedino mesto koje treba izmeniti.
 
+## Info Board (/info tabla na tabletu + /admin)
+
+`/info` je digitalna informativna tabla namenjena tabletu montiranom u hodniku BJ Residence
+(landscape orijentacija, otvara se preko kiosk browsera kao [Fully Kiosk
+Browser](https://www.fully-kiosk.com/)). Nema navigaciju sajta, ne skroluje se na uobičajenim
+tablet rezolucijama i sam se osvežava — jednom otvorena, tableta se ne mora dirati.
+
+Sadržaj (čišćenje, obaveštenje, "ove nedelje", saobraćaj, Wi-Fi/kontakt, QR kod) uređuje se na
+`/admin`, zaštićeno lozinkom.
+
+### Podešavanje (jednom)
+
+U `.env.local` (i u environment promenljivama hostinga posle deploy-a) popunite:
+
+```
+ADMIN_PASSWORD=neka-jaka-lozinka
+ADMIN_SESSION_SECRET=neki-drugi-dugacak-nasumican-string
+```
+
+Bez ova dva, `/admin` odbija prijavu (i login forma to jasno kaže).
+
+### Korišćenje
+
+1. Otvorite `https://VAS-DOMEN.com/admin`, prijavite se sa `ADMIN_PASSWORD`.
+2. Popunite/izmenite sekcije (čišćenje, obaveštenje, "ove nedelje", saobraćaj, Wi-Fi/mir/kontakt,
+   QR) i kliknite **Sačuvaj izmene**.
+3. Na tabletu otvorite `https://VAS-DOMEN.com/info` u kiosk browseru (podesite ga da se automatski
+   pokreće i osvežava posle restarta uređaja/struje). Izmene iz admina se pojave na tabletu u roku
+   od oko 45 sekundi, bez ručnog osvežavanja.
+4. Isključene ili prazne sekcije (npr. nema aktivnog obaveštenja, nema stavki za ovu nedelju) se
+   automatski sklanjaju sa table — raspored kartica se sam prilagođava.
+
+Jezik na tableti (`SR`/`EN`, dole desno) je nezavisan od jezika glavnog sajta i pamti se lokalno u
+tom browseru.
+
+### Vreme (weather)
+
+Koristi [Open-Meteo](https://open-meteo.com/) — besplatno, bez API ključa, bez registracije, preko
+`src/app/api/info-board/weather/route.ts`. Ništa dodatno nije potrebno da bi vremenska prognoza
+radila.
+
+### Saobraćaj (traffic)
+
+Kartica "Saobraćaj sada" prikazuje procenjeno vreme vožnje po odredištu, koje unosite u
+`/admin` (npr. "Centar" → 22 min). Ako podesite `GOOGLE_MAPS_API_KEY` (server-side, nikad se ne
+šalje ka tableti/browseru), kartica automatski koristi Google Distance Matrix API za saobraćajem-
+svesno vreme vožnje uživo umesto te procene — ključ nije obavezan, sajt radi ispravno i bez njega.
+
+### Napomena o skladištenju
+
+Info Board konfiguracija čuva se u `data/info-board.json`, po istom principu kao
+`data/availability.json` (vidi napomenu u sekciji "Telegram bot" iznad) — pouzdano na dugotrajnom
+Node hostingu, a na potpuno serverless platformi bez trajnog fajl sistema treba zameniti
+`src/lib/info-board-store.ts` pravom bazom.
+
 ## SR/EN podrška
 
 Jezik se bira preko dugmadi u headeru (`SR` / `EN`) i pamti se u `localStorage`. Svi tekstovi se
@@ -219,5 +290,8 @@ komponentama.
 4. **Domen i deploy** — deploy na Vercel (ili sličan hosting), povezati pravi domen, ažurirati
    `metadataBase` URL u `src/app/layout.tsx` i URL-ove u `robots.ts`/`sitemap.ts`.
 5. **Google Maps embed** — ako se obezbedi API ključ, zameniti statični placeholder u sekciji
-   lokacije pravom interaktivnom mapom.
+   lokacije pravom interaktivnom mapom. (Za saobraćaj na `/info` tabli, `GOOGLE_MAPS_API_KEY` je već
+   podržan — vidi sekciju "Info Board" iznad.)
 6. **Analytics** — dodati Google Analytics / Plausible po potrebi.
+7. **Info Board na pravoj bazi** — ako pređete na Supabase/sličnu bazu za dostupnost (tačka 3), po
+   istom principu prebaciti i `data/info-board.json` (vidi "Info Board" → "Napomena o skladištenju").

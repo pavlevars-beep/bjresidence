@@ -2,10 +2,6 @@ import type { Metadata } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { LanguageProvider } from "@/i18n/LanguageContext";
-import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
-import { WhatsAppFloat } from "@/components/layout/WhatsAppFloat";
-import { MobileStickyCta } from "@/components/layout/MobileStickyCta";
 import { LodgingSchema } from "@/components/Schema";
 
 const jakarta = Plus_Jakarta_Sans({
@@ -43,14 +39,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <LodgingSchema />
       </head>
-      <body className="min-h-screen bg-cream font-sans text-ink antialiased pb-16 lg:pb-0">
-        <LanguageProvider>
-          <Header />
-          <main>{children}</main>
-          <Footer />
-          <WhatsAppFloat />
-          <MobileStickyCta />
-        </LanguageProvider>
+      <body className="min-h-screen bg-cream font-sans text-ink antialiased">
+        <LanguageProvider>{children}</LanguageProvider>
       </body>
     </html>
   );
