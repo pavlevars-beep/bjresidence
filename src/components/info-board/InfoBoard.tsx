@@ -25,13 +25,10 @@ const CLOCK_TICK_MS = 1000;
 
 // Literal class strings so Tailwind's JIT scanner picks them up even though the
 // lookup itself happens at runtime (see tailwind.config content globs).
-const TOP_ROW_COLS: Record<number, string> = {
+const MAIN_ROW_COLS: Record<number, string> = {
   1: "grid-cols-1",
   2: "grid-cols-1 sm:grid-cols-2",
-};
-const BOTTOM_ROW_COLS: Record<number, string> = {
-  1: "grid-cols-1",
-  2: "grid-cols-1 sm:grid-cols-[1.7fr_1fr]",
+  3: "grid-cols-1 sm:grid-cols-3",
 };
 
 export function InfoBoard() {
@@ -82,8 +79,7 @@ export function InfoBoard() {
   const hasTraffic = (traffic?.destinations?.length ?? 0) > 0;
   const hasWeekly = visibleWeeklyItems.length > 0;
 
-  const topCount = 1 + (isCleaningActive ? 1 : 0);
-  const bottomCount = (hasWeekly ? 1 : 0) + (hasTraffic ? 1 : 0);
+  const mainCount = 1 + (isCleaningActive ? 1 : 0) + (hasTraffic ? 1 : 0);
 
   if (!now) {
     return <div className="h-[100dvh] w-full bg-cream" />;
@@ -106,9 +102,12 @@ export function InfoBoard() {
       )}
 
       <div
-        className={cn("mt-2.5 grid min-h-0 flex-1 gap-3 sm:mt-3 sm:gap-4", TOP_ROW_COLS[topCount] ?? TOP_ROW_COLS[2])}
+        className={cn(
+          "mt-2.5 grid min-h-0 flex-1 gap-3 sm:mt-3 sm:gap-4",
+          MAIN_ROW_COLS[mainCount] ?? MAIN_ROW_COLS[3]
+        )}
       >
-        <div className={cn("h-full min-h-0", topCount === 1 && "max-w-lg")}>
+        <div className={cn("h-full min-h-0", mainCount === 1 && "max-w-lg")}>
           <WeatherCard weather={weather?.ok ? weather : null} locale={locale} dict={dict} />
         </div>
         {isCleaningActive && (
@@ -116,25 +115,16 @@ export function InfoBoard() {
             <CleaningCard cleaning={config.cleaning} locale={locale} dict={dict} />
           </div>
         )}
+        {hasTraffic && (
+          <div className="h-full min-h-0">
+            <TrafficCard traffic={traffic?.ok ? traffic : null} locale={locale} dict={dict} />
+          </div>
+        )}
       </div>
 
-      {(hasWeekly || hasTraffic) && (
-        <div
-          className={cn(
-            "mt-2.5 grid min-h-0 flex-1 gap-3 sm:mt-3 sm:gap-4",
-            BOTTOM_ROW_COLS[bottomCount] ?? BOTTOM_ROW_COLS[2]
-          )}
-        >
-          {hasWeekly && (
-            <div className="h-full min-h-0">
-              <WeeklyEvents items={visibleWeeklyItems} locale={locale} dict={dict} />
-            </div>
-          )}
-          {hasTraffic && (
-            <div className="h-full min-h-0">
-              <TrafficCard traffic={traffic?.ok ? traffic : null} locale={locale} dict={dict} />
-            </div>
-          )}
+      {hasWeekly && (
+        <div className="mt-2.5 shrink-0 sm:mt-3">
+          <WeeklyEvents items={visibleWeeklyItems} locale={locale} dict={dict} />
         </div>
       )}
 

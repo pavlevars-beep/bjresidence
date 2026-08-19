@@ -9,12 +9,12 @@ export function InfoHeader({ now, locale }: { now: Date; locale: BoardLocale }) 
         <Image
           src="/images/brand/icon-mark.png"
           alt=""
-          width={40}
-          height={40}
+          width={48}
+          height={48}
           priority
-          className="h-8 w-8 sm:h-9 sm:w-9"
+          className="h-10 w-10 sm:h-12 sm:w-12"
         />
-        <span className="text-lg font-bold tracking-tight text-ink sm:text-xl">BJ Residence</span>
+        <span className="text-xl font-bold tracking-tight text-ink sm:text-2xl">BJ Residence</span>
       </div>
       <Clock now={now} locale={locale} />
     </div>

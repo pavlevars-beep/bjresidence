@@ -3,11 +3,19 @@
 
 export interface InfoBoardDictionary {
   greeting: { morning: string; afternoon: string; evening: string; welcome: string };
-  weather: { location: string; today: string; tomorrow: string; unavailable: string };
+  weather: {
+    location: string;
+    today: string;
+    tomorrow: string;
+    unavailable: string;
+    feelsLike: string;
+    sunrise: string;
+    sunset: string;
+  };
   cleaning: { title: string };
   weekly: { title: string };
   announcement: { title: string };
-  traffic: { title: string; min: string; unavailable: string };
+  traffic: { title: string; min: string; unavailable: string; whereWeAre: string };
   residence: { wifi: string; quietHours: string; contact: string };
   qr: { defaultLabel: string };
   ticker: { welcome: string; nextCleaning: string; today: string };
@@ -26,11 +34,19 @@ export const infoBoardSr: InfoBoardDictionary = {
     today: "Danas",
     tomorrow: "Sutra",
     unavailable: "Vremenska prognoza trenutno nije dostupna",
+    feelsLike: "Oseća se kao",
+    sunrise: "Izlazak sunca",
+    sunset: "Zalazak sunca",
   },
   cleaning: { title: "Sledeće čišćenje" },
   weekly: { title: "Ove nedelje" },
   announcement: { title: "Važna informacija" },
-  traffic: { title: "Saobraćaj sada", min: "min", unavailable: "Podaci o saobraćaju trenutno nisu dostupni" },
+  traffic: {
+    title: "Saobraćaj sada",
+    min: "min",
+    unavailable: "Podaci o saobraćaju trenutno nisu dostupni",
+    whereWeAre: "Ovde smo",
+  },
   residence: { wifi: "Wi-Fi", quietHours: "Mir u objektu", contact: "Kontakt" },
   qr: { defaultLabel: "Skenirajte za više informacija" },
   ticker: { welcome: "Dobrodošli u BJ Residence", nextCleaning: "Sledeće čišćenje", today: "Danas" },
@@ -49,11 +65,19 @@ export const infoBoardEn: InfoBoardDictionary = {
     today: "Today",
     tomorrow: "Tomorrow",
     unavailable: "Weather is currently unavailable",
+    feelsLike: "Feels like",
+    sunrise: "Sunrise",
+    sunset: "Sunset",
   },
   cleaning: { title: "Next cleaning" },
   weekly: { title: "This week" },
   announcement: { title: "Important information" },
-  traffic: { title: "Traffic now", min: "min", unavailable: "Traffic data is currently unavailable" },
+  traffic: {
+    title: "Traffic now",
+    min: "min",
+    unavailable: "Traffic data is currently unavailable",
+    whereWeAre: "We are here",
+  },
   residence: { wifi: "Wi-Fi", quietHours: "Quiet hours", contact: "Contact" },
   qr: { defaultLabel: "Scan for more information" },
   ticker: { welcome: "Welcome to BJ Residence", nextCleaning: "Next cleaning", today: "Today" },
