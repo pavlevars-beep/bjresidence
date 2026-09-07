@@ -3,11 +3,11 @@
 import { motion } from "framer-motion";
 import {
   Archive,
+  AirVent,
   BedDouble,
   ChefHat,
   Flame,
   Layers,
-  Microwave,
   Refrigerator,
   ShowerHead,
   Sparkles,
@@ -32,7 +32,7 @@ const icons = [
   ChefHat,
   Refrigerator,
   Flame,
-  Microwave,
+  AirVent,
   UtensilsCrossed,
   Table2,
   ShowerHead,

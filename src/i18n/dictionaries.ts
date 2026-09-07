@@ -48,7 +48,7 @@ export const sr = {
     cards: [
       {
         title: "Lični prostor za svakog gosta",
-        desc: "Svaki gost ima sopstveni krevet, ormarić i mesto za lične stvari.",
+        desc: "Svaki gost ima sopstveni krevet, sopstveni prostor za odlaganje i mesto za lične stvari.",
       },
       {
         title: "Mirna lokacija",
@@ -121,7 +121,7 @@ export const sr = {
       "Utičnica i USB priključak",
       "Mala polica",
       "Fioke ispod kreveta",
-      "Lični ormarić",
+      "Lični prostor za odlaganje",
       "Dodatni prostor u posebnoj ostavi",
     ],
   },
@@ -138,7 +138,7 @@ export const sr = {
       "Korišćenje kuhinje",
       "Frižider",
       "Indukciona ploča",
-      "Mikrotalasna",
+      "Prečišćivač vazduha",
       "Posuđe",
       "Trpezarijski sto",
       "Kupatilo",
@@ -255,8 +255,8 @@ export const sr = {
         a: "Da, moguć je boravak od jednog meseca do više od šest meseci, po dogovoru.",
       },
       {
-        q: "Da li svaki gost ima svoj ormar?",
-        a: "Da, svaki gost ima lični ormarić, policu i dodatni prostor u ostavi za veće stvari.",
+        q: "Da li svaki gost ima svoj prostor za odlaganje stvari?",
+        a: "Da, svaki gost ima sopstveni prostor za odlaganje, policu i dodatni prostor u ostavi za veće stvari.",
       },
       {
         q: "Da li se potpisuje ugovor?",
@@ -370,7 +370,7 @@ export const en: Dictionary = {
     cards: [
       {
         title: "Private space for every guest",
-        desc: "Each guest has their own bed, locker and place for personal belongings.",
+        desc: "Each guest has their own bed, their own storage space and a place for personal belongings.",
       },
       {
         title: "Quiet location",
@@ -442,7 +442,7 @@ export const en: Dictionary = {
       "Power outlet and USB port",
       "Small shelf",
       "Under-bed drawers",
-      "Personal locker",
+      "Personal storage space",
       "Extra space in a separate storage room",
     ],
   },
@@ -459,7 +459,7 @@ export const en: Dictionary = {
       "Kitchen use",
       "Refrigerator",
       "Induction hob",
-      "Microwave",
+      "Air purifier",
       "Dishware",
       "Dining table",
       "Bathroom",
@@ -576,8 +576,8 @@ export const en: Dictionary = {
         a: "Yes, stays from one month up to more than six months are possible, by agreement.",
       },
       {
-        q: "Does every guest have their own locker?",
-        a: "Yes, every guest gets a personal locker, a shelf and extra storage space for larger items.",
+        q: "Does every guest have their own storage space?",
+        a: "Yes, every guest gets their own storage space, a shelf and extra storage space for larger items.",
       },
       {
         q: "Is a contract signed?",
