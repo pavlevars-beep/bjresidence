@@ -122,7 +122,6 @@ export const sr = {
       "Mala polica",
       "Fioke ispod kreveta",
       "Lični prostor za odlaganje",
-      "Dodatni prostor u posebnoj ostavi",
     ],
   },
   included: {
@@ -443,7 +442,6 @@ export const en: Dictionary = {
       "Small shelf",
       "Under-bed drawers",
       "Personal storage space",
-      "Extra space in a separate storage room",
     ],
   },
   included: {

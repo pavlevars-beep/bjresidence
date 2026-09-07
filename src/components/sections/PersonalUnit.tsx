@@ -11,8 +11,7 @@ const dotPositions = [
   { x: 330, y: 150 }, // outlet/usb
   { x: 300, y: 180 }, // shelf
   { x: 140, y: 300 }, // under-bed drawers
-  { x: 430, y: 200 }, // locker
-  { x: 430, y: 320 }, // extra storage note
+  { x: 430, y: 200 }, // personal storage space
 ];
 
 export function PersonalUnit() {
