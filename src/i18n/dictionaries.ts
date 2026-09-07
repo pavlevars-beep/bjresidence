@@ -239,7 +239,7 @@ export const sr = {
       },
       {
         q: "Da li su režije uključene?",
-        a: "Osnovne režije poput struje, vode i grejanja su uključene u standardni paket.",
+        a: "Osnovne režije poput struje, vode, grejanja i interneta su uključene u standardni paket, kao i komunalni troškovi.",
       },
       {
         q: "Da li postoji parking?",
@@ -559,7 +559,7 @@ export const en: Dictionary = {
       },
       {
         q: "Are utilities included?",
-        a: "Basic utilities such as electricity, water and heating are included in the standard package.",
+        a: "Basic utilities such as electricity, water, heating and internet are included in the standard package, along with building/communal fees.",
       },
       {
         q: "Is there parking?",
