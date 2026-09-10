@@ -9,9 +9,9 @@ export const siteConfig = {
   },
 
   contact: {
-    phone: "+381 60 123 4567",
-    phoneDisplay: "+381 60 123 4567",
-    whatsapp: "381601234567", // digits only, no + or spaces (used in wa.me links)
+    phone: "+381 62 475 550",
+    phoneDisplay: "+381 62 475 550",
+    whatsapp: "38162475550", // digits only, no + or spaces (used in wa.me links)
     email: "info@bjresidence.rs",
   },
 
