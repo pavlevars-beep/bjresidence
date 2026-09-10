@@ -1,6 +1,7 @@
 import { Cloud, Sunrise, Sunset } from "lucide-react";
 import { BoardCard, BoardCardTitle } from "./BoardCard";
 import { getWeatherInfo } from "@/lib/weather-codes";
+import { getAqiLevel } from "@/lib/aqi-levels";
 import type { WeatherState } from "@/lib/info-board-client-types";
 import type { InfoBoardDictionary } from "@/i18n/info-board-dictionary";
 import type { BoardLocale } from "@/i18n/InfoBoardLanguageContext";
@@ -16,6 +17,7 @@ export function WeatherCard({
 }) {
   const info = weather ? getWeatherInfo(weather.current.code, weather.current.isDay) : null;
   const Icon = info?.icon ?? Cloud;
+  const aqiLevel = weather?.current.aqi != null ? getAqiLevel(weather.current.aqi) : null;
 
   return (
     <BoardCard className="h-full">
@@ -51,8 +53,8 @@ export function WeatherCard({
               )}
             </div>
 
-            {(weather.today.sunrise || weather.today.sunset) && (
-              <div className="mt-2 flex items-center gap-4 text-xs text-ink/50 sm:text-sm">
+            {(weather.today.sunrise || weather.today.sunset || aqiLevel) && (
+              <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-ink/50 sm:text-sm">
                 {weather.today.sunrise && (
                   <span className="flex items-center gap-1.5">
                     <Sunrise size={15} className="text-wood" strokeWidth={1.8} />
@@ -63,6 +65,16 @@ export function WeatherCard({
                   <span className="flex items-center gap-1.5">
                     <Sunset size={15} className="text-wood" strokeWidth={1.8} />
                     {weather.today.sunset}
+                  </span>
+                )}
+                {aqiLevel && (
+                  <span className="flex items-center gap-1.5">
+                    <span
+                      className="h-2.5 w-2.5 shrink-0 rounded-full"
+                      style={{ backgroundColor: aqiLevel.color }}
+                      aria-hidden="true"
+                    />
+                    {dict.weather.airQuality}: {locale === "sr" ? aqiLevel.sr : aqiLevel.en}
                   </span>
                 )}
               </div>

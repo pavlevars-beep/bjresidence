@@ -1,7 +1,7 @@
 /** Shapes returned by the client-polled /api/info-board/* endpoints. */
 
 export interface WeatherState {
-  current: { temp: number; code: number; isDay: boolean; feelsLike: number | null };
+  current: { temp: number; code: number; isDay: boolean; feelsLike: number | null; aqi: number | null };
   today: { min: number; max: number; sunrise: string | null; sunset: string | null };
   tomorrow: { min: number; max: number; code: number } | null;
   updatedAt: string;

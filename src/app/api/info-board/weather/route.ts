@@ -7,20 +7,34 @@ const LAT = 44.7614;
 const LON = 20.4894;
 
 /**
- * Weather for the /info kiosk board via Open-Meteo — free, no API key required,
- * so there is nothing secret to keep server-side-only; we still proxy through
- * our own route so the client only ever talks to same-origin endpoints and we
- * can centralize caching/fallback behaviour.
+ * Weather (+ air quality) for the /info kiosk board via Open-Meteo — free, no
+ * API key required, so there is nothing secret to keep server-side-only; we
+ * still proxy through our own route so the client only ever talks to
+ * same-origin endpoints and we can centralize caching/fallback behaviour.
  */
 export async function GET() {
-  const url =
+  const forecastUrl =
     `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}` +
     `&current=temperature_2m,weather_code,is_day,apparent_temperature` +
     `&daily=temperature_2m_max,temperature_2m_min,weather_code,sunrise,sunset` +
     `&timezone=Europe%2FBelgrade&forecast_days=2`;
 
+  const airQualityUrl =
+    `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${LAT}&longitude=${LON}` +
+    `&current=european_aqi&timezone=Europe%2FBelgrade`;
+
+  // Air quality is a nice-to-have, not core — fetched in parallel and failure
+  // here never takes down the temperature/forecast data (falls back to null).
+  const aqiPromise = fetch(airQualityUrl, { signal: AbortSignal.timeout(6000), next: { revalidate: 1800 } })
+    .then((res) => (res.ok ? res.json() : null))
+    .then((data) => {
+      const value = data?.current?.european_aqi;
+      return typeof value === "number" ? Math.round(value) : null;
+    })
+    .catch(() => null);
+
   try {
-    const res = await fetch(url, {
+    const res = await fetch(forecastUrl, {
       signal: AbortSignal.timeout(6000),
       next: { revalidate: 600 },
     });
@@ -41,6 +55,8 @@ export async function GET() {
     // requested timezone=Europe/Belgrade — just lift the HH:mm, no conversion needed.
     const timeOnly = (iso: unknown) => (typeof iso === "string" ? iso.slice(11, 16) : null);
 
+    const aqi = await aqiPromise;
+
     return NextResponse.json({
       ok: true,
       current: {
@@ -51,6 +67,7 @@ export async function GET() {
           typeof data.current.apparent_temperature === "number"
             ? Math.round(data.current.apparent_temperature)
             : null,
+        aqi,
       },
       today: {
         min: Math.round(todayMin),

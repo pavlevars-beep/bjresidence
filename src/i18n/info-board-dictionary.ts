@@ -11,6 +11,7 @@ export interface InfoBoardDictionary {
     feelsLike: string;
     sunrise: string;
     sunset: string;
+    airQuality: string;
   };
   cleaning: { title: string };
   weekly: { title: string };
@@ -37,6 +38,7 @@ export const infoBoardSr: InfoBoardDictionary = {
     feelsLike: "Oseća se kao",
     sunrise: "Izlazak sunca",
     sunset: "Zalazak sunca",
+    airQuality: "Kvalitet vazduha",
   },
   cleaning: { title: "Sledeće čišćenje" },
   weekly: { title: "Ove nedelje" },
@@ -68,6 +70,7 @@ export const infoBoardEn: InfoBoardDictionary = {
     feelsLike: "Feels like",
     sunrise: "Sunrise",
     sunset: "Sunset",
+    airQuality: "Air quality",
   },
   cleaning: { title: "Next cleaning" },
   weekly: { title: "This week" },
