@@ -27,8 +27,8 @@ const CLOCK_TICK_MS = 1000;
 // lookup itself happens at runtime (see tailwind.config content globs).
 const MAIN_ROW_COLS: Record<number, string> = {
   1: "grid-cols-1",
-  2: "grid-cols-1 sm:grid-cols-2",
-  3: "grid-cols-1 sm:grid-cols-3",
+  2: "grid-cols-1 sm:grid-cols-[1.15fr_1fr]",
+  3: "grid-cols-1 sm:grid-cols-[1.2fr_1fr_1fr]",
 };
 
 export function InfoBoard() {
@@ -87,27 +87,27 @@ export function InfoBoard() {
 
   return (
     <div
-      className="flex h-[100dvh] w-full select-none flex-col overflow-hidden bg-cream px-5 py-3 [overscroll-behavior:none] sm:px-8 sm:py-4"
+      className="flex h-[100dvh] w-full select-none flex-col overflow-hidden bg-cream px-6 py-4 [overscroll-behavior:none] sm:px-10 sm:py-6"
     >
       <InfoHeader now={now} locale={locale} />
 
-      <div className="mt-2.5 sm:mt-3">
+      <div className="mt-3 sm:mt-4">
         <Greeting now={now} dict={dict} />
       </div>
 
       {isAnnouncementActive && (
-        <div className="mt-2.5 sm:mt-3">
+        <div className="mt-3 sm:mt-4">
           <AnnouncementCard announcement={config.announcement} locale={locale} />
         </div>
       )}
 
       <div
         className={cn(
-          "mt-2.5 grid min-h-0 flex-1 gap-3 sm:mt-3 sm:gap-4",
+          "mt-3 grid min-h-0 flex-1 gap-4 sm:mt-4 sm:gap-6",
           MAIN_ROW_COLS[mainCount] ?? MAIN_ROW_COLS[3]
         )}
       >
-        <div className={cn("h-full min-h-0", mainCount === 1 && "max-w-lg")}>
+        <div className="h-full min-h-0">
           <WeatherCard weather={weather?.ok ? weather : null} locale={locale} dict={dict} />
         </div>
         {isCleaningActive && (
@@ -123,14 +123,14 @@ export function InfoBoard() {
       </div>
 
       {hasWeekly && (
-        <div className="mt-2.5 shrink-0 sm:mt-3">
+        <div className="mt-3 shrink-0 sm:mt-4">
           <WeeklyEvents items={visibleWeeklyItems} locale={locale} dict={dict} />
         </div>
       )}
 
-      <div className="mt-2.5 flex flex-wrap items-center justify-between gap-4 border-t border-ink/8 pt-2.5 sm:mt-3 sm:pt-3">
+      <div className="mt-3 flex flex-wrap items-center justify-between gap-4 border-t border-ink/8 pt-3 sm:mt-4 sm:pt-4">
         <ResidenceInfo info={config.residenceInfo} dict={dict} />
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-5">
           <QRCard qr={config.qr} locale={locale} />
           <LanguageSwitcher locale={locale} setLocale={setLocale} />
         </div>

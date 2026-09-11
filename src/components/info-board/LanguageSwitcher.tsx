@@ -9,12 +9,12 @@ export function LanguageSwitcher({
   setLocale: (l: BoardLocale) => void;
 }) {
   return (
-    <div className="flex items-center rounded-full border border-ink/10 bg-white/60 p-0.5 text-xs font-semibold">
+    <div className="flex items-center rounded-full border border-ink/10 bg-white/60 p-1 text-sm font-semibold">
       <button
         type="button"
         onClick={() => setLocale("sr")}
         className={cn(
-          "select-none rounded-full px-3 py-1.5 transition-colors",
+          "select-none rounded-full px-4 py-2 transition-colors",
           locale === "sr" ? "bg-olive-dark text-cream" : "text-ink/50"
         )}
       >
@@ -24,7 +24,7 @@ export function LanguageSwitcher({
         type="button"
         onClick={() => setLocale("en")}
         className={cn(
-          "select-none rounded-full px-3 py-1.5 transition-colors",
+          "select-none rounded-full px-4 py-2 transition-colors",
           locale === "en" ? "bg-olive-dark text-cream" : "text-ink/50"
         )}
       >

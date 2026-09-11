@@ -35,10 +35,10 @@ export function QRCard({ qr, locale }: { qr: QrSettings; locale: BoardLocale }) 
   const label = locale === "sr" ? qr.labelSr : qr.labelEn;
 
   return (
-    <div className="flex items-center gap-3">
+    <div className="flex items-center gap-4">
       {/* eslint-disable-next-line @next/next/no-img-element -- small dynamically-generated data: URL, not an optimizable static asset */}
-      <img src={dataUrl} alt="" width={52} height={52} className="h-[3.25rem] w-[3.25rem] shrink-0 rounded-lg bg-white p-1.5 shadow-soft" />
-      {label && <span className="max-w-[9rem] text-[0.65rem] leading-snug text-ink/50">{label}</span>}
+      <img src={dataUrl} alt="" width={76} height={76} className="h-[4.75rem] w-[4.75rem] shrink-0 rounded-xl bg-white p-2 shadow-soft" />
+      {label && <span className="max-w-[10rem] text-sm leading-snug text-ink/50">{label}</span>}
     </div>
   );
 }

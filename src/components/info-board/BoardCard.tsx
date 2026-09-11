@@ -1,11 +1,20 @@
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
-export function BoardCard({ children, className }: { children: ReactNode; className?: string }) {
+export function BoardCard({
+  children,
+  className,
+  tone = "light",
+}: {
+  children: ReactNode;
+  className?: string;
+  tone?: "light" | "dark";
+}) {
   return (
     <div
       className={cn(
-        "flex flex-col overflow-hidden rounded-3xl border border-ink/8 bg-white/70 p-4 shadow-soft sm:p-5",
+        "flex flex-col overflow-hidden rounded-[2rem] p-5 shadow-soft sm:p-6",
+        tone === "light" ? "border border-ink/8 bg-white/70" : "border border-ink/5 bg-olive-dark text-cream",
         className
       )}
     >
@@ -14,8 +23,24 @@ export function BoardCard({ children, className }: { children: ReactNode; classN
   );
 }
 
-export function BoardCardTitle({ children, className }: { children: ReactNode; className?: string }) {
+export function BoardCardTitle({
+  children,
+  className,
+  tone = "light",
+}: {
+  children: ReactNode;
+  className?: string;
+  tone?: "light" | "dark";
+}) {
   return (
-    <p className={cn("text-xs font-semibold uppercase tracking-[0.18em] text-wood", className)}>{children}</p>
+    <p
+      className={cn(
+        "text-sm font-semibold uppercase tracking-[0.18em]",
+        tone === "light" ? "text-wood" : "text-cream/70",
+        className
+      )}
+    >
+      {children}
+    </p>
   );
 }

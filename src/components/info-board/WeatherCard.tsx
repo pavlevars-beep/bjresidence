@@ -20,68 +20,73 @@ export function WeatherCard({
   const aqiLevel = weather?.current.aqi != null ? getAqiLevel(weather.current.aqi) : null;
 
   return (
-    <BoardCard className="h-full">
-      <BoardCardTitle>{dict.weather.location}</BoardCardTitle>
+    <BoardCard tone="dark" className="h-full">
+      <BoardCardTitle tone="dark">{dict.weather.location}</BoardCardTitle>
 
       <div className="flex flex-1 flex-col justify-center">
         {weather ? (
           <>
-            <div className="flex items-center gap-3">
-              <Icon size={44} className="shrink-0 text-olive-dark" strokeWidth={1.6} />
-              <span className="text-[clamp(2.5rem,5.5vw,3.75rem)] font-bold leading-none tracking-tight text-ink">
+            <div className="flex items-center gap-4">
+              <Icon size={64} className="shrink-0 text-cream" strokeWidth={1.4} />
+              <span className="text-[clamp(3.25rem,3.5vw+4.5vh,7rem)] font-bold leading-none tracking-tight text-cream">
                 {weather.current.temp}°
               </span>
               {weather.current.feelsLike != null && (
-                <span className="text-sm text-ink/50">
-                  {dict.weather.feelsLike} {weather.current.feelsLike}°
+                <span className="text-base text-cream/60">
+                  {dict.weather.feelsLike}
+                  <br />
+                  {weather.current.feelsLike}°
                 </span>
               )}
             </div>
-            <p className="mt-1 truncate text-base text-ink/70">{locale === "sr" ? info?.sr : info?.en}</p>
+            <p className="mt-1.5 truncate text-xl text-cream/80 sm:text-2xl">{locale === "sr" ? info?.sr : info?.en}</p>
 
-            <div className="mt-3 flex items-center gap-3 border-t border-ink/8 pt-2 text-xs text-ink/60 sm:text-sm">
+            <div className="mt-2 flex items-center gap-4 border-t border-cream/15 pt-2 text-sm text-cream/70 sm:text-base">
               <p>
                 {dict.weather.today}{" "}
-                <span className="font-semibold text-ink">
+                <span className="font-semibold text-cream">
                   {weather.today.min}° / {weather.today.max}°
                 </span>
               </p>
               {weather.tomorrow && (
-                <p className="text-ink/45">
+                <p className="text-cream/50">
                   {dict.weather.tomorrow} {weather.tomorrow.min}° / {weather.tomorrow.max}°
                 </p>
               )}
             </div>
 
             {(weather.today.sunrise || weather.today.sunset || aqiLevel) && (
-              <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-ink/50 sm:text-sm">
+              <div
+                className="mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-cream/60 sm:text-sm"
+                title={aqiLevel ? dict.weather.airQuality : undefined}
+              >
                 {weather.today.sunrise && (
                   <span className="flex items-center gap-1.5">
-                    <Sunrise size={15} className="text-wood" strokeWidth={1.8} />
+                    <Sunrise size={16} className="text-wood" strokeWidth={1.8} />
                     {weather.today.sunrise}
                   </span>
                 )}
                 {weather.today.sunset && (
                   <span className="flex items-center gap-1.5">
-                    <Sunset size={15} className="text-wood" strokeWidth={1.8} />
+                    <Sunset size={16} className="text-wood" strokeWidth={1.8} />
                     {weather.today.sunset}
                   </span>
                 )}
                 {aqiLevel && (
                   <span className="flex items-center gap-1.5">
                     <span
-                      className="h-2.5 w-2.5 shrink-0 rounded-full"
+                      className="h-3 w-3 shrink-0 rounded-full"
                       style={{ backgroundColor: aqiLevel.color }}
                       aria-hidden="true"
                     />
-                    {dict.weather.airQuality}: {locale === "sr" ? aqiLevel.sr : aqiLevel.en}
+                    {locale === "sr" ? aqiLevel.sr : aqiLevel.en}
                   </span>
                 )}
               </div>
             )}
           </>
         ) : (
-          <p className="text-sm text-ink/40">{dict.weather.unavailable}</p>
+          <p className="text-base text-cream/50">{dict.weather.unavailable}</p>
         )}
       </div>
     </BoardCard>

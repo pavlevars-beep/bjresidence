@@ -7,13 +7,13 @@ export function AnnouncementCard({ announcement, locale }: { announcement: Annou
   const text = locale === "sr" ? announcement.textSr : announcement.textEn;
 
   return (
-    <div className="flex items-center gap-3 rounded-2xl border border-wood/25 bg-wood/10 px-4 py-3 shadow-soft sm:gap-4 sm:px-5 sm:py-3.5">
-      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-wood/20 text-wood">
-        <AlertTriangle size={18} strokeWidth={1.8} />
+    <div className="flex items-center gap-4 rounded-[1.75rem] border border-wood/25 bg-wood/10 px-6 py-4 shadow-soft sm:gap-5 sm:px-7 sm:py-5">
+      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-wood/20 text-wood">
+        <AlertTriangle size={24} strokeWidth={1.8} />
       </div>
       <div className="min-w-0 flex-1">
-        {title && <p className="text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-wood">{title}</p>}
-        <p className="truncate text-base font-medium leading-snug text-ink sm:text-lg">{text}</p>
+        {title && <p className="text-xs font-semibold uppercase tracking-[0.18em] text-wood">{title}</p>}
+        <p className="truncate text-xl font-medium leading-snug text-ink sm:text-2xl">{text}</p>
       </div>
     </div>
   );

@@ -21,19 +21,19 @@ export function WeeklyEvents({
     .slice(0, MAX_ITEMS);
 
   return (
-    <div className="flex items-center gap-5 overflow-hidden rounded-3xl border border-ink/8 bg-white/70 p-4 shadow-soft sm:p-5">
-      <div className="flex shrink-0 items-center gap-2">
-        <CalendarDays size={18} className="text-olive-dark" strokeWidth={1.6} />
+    <div className="flex items-center gap-6 overflow-hidden rounded-[2rem] border border-ink/8 bg-white/70 p-6 shadow-soft sm:p-7">
+      <div className="flex shrink-0 items-center gap-2.5">
+        <CalendarDays size={24} className="text-olive-dark" strokeWidth={1.6} />
         <BoardCardTitle>{dict.weekly.title}</BoardCardTitle>
       </div>
 
-      <ul className="flex flex-1 flex-wrap items-center gap-x-6 gap-y-2">
+      <ul className="flex flex-1 flex-wrap items-center gap-x-8 gap-y-3">
         {visible.map((item) => (
-          <li key={item.id} className="flex items-center gap-2.5">
-            <span className="shrink-0 rounded-full bg-olive-dark/10 px-2.5 py-1 text-xs font-semibold text-olive-dark">
+          <li key={item.id} className="flex items-center gap-3">
+            <span className="shrink-0 rounded-full bg-olive-dark/10 px-3 py-1.5 text-sm font-semibold text-olive-dark">
               {formatShortDate(item.date, locale)}
             </span>
-            <span className="truncate text-sm font-medium text-ink sm:text-base">
+            <span className="truncate text-lg font-medium text-ink">
               {locale === "sr" ? item.titleSr : item.titleEn}
               {item.time && <span className="ml-2 font-normal text-ink/50">{item.time}</span>}
             </span>
