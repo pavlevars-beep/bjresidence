@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { ExternalLink, LogOut } from "lucide-react";
+import { ExternalLink, LogOut, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import type { InfoBoardConfig } from "@/lib/info-board";
 import { CleaningSection } from "./sections/CleaningSection";
@@ -56,6 +56,12 @@ export function AdminDashboard({ initialConfig }: { initialConfig: InfoBoardConf
             </div>
           </div>
           <div className="flex items-center gap-2">
+            <Link
+              href="/admin/info-point"
+              className="flex items-center gap-1.5 rounded-full bg-olive-dark px-3 py-2 text-sm font-medium text-cream hover:bg-[#4a5241]"
+            >
+              <Sparkles size={15} /> Info Point
+            </Link>
             <Link
               href="/infopult"
               target="_blank"

@@ -54,3 +54,25 @@ export function formatBookingInquiry(payload: {
     .filter(Boolean)
     .join("\n");
 }
+
+export function formatIssueReport(payload: {
+  category?: unknown;
+  location?: unknown;
+  description?: unknown;
+  residentName?: unknown;
+  hasPhoto?: unknown;
+}) {
+  const line = (label: string, value: unknown) =>
+    value ? `${label}: ${escapeHtml(String(value))}` : null;
+
+  return [
+    "<b>Nova prijava kvara — Info Point</b>",
+    line("Kategorija", payload.category),
+    line("Lokacija", payload.location),
+    line("Opis", payload.description),
+    line("Ime/soba", payload.residentName),
+    payload.hasPhoto ? "Fotografija: da (pogledajte u admin panelu)" : null,
+  ]
+    .filter(Boolean)
+    .join("\n");
+}

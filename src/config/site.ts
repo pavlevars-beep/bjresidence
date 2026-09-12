@@ -8,6 +8,10 @@ export const siteConfig = {
     name: "BJ Residence",
   },
 
+  // Single source of truth for the production domain — used to build absolute
+  // URLs (e.g. the Info Point QR code) without hardcoding the string again.
+  url: "https://bjresidence.rs",
+
   contact: {
     phone: "+381 62 475 550",
     phoneDisplay: "+381 62 475 550",

@@ -15,7 +15,7 @@ export function QRCard({ qr, locale }: { qr: QrSettings; locale: BoardLocale }) 
     }
     let cancelled = false;
     QRCode.toDataURL(qr.url, {
-      width: 200,
+      width: 320,
       margin: 1,
       color: { dark: "#1E1F1C", light: "#00000000" },
     })
@@ -37,8 +37,8 @@ export function QRCard({ qr, locale }: { qr: QrSettings; locale: BoardLocale }) 
   return (
     <div className="flex items-center gap-4">
       {/* eslint-disable-next-line @next/next/no-img-element -- small dynamically-generated data: URL, not an optimizable static asset */}
-      <img src={dataUrl} alt="" width={76} height={76} className="h-[4.75rem] w-[4.75rem] shrink-0 rounded-xl bg-white p-2 shadow-soft" />
-      {label && <span className="max-w-[10rem] text-sm leading-snug text-ink/50">{label}</span>}
+      <img src={dataUrl} alt="" width={112} height={112} className="h-[7rem] w-[7rem] shrink-0 rounded-xl bg-white p-2 shadow-soft" />
+      {label && <span className="max-w-[11rem] whitespace-pre-line text-sm leading-snug text-ink/50">{label}</span>}
     </div>
   );
 }

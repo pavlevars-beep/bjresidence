@@ -1,0 +1,55 @@
+import {
+  AlertTriangle,
+  Ban,
+  Bus,
+  Car,
+  Landmark,
+  MapPin,
+  MessageCircle,
+  Moon,
+  Phone,
+  ShieldAlert,
+  ShieldCheck,
+  ShoppingCart,
+  ShowerHead,
+  Sofa,
+  Sparkles,
+  Stethoscope,
+  Trash2,
+  Truck,
+  UtensilsCrossed,
+  Users,
+  Wifi,
+  Wrench,
+  type LucideIcon,
+} from "lucide-react";
+
+/** Lets admin content reference an icon by stable string name (stored in JSON) rather than a component. */
+export const ICONS: Record<string, LucideIcon> = {
+  Moon,
+  UtensilsCrossed,
+  ShowerHead,
+  Ban,
+  Users,
+  Sparkles,
+  Trash2,
+  Sofa,
+  ShieldCheck,
+  AlertTriangle,
+  Wifi,
+  Wrench,
+  MapPin,
+  Bus,
+  ShieldAlert,
+  MessageCircle,
+  ShoppingCart,
+  Stethoscope,
+  Landmark,
+  Car,
+  Truck,
+  Phone,
+};
+
+export function getIcon(name: string): LucideIcon {
+  return ICONS[name] ?? Sparkles;
+}

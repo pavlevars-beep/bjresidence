@@ -117,9 +117,9 @@ export function defaultInfoBoardConfig(): InfoBoardConfig {
     },
     qr: {
       enabled: true,
-      url: "https://bjresidence.rs",
-      labelSr: "Skenirajte za više informacija",
-      labelEn: "Scan for more information",
+      url: `${siteConfig.url}/info-point`,
+      labelSr: "LIVING AT BJ\nSkenirajte za: Wi-Fi • kućni red • prevoz • prijavu kvara",
+      labelEn: "LIVING AT BJ\nScan for: Wi-Fi • house rules • transport • issue reporting",
     },
     trafficDestinations: [
       {
