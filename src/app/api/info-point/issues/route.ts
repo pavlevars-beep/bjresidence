@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { randomUUID } from "crypto";
 import { addIssueReport } from "@/lib/info-point-issues-store";
 import { ISSUE_CATEGORIES, ISSUE_LOCATIONS, type IssueCategory, type IssueLocation } from "@/lib/info-point-issues";
 import { isAllowedImageType, saveIssuePhoto, MAX_UPLOAD_BYTES } from "@/lib/info-point-uploads";
@@ -57,6 +58,7 @@ export async function POST(request: Request) {
   }
 
   let photoFilename: string | null = null;
+  let photoSaveFailed = false;
   if (photo instanceof File && photo.size > 0) {
     if (!isAllowedImageType(photo.type)) {
       return NextResponse.json({ ok: false, error: "unsupported_photo_type" }, { status: 400 });
@@ -66,25 +68,59 @@ export async function POST(request: Request) {
     }
     try {
       photoFilename = await saveIssuePhoto(photo);
-    } catch {
-      return NextResponse.json({ ok: false, error: "photo_save_failed" }, { status: 500 });
+    } catch (err) {
+      // Local disk isn't writable on some hosts (e.g. Vercel's serverless
+      // filesystem) — don't let that block the report itself from getting
+      // through; the resident's text still matters even without the photo.
+      photoSaveFailed = true;
+      // eslint-disable-next-line no-console
+      console.error("[info-point-issues] photo save failed:", err);
     }
   }
 
-  const report = await addIssueReport({
-    category: category as IssueCategory,
-    location: location as IssueLocation,
-    description: description.slice(0, 2000),
-    photoFilename,
-    residentName: residentName ? residentName.slice(0, 200) : null,
-  });
-
-  await sendTelegramMessage(
-    formatIssueReport({ category, location, description, residentName, hasPhoto: !!photoFilename })
-  ).catch((err) => {
+  // Storage (for the admin Issue Reports list) and the Telegram notification
+  // are independent — a host with a read-only filesystem can still fail to
+  // persist the report while Telegram delivery succeeds, and that must count
+  // as a successful submission from the resident's point of view.
+  let stored = true;
+  let reportId: string;
+  try {
+    const report = await addIssueReport({
+      category: category as IssueCategory,
+      location: location as IssueLocation,
+      description: description.slice(0, 2000),
+      photoFilename,
+      residentName: residentName ? residentName.slice(0, 200) : null,
+    });
+    reportId = report.id;
+  } catch (err) {
+    stored = false;
+    reportId = randomUUID();
     // eslint-disable-next-line no-console
-    console.error("[info-point-issues] telegram notify failed:", err);
-  });
+    console.error("[info-point-issues] failed to persist report:", err);
+  }
 
-  return NextResponse.json({ ok: true, id: report.id });
+  const telegramText = formatIssueReport({
+    category,
+    location,
+    description,
+    residentName,
+    hasPhoto: !!photoFilename,
+  });
+  const telegramSent = await sendTelegramMessage(
+    photoSaveFailed ? `${telegramText}\n\n(Fotografija je poslata ali nije mogla da se sačuva.)` : telegramText
+  )
+    .then(() => true)
+    .catch((err) => {
+      // eslint-disable-next-line no-console
+      console.error("[info-point-issues] telegram notify failed:", err);
+      return false;
+    });
+
+  if (!stored && !telegramSent) {
+    // Neither channel worked — this genuinely didn't reach anyone.
+    return NextResponse.json({ ok: false, error: "delivery_failed" }, { status: 500 });
+  }
+
+  return NextResponse.json({ ok: true, id: reportId, stored, telegramSent });
 }
