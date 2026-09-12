@@ -21,7 +21,7 @@ export function WeeklyEvents({
     .slice(0, MAX_ITEMS);
 
   return (
-    <div className="flex items-center gap-6 overflow-hidden rounded-[2rem] border border-ink/8 bg-white/70 p-6 shadow-soft sm:p-7">
+    <div className="flex items-center gap-6 overflow-hidden rounded-[2rem] border border-ink/8 bg-white/70 p-4 shadow-soft sm:p-5">
       <div className="flex shrink-0 items-center gap-2.5">
         <CalendarDays size={24} className="text-olive-dark" strokeWidth={1.6} />
         <BoardCardTitle>{dict.weekly.title}</BoardCardTitle>

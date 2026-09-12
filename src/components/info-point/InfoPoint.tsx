@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import {
   AlertTriangle,
+  ArrowLeft,
   BookOpen,
   Bus,
   MapPin,
@@ -45,7 +47,7 @@ const CATEGORY_ICON: Record<InfoPointCategoryKey, LucideIcon> = {
   contact: MessageCircle,
 };
 
-export function InfoPoint({ config }: { config: InfoPointConfig }) {
+export function InfoPoint({ config, isKiosk = false }: { config: InfoPointConfig; isKiosk?: boolean }) {
   const { locale, dict } = useInfoPointLanguage();
   const [openKey, setOpenKey] = useState<InfoPointCategoryKey | null>(null);
 
@@ -84,6 +86,15 @@ export function InfoPoint({ config }: { config: InfoPointConfig }) {
 
   return (
     <div className="mx-auto min-h-screen max-w-xl pb-16">
+      {isKiosk && (
+        <Link
+          href="/infopult"
+          className="sticky top-0 z-40 flex items-center justify-center gap-2 bg-olive-dark px-5 py-3 text-sm font-semibold text-cream shadow-soft"
+        >
+          <ArrowLeft size={16} /> {dict.kiosk.backToBoard}
+        </Link>
+      )}
+
       <InfoPointHeader settings={config.settings} />
 
       <div className="mt-6">

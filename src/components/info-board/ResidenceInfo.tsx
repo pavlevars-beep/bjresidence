@@ -12,12 +12,12 @@ export function ResidenceInfo({ info, dict }: { info: ResidenceInfoData; dict: I
   if (items.length === 0) return null;
 
   return (
-    <div className="flex flex-wrap items-center gap-x-8 gap-y-2">
+    <div className="flex flex-wrap items-center gap-x-5 gap-y-1.5">
       {items.map(({ icon: Icon, label, value }) => (
-        <div key={label} className="flex items-center gap-2.5">
-          <Icon size={22} className="shrink-0 text-wood" strokeWidth={1.8} />
-          <span className="text-sm text-ink/50 sm:text-base">{label}</span>
-          <span className="text-sm font-semibold text-ink sm:text-base">{value}</span>
+        <div key={label} className="flex items-center gap-2">
+          <Icon size={18} className="shrink-0 text-wood" strokeWidth={1.8} />
+          <span className="hidden text-xs text-ink/50 sm:text-sm xl:inline">{label}</span>
+          <span className="text-xs font-semibold text-ink sm:text-sm">{value}</span>
         </div>
       ))}
     </div>

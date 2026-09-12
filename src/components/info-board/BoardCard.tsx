@@ -13,7 +13,7 @@ export function BoardCard({
   return (
     <div
       className={cn(
-        "flex flex-col overflow-hidden rounded-[2rem] p-5 shadow-soft sm:p-6",
+        "flex flex-col overflow-hidden rounded-[2rem] p-4 shadow-soft sm:p-5",
         tone === "light" ? "border border-ink/8 bg-white/70" : "border border-ink/5 bg-olive-dark text-cream",
         className
       )}

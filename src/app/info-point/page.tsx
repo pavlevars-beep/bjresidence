@@ -14,12 +14,16 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false, nocache: true },
 };
 
-export default async function InfoPointPage() {
+export default async function InfoPointPage({
+  searchParams,
+}: {
+  searchParams: { kiosk?: string };
+}) {
   const config = await getInfoPointConfig();
   return (
     <InfoPointLanguageProvider>
       <div className="min-h-screen bg-cream">
-        <InfoPoint config={config} />
+        <InfoPoint config={config} isKiosk={searchParams.kiosk === "1"} />
       </div>
     </InfoPointLanguageProvider>
   );

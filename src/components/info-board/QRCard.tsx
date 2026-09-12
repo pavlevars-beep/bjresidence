@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import QRCode from "qrcode";
+import { ChevronRight } from "lucide-react";
 import type { QrSettings } from "@/lib/info-board";
 import type { BoardLocale } from "@/i18n/InfoBoardLanguageContext";
 
@@ -35,10 +37,16 @@ export function QRCard({ qr, locale }: { qr: QrSettings; locale: BoardLocale }) 
   const label = locale === "sr" ? qr.labelSr : qr.labelEn;
 
   return (
-    <div className="flex items-center gap-4">
+    <Link
+      href="/info-point?kiosk=1"
+      className="flex items-center gap-3 rounded-2xl transition-transform active:scale-[0.97]"
+    >
       {/* eslint-disable-next-line @next/next/no-img-element -- small dynamically-generated data: URL, not an optimizable static asset */}
       <img src={dataUrl} alt="" width={112} height={112} className="h-[7rem] w-[7rem] shrink-0 rounded-xl bg-white p-2 shadow-soft" />
-      {label && <span className="max-w-[11rem] whitespace-pre-line text-sm leading-snug text-ink/50">{label}</span>}
-    </div>
+      <span className="flex items-center gap-1">
+        {label && <span className="max-w-[8.5rem] whitespace-pre-line text-xs leading-snug text-ink/50">{label}</span>}
+        <ChevronRight size={16} className="shrink-0 text-ink/30" />
+      </span>
+    </Link>
   );
 }

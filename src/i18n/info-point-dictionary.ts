@@ -11,6 +11,7 @@
 
 export interface InfoPointDictionary {
   header: { title: string; subtitle: string; scanHint: string };
+  kiosk: { backToBoard: string };
   quickActions: {
     wifi: string;
     reportIssue: string;
@@ -89,6 +90,7 @@ const infoPointSr: InfoPointDictionary = {
     subtitle: "Sve što vam je potrebno tokom boravka na jednom mestu.",
     scanHint: "Sačuvajte ovu stranicu — koristiće vam tokom celog boravka.",
   },
+  kiosk: { backToBoard: "Nazad na Info tablu" },
   quickActions: {
     wifi: "Wi-Fi",
     reportIssue: "Prijavi kvar",
@@ -194,6 +196,7 @@ const infoPointEn: InfoPointDictionary = {
     subtitle: "Everything you need during your stay in one place.",
     scanHint: "Save this page — you'll use it throughout your stay.",
   },
+  kiosk: { backToBoard: "Back to Info Board" },
   quickActions: {
     wifi: "Wi-Fi",
     reportIssue: "Report an issue",
