@@ -1,29 +1,21 @@
-import { promises as fs } from "fs";
-import path from "path";
 import { randomUUID } from "crypto";
+import { readJsonBlob, writeJsonBlob } from "./blob-store";
 import type { IssueCategory, IssueLocation, IssueReport, IssueStatus } from "./info-point-issues";
 
 /**
  * Resident-submitted issue reports, stored separately from the main Info
  * Point content (info-point-store.ts) since these are append/patch records
- * rather than admin-authored content. Same JSON-file pattern/caveats as the
- * rest of the project's storage — see info-point-store.ts's note on Vercel.
+ * rather than admin-authored content. Persisted via blob-store.ts.
  */
-const filePath = path.join(process.cwd(), "data", "info-point-issues.json");
+const BLOB_PATH = "data/info-point-issues.json";
 
 async function readAll(): Promise<IssueReport[]> {
-  try {
-    const raw = await fs.readFile(filePath, "utf-8");
-    const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed : [];
-  } catch {
-    return [];
-  }
+  const parsed = await readJsonBlob<IssueReport[]>(BLOB_PATH);
+  return Array.isArray(parsed) ? parsed : [];
 }
 
 async function writeAll(reports: IssueReport[]): Promise<void> {
-  await fs.mkdir(path.dirname(filePath), { recursive: true });
-  await fs.writeFile(filePath, JSON.stringify(reports, null, 2));
+  await writeJsonBlob(BLOB_PATH, reports);
 }
 
 export async function getIssueReports(): Promise<IssueReport[]> {

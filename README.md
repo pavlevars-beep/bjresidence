@@ -204,11 +204,9 @@ zna vaš `TELEGRAM_WEBHOOK_SECRET` ne može da šalje lažne komande.
 
 ### Napomena o skladištenju
 
-Broj slobodnih mesta koji `/dostupnost` menja čuva se u fajlu `data/availability.json` (kreira se
-automatski, nije u git-u). Ovo radi pouzdano ako sajt hostujete kao dugotrajan Node proces (VPS,
-Railway, Render, Docker). Ako deploy-ujete na potpuno serverless platformu gde fajl sistem nije
-trajan između zahteva, zamenite `src/lib/availability-store.ts` sa pravom bazom (Supabase, Vercel KV
-ili slično) — funkcije `getAvailability`/`setAvailability` su jedino mesto koje treba izmeniti.
+Broj slobodnih mesta koji `/dostupnost` menja čuva se preko `src/lib/availability-store.ts` — vidi
+sekciju "Trajno skladištenje (Vercel Blob)" ispod za detalje o tome gde i kako se to trajno čuva na
+produkciji.
 
 ## Info Board (/infopult tabla na tabletu + /admin)
 
@@ -280,10 +278,31 @@ ključ nije obavezan, sajt radi ispravno i bez njega, sa unetom procenom.
 
 ### Napomena o skladištenju
 
-Info Board konfiguracija čuva se u `data/info-board.json`, po istom principu kao
-`data/availability.json` (vidi napomenu u sekciji "Telegram bot" iznad) — pouzdano na dugotrajnom
-Node hostingu, a na potpuno serverless platformi bez trajnog fajl sistema treba zameniti
-`src/lib/info-board-store.ts` pravom bazom.
+Info Board konfiguracija čuva se preko `src/lib/info-board-store.ts` — vidi sekciju "Trajno
+skladištenje (Vercel Blob)" ispod.
+
+## Trajno skladištenje (Vercel Blob)
+
+Sav sadržaj koji se menja iz `/admin` (Info Board, Info Point, prijave kvarova, dostupnost) i
+fotografije uz prijave kvarova čuvaju se preko [Vercel Blob](https://vercel.com/docs/storage/vercel-blob)
+— privatno skladište povezano sa vašim Vercel projektom, a NE u fajlovima na disku. Ovo je zamena za
+raniji pristup (JSON fajlovi u `data/`), koji na Vercel-u ne radi pouzdano jer je fajl-sistem tamo
+read-only.
+
+**Podešavanje (jednom, na Vercel-u):**
+
+1. Vercel dashboard → vaš projekat → **Storage** → **Create Database** → izaberite **Blob**
+2. Povežite ga sa ovim projektom — Vercel automatski podešava `BLOB_READ_WRITE_TOKEN` za sve
+   production i preview deploy-eve. Ne treba ništa ručno da upisujete u environment varijable.
+3. To je sve — sledeći deploy će koristiti Blob umesto lokalnih fajlova.
+
+**Lokalni razvoj** (`npm run dev`) ne zahteva ovo — ako `BLOB_READ_WRITE_TOKEN` nije podešen, sajt
+automatski koristi lokalne JSON fajlove u `data/` (isto kao ranije), tako da razvoj i dalje radi bez
+ikakvog dodatnog podešavanja.
+
+Implementacija je u `src/lib/blob-store.ts` (JSON "baza") i `src/lib/info-point-uploads.ts`
+(fotografije) — oba fajla imaju identičnu logiku: koriste Blob ako je token dostupan, inače padaju
+nazad na lokalni fajl-sistem.
 
 ## SR/EN podrška
 
@@ -305,8 +324,8 @@ komponentama.
 1. **Prave fotografije** — zameniti SVG placeholdere u `public/images/` pravim fotografijama smeštaja.
 2. **Povezati formu** sa email servisom, Supabase ili Google Sheets (vidi sekciju iznad).
 3. **Pravi kalendar dostupnosti** — dostupnost se sada može menjati preko Telegram bota (vidi
-   sekciju "Telegram bot" iznad); za nešto ozbiljnije potrebe zameniti `data/availability.json`
-   pravom bazom (Supabase, Google Calendar, ili slično), po potrebi sa kalendarskim prikazom.
+   sekciju "Telegram bot" iznad) i trajno se čuva preko Vercel Blob (vidi sekciju iznad); za nešto
+   ozbiljnije potrebe razmisliti o pravom kalendarskom prikazu (Google Calendar ili slično).
 4. **Domen i deploy** — deploy na Vercel (ili sličan hosting), povezati pravi domen, ažurirati
    `metadataBase` URL u `src/app/layout.tsx` i URL-ove u `robots.ts`/`sitemap.ts`.
 5. **Google Maps embed** — ako se obezbedi API ključ, zameniti statični placeholder u sekciji
