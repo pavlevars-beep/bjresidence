@@ -49,10 +49,6 @@ export const siteConfig = {
   gallery: {
     categories: [
       {
-        id: "exterior",
-        images: [{ src: "/images/gallery/exterior-1.webp", captionKey: "exterior.img1" }],
-      },
-      {
         id: "livingRoom",
         images: [
           { src: "/images/gallery/living-room-1.webp", captionKey: "livingRoom.img1" },
@@ -83,6 +79,10 @@ export const siteConfig = {
           { src: "/images/gallery/entrance-1.webp", captionKey: "details.img1" },
           { src: "/images/gallery/corridor-1.webp", captionKey: "details.img2" },
         ],
+      },
+      {
+        id: "exterior",
+        images: [{ src: "/images/gallery/exterior-1.webp", captionKey: "exterior.img1" }],
       },
     ],
   },
