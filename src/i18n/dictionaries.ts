@@ -51,20 +51,20 @@ export const sr = {
         desc: "Svaki gost ima potpuno privatnu kabinu sa udobnim krevetom, posteljinom, velikim fiokama za stvari, čivilukom, noćnim stočićem i sopstvenom rasvetom.",
       },
       {
-        title: "Mirna lokacija",
+        title: "Odlična lokacija",
         desc: "Smeštaj se nalazi na 7 km od centra Beograda u naselju Braće Jerković, u izdvojenom mirnom delu ulice, dok je sam smeštaj okrenut ka prirodi.",
       },
       {
         title: "Dobra povezanost sa gradom",
-        desc: "Odlična povezanost prevozom povezuje vas sa centrom i drugim delovima grada.",
+        desc: "Odlična povezanost javnim prevozom — linije 18, 26, 50 — kao i odlična povezanost širokim saobraćajnicama sa drugim delovima grada i autoputem.",
       },
       {
         title: "Potpuno opremljen prostor",
-        desc: "Kuhinja, kupatilo i veš-mašina su spremni za svakodnevno korišćenje.",
+        desc: "U smeštaju postoji sve što je potrebno za udoban boravak i dobar osećaj kao kod kuće.",
       },
       {
         title: "Čisto i održavano",
-        desc: "Zajednički prostori se redovno čiste i održavaju.",
+        desc: "Uključena redovna zamena posteljine na 2 nedelje i redovno čišćenje zajedničkih prostora.",
       },
     ],
   },
@@ -392,20 +392,20 @@ export const en: Dictionary = {
         desc: "Every guest gets a fully private cabin with a comfortable bed and bedding, large drawers for belongings, a coat rack, a nightstand and their own lighting.",
       },
       {
-        title: "Quiet location",
+        title: "Excellent location",
         desc: "The residence is located 7 km from central Belgrade in the Braće Jerković neighbourhood, on a secluded, quiet stretch of the street, with the building itself facing nature.",
       },
       {
         title: "Good connection to the city",
-        desc: "Excellent public transport links connect you to the centre and other parts of the city.",
+        desc: "Excellent public transport links — lines 18, 26, 50 — plus excellent connections via major roads to the rest of the city and the highway.",
       },
       {
         title: "Fully equipped space",
-        desc: "Kitchen, bathroom and washing machine are ready for daily use.",
+        desc: "The residence has everything you need for a comfortable stay and a genuine at-home feeling.",
       },
       {
         title: "Clean and maintained",
-        desc: "Shared areas are cleaned and maintained on a regular basis.",
+        desc: "Includes bedding changed every 2 weeks and regular cleaning of shared areas.",
       },
     ],
   },
