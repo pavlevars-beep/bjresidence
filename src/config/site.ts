@@ -49,6 +49,10 @@ export const siteConfig = {
   gallery: {
     categories: [
       {
+        id: "exterior",
+        images: [{ src: "/images/gallery/exterior-1.webp", captionKey: "exterior.img1" }],
+      },
+      {
         id: "livingRoom",
         images: [
           { src: "/images/gallery/living-room-1.webp", captionKey: "livingRoom.img1" },
@@ -65,23 +69,19 @@ export const siteConfig = {
       {
         id: "kitchen",
         images: [
-          { src: "/images/gallery/kitchen-1.jpg", captionKey: "kitchen.img1" },
+          { src: "/images/gallery/kitchen-1.webp", captionKey: "kitchen.img1" },
           { src: "/images/gallery/kitchen-2.jpg", captionKey: "kitchen.img2" },
         ],
       },
       {
         id: "bathroom",
-        images: [{ src: "/images/gallery/bathroom-1.jpg", captionKey: "bathroom.img1" }],
-      },
-      {
-        id: "storage",
-        images: [{ src: "/images/gallery/storage-1.svg", captionKey: "storage.img1" }],
+        images: [{ src: "/images/gallery/bathroom-1.webp", captionKey: "bathroom.img1" }],
       },
       {
         id: "details",
         images: [
           { src: "/images/gallery/entrance-1.webp", captionKey: "details.img1" },
-          { src: "/images/gallery/details-2.jpg", captionKey: "details.img2" },
+          { src: "/images/gallery/corridor-1.webp", captionKey: "details.img2" },
         ],
       },
     ],
