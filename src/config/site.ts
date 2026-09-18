@@ -49,10 +49,17 @@ export const siteConfig = {
   gallery: {
     categories: [
       {
+        id: "livingRoom",
+        images: [
+          { src: "/images/gallery/living-room-1.webp", captionKey: "livingRoom.img1" },
+          { src: "/images/gallery/living-room-2.webp", captionKey: "livingRoom.img2" },
+        ],
+      },
+      {
         id: "bedrooms",
         images: [
-          { src: "/images/gallery/bedroom-1.jpg", captionKey: "bedrooms.img1" },
-          { src: "/images/gallery/bedroom-2.jpg", captionKey: "bedrooms.img2" },
+          { src: "/images/gallery/bedroom-1.webp", captionKey: "bedrooms.img1" },
+          { src: "/images/gallery/bedroom-2.webp", captionKey: "bedrooms.img2" },
         ],
       },
       {
@@ -73,7 +80,7 @@ export const siteConfig = {
       {
         id: "details",
         images: [
-          { src: "/images/gallery/details-1.jpg", captionKey: "details.img1" },
+          { src: "/images/gallery/entrance-1.webp", captionKey: "details.img1" },
           { src: "/images/gallery/details-2.jpg", captionKey: "details.img2" },
         ],
       },

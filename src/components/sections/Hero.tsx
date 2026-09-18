@@ -75,8 +75,8 @@ export function Hero() {
           className="relative aspect-[4/3] w-full overflow-hidden rounded-3xl shadow-card sm:aspect-[16/11]"
         >
           <Image
-            src="/images/hero/hero-main.svg"
-            alt="Prikaz enterijera BJ Residence smeštaja"
+            src="/images/hero/hero-main.webp"
+            alt="Spavaća soba u BJ Residence smeštaju"
             fill
             priority
             className="object-cover"

@@ -89,8 +89,9 @@ export const sr = {
   gallery: {
     eyebrow: "Prikaz smeštaja",
     title: "Pogledajte kako izgleda prostor",
-    subtitle: "Fotografije prikazuju trenutni izgled i planove enterijera — biće ažurirane finalnim snimcima po završetku radova.",
+    subtitle: "Fotografije prikazuju stvaran izgled prostora.",
     categories: {
+      livingRoom: "Dnevni boravak",
       bedrooms: "Spavaonice",
       kitchen: "Kuhinja i trpezarija",
       bathroom: "Kupatilo",
@@ -98,7 +99,9 @@ export const sr = {
       details: "Detalji enterijera",
     },
     captions: {
-      "bedrooms.img1": "Individualni kreveti sa zavesama za privatnost i noćnim osvetljenjem",
+      "livingRoom.img1": "Zajednički dnevni boravak sa Smart TV-om i udobnom garniturom",
+      "livingRoom.img2": "Miran kutak za opuštanje",
+      "bedrooms.img1": "Individualni krevet sa ličnom rasvetom i noćnim stočićem",
       "bedrooms.img2": "Lampica za čitanje, utičnica i noćni stočić pored kreveta",
       "kitchen.img1": "Zajednička kuhinja sa osnovnim aparatima",
       "kitchen.img2": "Radna površina sa sudoperom i indukcionom pločom",
@@ -427,8 +430,9 @@ export const en: Dictionary = {
   gallery: {
     eyebrow: "The accommodation",
     title: "See what the space looks like",
-    subtitle: "Photos show the current state and interior plans — will be updated with final photos once work is complete.",
+    subtitle: "The photos show the real look of the space.",
     categories: {
+      livingRoom: "Living room",
       bedrooms: "Bedrooms",
       kitchen: "Kitchen & dining",
       bathroom: "Bathroom",
@@ -436,7 +440,9 @@ export const en: Dictionary = {
       details: "Interior details",
     },
     captions: {
-      "bedrooms.img1": "Individual beds with privacy curtains and night lighting",
+      "livingRoom.img1": "Shared living room with a Smart TV and comfortable sofa",
+      "livingRoom.img2": "A quiet corner to unwind",
+      "bedrooms.img1": "Individual bed with personal lighting and a nightstand",
       "bedrooms.img2": "Reading light, power outlet and nightstand by each bed",
       "kitchen.img1": "Shared kitchen with basic appliances",
       "kitchen.img2": "Countertop with sink and induction hob",
