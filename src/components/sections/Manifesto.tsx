@@ -62,7 +62,6 @@ export function Manifesto() {
                   sizes="(max-width: 640px) 60vw, 240px"
                 />
               </div>
-              <p className="mt-3 text-sm text-ink/50">{m.dashboardCaption}</p>
             </div>
 
             <p className="mt-4 text-base text-ink/50 sm:text-lg">{m.closing[0]}</p>
