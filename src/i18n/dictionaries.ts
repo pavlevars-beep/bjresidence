@@ -52,7 +52,7 @@ export const sr = {
       },
       {
         title: "Mirna lokacija",
-        desc: "Smeštaj se nalazi u tihom delu grada, van gužve i buke.",
+        desc: "Smeštaj se nalazi na 7 km od centra Beograda u naselju Braće Jerković, u izdvojenom mirnom delu ulice, dok je sam smeštaj okrenut ka prirodi.",
       },
       {
         title: "Dobra povezanost sa gradom",
@@ -394,7 +394,7 @@ export const en: Dictionary = {
       },
       {
         title: "Quiet location",
-        desc: "The residence sits in a calm part of the city, away from noise and crowds.",
+        desc: "The residence is located 7 km from central Belgrade in the Braće Jerković neighbourhood, on a secluded, quiet stretch of the street, with the building itself facing nature.",
       },
       {
         title: "Good connection to the city",
