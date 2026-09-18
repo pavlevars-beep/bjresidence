@@ -48,7 +48,7 @@ export const sr = {
     cards: [
       {
         title: "Lični prostor za svakog gosta",
-        desc: "Svaki gost ima sopstveni krevet, sopstveni prostor za odlaganje i mesto za lične stvari.",
+        desc: "Svaki gost ima potpuno privatnu kabinu sa udobnim krevetom, posteljinom, velikim fiokama za stvari, čivilukom, noćnim stočićem i sopstvenom rasvetom.",
       },
       {
         title: "Mirna lokacija",
@@ -390,7 +390,7 @@ export const en: Dictionary = {
     cards: [
       {
         title: "Private space for every guest",
-        desc: "Each guest has their own bed, their own storage space and a place for personal belongings.",
+        desc: "Every guest gets a fully private cabin with a comfortable bed and bedding, large drawers for belongings, a coat rack, a nightstand and their own lighting.",
       },
       {
         title: "Quiet location",
