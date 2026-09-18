@@ -84,6 +84,7 @@ export const sr = {
       "Verujemo da i pristupačan smeštaj može biti uredan, topao i napravljen sa pažnjom.",
     ],
     closingIntro: "Zato je svaki detalj u BJ Residence izabran sa namerom.",
+    dashboardCaption: "Pametan info-pult u svakoj kabini — vremenska prognoza, Wi-Fi i QR pristup na dodir ruke.",
     closing: ["Ne da izgleda skupo.", "Već da se čovek oseća dobro."],
   },
   gallery: {
@@ -424,6 +425,7 @@ export const en: Dictionary = {
       "We believe affordable housing can be tidy, warm and made with care.",
     ],
     closingIntro: "That's why every detail at BJ Residence was chosen with intention.",
+    dashboardCaption: "A smart info screen in every cabin — weather, Wi-Fi and QR access at a glance.",
     closing: ["Not to look expensive.", "But so people feel good."],
   },
   gallery: {

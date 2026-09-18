@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { Container } from "@/components/ui/Container";
 import { Reveal } from "@/components/ui/Reveal";
 import { useLanguage } from "@/i18n/LanguageContext";
@@ -50,6 +51,19 @@ export function Manifesto() {
             <p className="mx-auto mt-10 max-w-xl text-base leading-relaxed text-ink/70 sm:text-lg">
               {m.closingIntro}
             </p>
+
+            <div className="mx-auto mt-8 max-w-[15rem]">
+              <div className="relative aspect-[3/4] overflow-hidden rounded-3xl shadow-card">
+                <Image
+                  src="/images/manifesto/infopult-dashboard.jpg"
+                  alt={m.dashboardCaption}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 640px) 60vw, 240px"
+                />
+              </div>
+              <p className="mt-3 text-sm text-ink/50">{m.dashboardCaption}</p>
+            </div>
 
             <p className="mt-4 text-base text-ink/50 sm:text-lg">{m.closing[0]}</p>
             <p className="mt-1 text-xl font-semibold text-ink sm:text-2xl">{m.closing[1]}</p>
