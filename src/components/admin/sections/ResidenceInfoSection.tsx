@@ -20,6 +20,14 @@ export function ResidenceInfoSection({
           <Field label="Naziv Wi-Fi mreže" className="flex-1">
             <input type="text" value={value.wifiName} onChange={(e) => set("wifiName", e.target.value)} className={inputClass} />
           </Field>
+          <Field label="Šifra Wi-Fi mreže" className="flex-1">
+            <input
+              type="text"
+              value={value.wifiPassword}
+              onChange={(e) => set("wifiPassword", e.target.value)}
+              className={inputClass}
+            />
+          </Field>
         </div>
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
           <div className="sm:w-44 sm:shrink-0">

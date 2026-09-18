@@ -38,6 +38,7 @@ export interface WeeklyItem {
 export interface ResidenceInfo {
   wifiEnabled: boolean;
   wifiName: string;
+  wifiPassword: string;
   quietHoursEnabled: boolean;
   quietHoursText: string;
   contactEnabled: boolean;
@@ -110,6 +111,7 @@ export function defaultInfoBoardConfig(): InfoBoardConfig {
     residenceInfo: {
       wifiEnabled: true,
       wifiName: "BJ Residence Guest",
+      wifiPassword: "bjresidence2026",
       quietHoursEnabled: true,
       quietHoursText: "22:00–07:00",
       contactEnabled: true,

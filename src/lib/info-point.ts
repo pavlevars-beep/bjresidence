@@ -239,7 +239,7 @@ export function defaultInfoPointConfig(): InfoPointConfig {
     wifi: {
       enabled: true,
       networkName: "BJ Residence Guest",
-      password: "",
+      password: "bjresidence2026",
       revealMode: "tap",
       showQr: true,
     },

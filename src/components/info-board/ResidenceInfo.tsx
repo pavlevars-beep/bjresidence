@@ -4,7 +4,11 @@ import type { InfoBoardDictionary } from "@/i18n/info-board-dictionary";
 
 export function ResidenceInfo({ info, dict }: { info: ResidenceInfoData; dict: InfoBoardDictionary }) {
   const items = [
-    info.wifiEnabled && { icon: Wifi, label: dict.residence.wifi, value: info.wifiName },
+    info.wifiEnabled && {
+      icon: Wifi,
+      label: dict.residence.wifi,
+      value: info.wifiPassword ? `${info.wifiName} • ${info.wifiPassword}` : info.wifiName,
+    },
     info.quietHoursEnabled && { icon: Volume2, label: dict.residence.quietHours, value: info.quietHoursText },
     info.contactEnabled && { icon: Phone, label: dict.residence.contact, value: info.contactPhone },
   ].filter(Boolean) as { icon: typeof Wifi; label: string; value: string }[];
