@@ -5,13 +5,12 @@ import { Reveal } from "@/components/ui/Reveal";
 import { useLanguage } from "@/i18n/LanguageContext";
 
 const dotPositions = [
-  { x: 150, y: 55 }, // curtain rod
+  { x: 150, y: 55 }, // bed
   { x: 60, y: 150 }, // curtain
   { x: 300, y: 90 }, // lamp
-  { x: 330, y: 150 }, // outlet/usb
-  { x: 300, y: 180 }, // shelf
+  { x: 330, y: 150 }, // outlets
+  { x: 300, y: 180 }, // nightstand
   { x: 140, y: 300 }, // under-bed drawers
-  { x: 430, y: 200 }, // personal storage space
 ];
 
 export function PersonalUnit() {
@@ -53,8 +52,8 @@ export function PersonalUnit() {
 
         <Reveal delay={0.1}>
           <div className="relative rounded-3xl bg-beige/50 p-6 shadow-soft sm:p-10">
-            <svg viewBox="0 0 520 400" className="mx-auto w-full max-w-md" role="img" aria-hidden="true">
-              {/* wall shelf */}
+            <svg viewBox="0 0 380 400" className="mx-auto w-full max-w-md" role="img" aria-hidden="true">
+              {/* nightstand */}
               <rect x="270" y="150" width="90" height="14" rx="4" fill="#A9784E" />
               {/* lamp */}
               <circle cx="300" cy="110" r="16" fill="#59624F" opacity="0.85" />
@@ -75,11 +74,6 @@ export function PersonalUnit() {
               <rect x="190" y="330" width="80" height="30" rx="6" fill="#59624F" opacity="0.9" />
               {/* outlet / usb */}
               <rect x="322" y="230" width="20" height="28" rx="4" fill="#1E1F1C" opacity="0.7" />
-              {/* locker */}
-              <rect x="380" y="90" width="110" height="260" rx="14" fill="#59624F" />
-              <line x1="435" y1="100" x2="435" y2="340" stroke="#1E1F1C" strokeOpacity="0.2" strokeWidth="2" />
-              <circle cx="425" cy="220" r="3" fill="#E8DDCC" />
-              <circle cx="445" cy="220" r="3" fill="#E8DDCC" />
 
               {dotPositions.map((d, i) => (
                 <g key={i}>
