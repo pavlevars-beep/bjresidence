@@ -275,7 +275,7 @@ export const sr = {
       },
       {
         q: "Da li svaki gost ima svoj prostor za odlaganje stvari?",
-        a: "Da, svaki gost ima sopstveni prostor za odlaganje, policu i dodatni prostor u ostavi za veće stvari.",
+        a: "Da, svaki gost može da drži svoje stvari u svojoj kabini, gde se nalazi čiviluk sa više kukica, ofingeri, kao i dve velike fioke ukupne veličine 90x200 cm, kao i polica za obuću u hodniku. Dodatni prostor za odlaganje moguć je uz poseban dogovor i doplatu.",
       },
       {
         q: "Da li se potpisuje ugovor?",
@@ -615,7 +615,7 @@ export const en: Dictionary = {
       },
       {
         q: "Does every guest have their own storage space?",
-        a: "Yes, every guest gets their own storage space, a shelf and extra storage space for larger items.",
+        a: "Yes, every guest can keep their belongings in their own cabin, which has a coat rack with several hooks and hangers, plus two large drawers totaling 90x200 cm, as well as a shoe shelf in the hallway. Additional storage space is available by separate arrangement and for an extra fee.",
       },
       {
         q: "Is a contract signed?",
