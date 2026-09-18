@@ -70,7 +70,7 @@ export const siteConfig = {
         id: "kitchen",
         images: [
           { src: "/images/gallery/kitchen-1.webp", captionKey: "kitchen.img1" },
-          { src: "/images/gallery/kitchen-2.jpg", captionKey: "kitchen.img2" },
+          { src: "/images/gallery/kitchen-2.webp", captionKey: "kitchen.img2" },
         ],
       },
       {
