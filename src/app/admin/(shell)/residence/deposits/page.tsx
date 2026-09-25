@@ -26,10 +26,15 @@ export default async function DepositsPage() {
       const held = paid - returned;
       const activeStay = stays.find((s) => s.residentId === resident.id && s.status === "active");
       const cabinName = activeStay ? cabinById.get(activeStay.cabinId)?.name ?? null : null;
-      return { resident, paid, returned, held, cabinName };
+      return { resident, paid, returned, held, cabinName, isActive: !!activeStay, missing: !!activeStay && held <= 0 };
     })
-    .filter((r) => r.paid > 0)
-    .sort((a, b) => b.held - a.held);
+    // Keep anyone with deposit history, plus every currently active resident
+    // (even with zero deposit — that's exactly what needs surfacing here).
+    .filter((r) => r.paid > 0 || r.isActive)
+    .sort((a, b) => {
+      if (a.missing !== b.missing) return a.missing ? -1 : 1;
+      return b.held - a.held;
+    });
 
   const totalHeld = rows.reduce((s, r) => s + r.held, 0);
 
@@ -44,16 +49,23 @@ export default async function DepositsPage() {
         <p className="text-sm text-ink/50">Nema depozita.</p>
       ) : (
         <ul className="flex flex-col gap-2">
-          {rows.map(({ resident, paid, returned, held, cabinName }) => (
+          {rows.map(({ resident, paid, returned, held, cabinName, missing }) => (
             <li key={resident.id} className="flex items-center justify-between gap-3 rounded-2xl border border-ink/10 bg-white p-3.5">
               <div>
                 <Link href={`/admin/residence/residents/${resident.id}`} className="text-sm font-medium text-ink hover:underline">
                   {resident.firstName} {resident.lastName}
                 </Link>
-                <p className="text-xs text-ink/50">{cabinName ?? "Bez kabine"} · Uplaćeno {paid} € {returned > 0 && `· Vraćeno ${returned} €`}</p>
+                <p className="text-xs text-ink/50">
+                  {cabinName ?? "Bez kabine"}
+                  {missing ? "" : ` · Uplaćeno ${paid} €${returned > 0 ? ` · Vraćeno ${returned} €` : ""}`}
+                </p>
               </div>
-              <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${held > 0 ? "bg-olive-dark/10 text-olive-dark" : "bg-ink/5 text-ink/50"}`}>
-                {held > 0 ? `${held} € na čuvanju` : "Vraćen"}
+              <span
+                className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-semibold ${
+                  missing ? "bg-red-50 text-red-700" : held > 0 ? "bg-olive-dark/10 text-olive-dark" : "bg-ink/5 text-ink/50"
+                }`}
+              >
+                {missing ? "Nedostaje depozit" : held > 0 ? `${held} € na čuvanju` : "Vraćen"}
               </span>
             </li>
           ))}

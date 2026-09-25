@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Plus } from "lucide-react";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
 import { AdminLogin } from "@/components/admin/AdminLogin";
-import { getCabinViews, getResidenceStats, getUpcoming } from "@/lib/residence/derive";
+import { getCabinViews, getMissingDeposits, getResidenceStats, getUpcoming } from "@/lib/residence/derive";
 import { listActivity } from "@/lib/residence/activity-log-store";
 import { SectionCard } from "@/components/admin/ui";
 import { CabinStatusBadge, PaymentStatusBadge } from "@/components/admin/residence/status-badges";
@@ -23,11 +23,12 @@ export default async function ResidenceOverviewPage() {
     return <AdminLogin />;
   }
 
-  const [cabins, stats, upcoming, activity] = await Promise.all([
+  const [cabins, stats, upcoming, activity, missingDeposits] = await Promise.all([
     getCabinViews(),
     getResidenceStats(),
     getUpcoming(7),
     listActivity(8),
+    getMissingDeposits(),
   ]);
 
   return (
@@ -88,6 +89,28 @@ export default async function ResidenceOverviewPage() {
         <StatTile label="Mesečni prihod" value={`${stats.monthlyRecurringRent} €`} />
         <StatTile label="Depoziti na čuvanju" value={`${stats.depositsHeld} €`} />
       </div>
+
+      <SectionCard title="Nedostaju depoziti" description="Aktivni gosti bez zabeležene uplate depozita.">
+        {missingDeposits.length === 0 ? (
+          <p className="text-sm text-ink/50">Svi trenutni gosti imaju uplaćen depozit.</p>
+        ) : (
+          <ul className="flex flex-col gap-2">
+            {missingDeposits.map(({ resident, cabin }) => (
+              <li key={resident.id} className="flex items-center justify-between gap-3 rounded-2xl border border-ink/10 bg-white p-3.5">
+                <p className="text-sm font-medium text-ink">
+                  {cabin.name} — {resident.firstName} {resident.lastName}
+                </p>
+                <Link
+                  href={`/admin/residence/residents/${resident.id}`}
+                  className="shrink-0 rounded-full bg-red-50 px-2.5 py-1 text-xs font-semibold text-red-700 hover:bg-red-100"
+                >
+                  Nedostaje depozit
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
+      </SectionCard>
 
       <div className="grid gap-4 lg:grid-cols-2">
         <SectionCard title="Predstojeće u narednih 7 dana" description="Uplate, iseljenja i odluke.">

@@ -139,3 +139,29 @@ export async function getUpcoming(withinDays = 7): Promise<UpcomingItem[]> {
 
   return items.sort((a, b) => a.daysRemaining - b.daysRemaining);
 }
+
+export interface MissingDepositItem {
+  resident: Resident;
+  cabin: Cabin;
+  stay: Stay;
+}
+
+/** Active stays with no deposit on record at all — not time-bound like getUpcoming(), just a standing reminder. */
+export async function getMissingDeposits(): Promise<MissingDepositItem[]> {
+  const [cabins, stays, residents] = await Promise.all([getCabins(), getStays(), getResidents()]);
+  const cabinById = new Map(cabins.map((c) => [c.id, c]));
+  const residentById = new Map(residents.map((r) => [r.id, r]));
+  const items: MissingDepositItem[] = [];
+
+  for (const stay of stays) {
+    if (stay.status !== "active") continue;
+    const cabin = cabinById.get(stay.cabinId);
+    const resident = residentById.get(stay.residentId);
+    if (!cabin || !resident) continue;
+
+    const held = await getDepositHeld(resident.id);
+    if (held <= 0) items.push({ resident, cabin, stay });
+  }
+
+  return items;
+}
