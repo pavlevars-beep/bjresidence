@@ -4,10 +4,14 @@ import { notFound } from "next/navigation";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
 import { AdminLogin } from "@/components/admin/AdminLogin";
 import { getCabinViews } from "@/lib/residence/derive";
-import { getStaysForCabin } from "@/lib/residence/stays-store";
+import { getStaysForCabin, getStaysForResident } from "@/lib/residence/stays-store";
 import { getResidents } from "@/lib/residence/residents-store";
+import { getPaymentsForResident } from "@/lib/residence/payments-store";
+import { getDocumentsForResident } from "@/lib/residence/documents-store";
+import { getCabins } from "@/lib/residence/cabins-store";
 import { SectionCard } from "@/components/admin/ui";
 import { CabinStatusBadge } from "@/components/admin/residence/status-badges";
+import { ResidentProfile } from "@/components/admin/residence/ResidentProfile";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Kabina — BJ Residence Admin", robots: { index: false, follow: false } };
@@ -24,6 +28,28 @@ export default async function CabinDetailPage({ params }: { params: { id: string
   const residentById = new Map(residents.map((r) => [r.id, r]));
   const sortedStays = [...stays].sort((a, b) => b.moveInDate.localeCompare(a.moveInDate));
 
+  // When the cabin has an active resident, load the same data the resident's
+  // own profile page uses so every edit action (uplate, odluka, premeštaj,
+  // brisanje) is available here too — not just a read-only summary.
+  let residentProfileData: {
+    resident: NonNullable<typeof view.resident>;
+    stays: Awaited<ReturnType<typeof getStaysForResident>>;
+    payments: Awaited<ReturnType<typeof getPaymentsForResident>>;
+    documents: Awaited<ReturnType<typeof getDocumentsForResident>>;
+    cabins: Awaited<ReturnType<typeof getCabins>>;
+  } | null = null;
+
+  if (view.resident && view.activeStay) {
+    const resident = view.resident;
+    const [residentStays, residentPayments, residentDocuments, allCabins] = await Promise.all([
+      getStaysForResident(resident.id),
+      getPaymentsForResident(resident.id),
+      getDocumentsForResident(resident.id),
+      getCabins(),
+    ]);
+    residentProfileData = { resident, stays: residentStays, payments: residentPayments, documents: residentDocuments, cabins: allCabins };
+  }
+
   return (
     <div className="flex flex-col gap-6">
       <div>
@@ -34,16 +60,10 @@ export default async function CabinDetailPage({ params }: { params: { id: string
         </div>
       </div>
 
-      <SectionCard title="Trenutno stanje">
+      <SectionCard title="Kabina">
         <dl className="grid gap-4 sm:grid-cols-2">
           <div>
-            <dt className="text-xs font-semibold uppercase tracking-wide text-ink/45">Trenutni gost</dt>
-            <dd className="mt-1 text-sm text-ink">
-              {view.resident ? `${view.resident.firstName} ${view.resident.lastName}` : "—"}
-            </dd>
-          </div>
-          <div>
-            <dt className="text-xs font-semibold uppercase tracking-wide text-ink/45">Mesečna kirija</dt>
+            <dt className="text-xs font-semibold uppercase tracking-wide text-ink/45">Podrazumevana mesečna kirija</dt>
             <dd className="mt-1 text-sm text-ink">{view.cabin.monthlyRentDefault} {view.cabin.currency}</dd>
           </div>
           <div>
@@ -57,15 +77,27 @@ export default async function CabinDetailPage({ params }: { params: { id: string
             </div>
           )}
         </dl>
-        {view.resident && view.activeStay && (
-          <Link
-            href={`/admin/residence/residents/${view.resident.id}`}
-            className="mt-4 inline-block rounded-full bg-olive-dark px-4 py-2 text-sm font-medium text-cream hover:bg-[#4a5241]"
-          >
-            Otvori profil gosta
-          </Link>
-        )}
+        <Link
+          href="/admin/residence/cabins"
+          className="mt-4 inline-block rounded-full bg-ink/5 px-4 py-2 text-sm font-medium text-ink/70 hover:bg-ink/10"
+        >
+          Podesi održavanje / cenu →
+        </Link>
       </SectionCard>
+
+      {residentProfileData ? (
+        <ResidentProfile
+          resident={residentProfileData.resident}
+          stays={residentProfileData.stays}
+          payments={residentProfileData.payments}
+          documents={residentProfileData.documents}
+          cabins={residentProfileData.cabins}
+        />
+      ) : (
+        <SectionCard title="Trenutni gost">
+          <p className="text-sm text-ink/50">Kabina je trenutno prazna — nema gosta za upravljanje.</p>
+        </SectionCard>
+      )}
 
       <SectionCard title="Istorija boravaka" description="Svi gosti koji su boravili u ovoj kabini.">
         {sortedStays.length === 0 ? (

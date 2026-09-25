@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { Trash2 } from "lucide-react";
 import { Field, inputClass, SectionCard } from "@/components/admin/ui";
 import { Button } from "@/components/ui/Button";
 import { ContinuationBadge, ResidentStatusBadge } from "./status-badges";
@@ -28,26 +29,26 @@ export function ResidentProfile({
   payments: initialPayments,
   documents: initialDocuments,
   cabins,
-  depositHeld: initialDepositHeld,
 }: {
   resident: Resident;
   stays: Stay[];
   payments: Payment[];
   documents: ResidentDocument[];
   cabins: Cabin[];
-  depositHeld: number;
+  /** @deprecated depositHeld is now recomputed live from `payments` so deletes/adds reflect instantly. */
+  depositHeld?: number;
 }) {
   const router = useRouter();
   const [resident, setResident] = useState(initialResident);
   const [stays, setStays] = useState(initialStays);
   const [payments, setPayments] = useState(initialPayments);
   const [documents, setDocuments] = useState(initialDocuments);
-  const [depositHeld] = useState(initialDepositHeld);
 
   const [showPaymentForm, setShowPaymentForm] = useState(false);
   const [showMoveCabin, setShowMoveCabin] = useState(false);
   const [editingNotes, setEditingNotes] = useState(false);
   const [notesDraft, setNotesDraft] = useState(resident.notes);
+  const [deletingPaymentId, setDeletingPaymentId] = useState<string | null>(null);
 
   const cabinById = new Map(cabins.map((c) => [c.id, c]));
   const activeStay = stays.find((s) => s.status === "active") ?? null;
@@ -55,6 +56,24 @@ export function ResidentProfile({
   const sortedStays = [...stays].sort((a, b) => b.moveInDate.localeCompare(a.moveInDate));
   const sortedPayments = [...payments].sort((a, b) => b.paymentDate.localeCompare(a.paymentDate));
   const totalRentPaid = payments.filter((p) => p.type === "rent").reduce((s, p) => s + p.amount, 0);
+  // Recomputed from the live payments list (not the server-provided initial
+  // value) so a delete/add immediately reflects here without a full reload.
+  const depositHeld =
+    payments.filter((p) => p.type === "deposit").reduce((s, p) => s + p.amount, 0) -
+    payments.filter((p) => p.type === "deposit_return").reduce((s, p) => s + p.amount, 0);
+
+  async function handleDeletePayment(id: string) {
+    if (!confirm("Obrisati ovu uplatu? Ova radnja se ne može poništiti.")) return;
+    setDeletingPaymentId(id);
+    try {
+      const res = await fetch(`/api/admin/residence/payments/${id}`, { method: "DELETE" });
+      if (res.ok) {
+        setPayments((prev) => prev.filter((p) => p.id !== id));
+      }
+    } finally {
+      setDeletingPaymentId(null);
+    }
+  }
 
   function upsertStay(updated: Stay) {
     setStays((prev) => {
@@ -198,6 +217,13 @@ export function ResidentProfile({
                     {p.paymentDate}{p.periodFrom && p.periodTo ? ` · Period: ${p.periodFrom} – ${p.periodTo}` : ""}
                   </p>
                 </div>
+                <button
+                  onClick={() => handleDeletePayment(p.id)}
+                  disabled={deletingPaymentId === p.id}
+                  className="flex shrink-0 items-center gap-1 rounded-full px-3 py-1.5 text-xs font-medium text-red-700 hover:bg-red-50"
+                >
+                  <Trash2 size={13} /> Obriši
+                </button>
               </li>
             ))}
           </ul>
