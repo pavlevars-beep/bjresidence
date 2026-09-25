@@ -8,13 +8,24 @@ import { ExternalLink, LayoutGrid, LogOut, Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ADMIN_NAV_GROUPS } from "./AdminNavConfig";
 
-function isActive(pathname: string | null, href: string): boolean {
-  if (!pathname) return false;
-  if (href === "/admin") return pathname === "/admin";
-  return pathname === href || pathname.startsWith(`${href}/`);
+/**
+ * Several nav hrefs are prefixes of their own siblings (e.g. "/admin/residence"
+ * "Pregled" is a prefix of "/admin/residence/cabins" "Kabine"), so naive
+ * per-link startsWith matching highlights more than one item at once. Instead,
+ * find every href that matches the current path, then keep only the longest
+ * (most specific) one — exactly one item lights up, ever.
+ */
+function getActiveHref(pathname: string | null): string | null {
+  if (!pathname) return null;
+  const allHrefs = ["/admin", ...ADMIN_NAV_GROUPS.flatMap((g) => g.links.map((l) => l.href))];
+  const candidates = allHrefs.filter((href) => pathname === href || pathname.startsWith(`${href}/`));
+  if (candidates.length === 0) return null;
+  return candidates.reduce((best, href) => (href.length > best.length ? href : best));
 }
 
 function NavLinks({ pathname, onNavigate }: { pathname: string | null; onNavigate?: () => void }) {
+  const activeHref = getActiveHref(pathname);
+
   return (
     <nav className="flex flex-col gap-5">
       <Link
@@ -22,7 +33,7 @@ function NavLinks({ pathname, onNavigate }: { pathname: string | null; onNavigat
         onClick={onNavigate}
         className={cn(
           "flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium",
-          pathname === "/admin" ? "bg-olive-dark text-cream" : "text-ink/70 hover:bg-ink/5"
+          activeHref === "/admin" ? "bg-olive-dark text-cream" : "text-ink/70 hover:bg-ink/5"
         )}
       >
         <LayoutGrid size={16} /> Kontrolna tabla
@@ -39,7 +50,7 @@ function NavLinks({ pathname, onNavigate }: { pathname: string | null; onNavigat
                 onClick={onNavigate}
                 className={cn(
                   "rounded-xl px-3 py-2 text-sm font-medium transition-colors",
-                  isActive(pathname, link.href) ? "bg-olive-dark text-cream" : "text-ink/70 hover:bg-ink/5"
+                  link.href === activeHref ? "bg-olive-dark text-cream" : "text-ink/70 hover:bg-ink/5"
                 )}
               >
                 {link.label}
