@@ -108,7 +108,6 @@ export function PassportOcrPanel({
             ref={inputRef}
             type="file"
             accept="image/jpeg,image/png,image/webp"
-            capture="environment"
             onChange={handleFile}
             className="hidden"
           />
