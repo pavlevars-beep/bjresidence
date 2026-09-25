@@ -38,8 +38,12 @@ export default function TelegramSettingsPage() {
       <SectionCard title="Kako radi" description="Trenutno stanje sistema obaveštenja.">
         <ul className="list-disc space-y-1.5 pl-5 text-sm text-ink/70">
           <li>Prijave o kvarovima i upiti sa sajta se odmah šalju na Telegram.</li>
-          <li>Podsetnici za istek plaćenog perioda boravka šalju se ručno iz Predstojeće odluke (dugme &quot;Pošalji podsetnike&quot;).</li>
-          <li>Automatsko dnevno slanje (bez ručnog pokretanja) još nije uključeno — planirano za sledeću fazu.</li>
+          <li>
+            Podsetnici za istek plaćenog perioda boravka šalju se automatski jednom dnevno (Vercel Cron, oko
+            07:00 UTC) i mogu se pokrenuti i ručno iz Predstojeće odluke (dugme &quot;Pošalji podsetnike&quot;) — obe
+            putanje dele istu logiku, tako da se ista poruka nikad ne šalje dvaput za isti period.
+          </li>
+          <li>Dnevni automatski posao radi samo ako je <code>CRON_SECRET</code> podešen (vidi Sistem).</li>
         </ul>
       </SectionCard>
     </div>

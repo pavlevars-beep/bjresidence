@@ -323,12 +323,19 @@ Iseljava se / Neodlučeno.
 
 ### Telegram podsetnici
 
-Dugme **"Pošalji podsetnike"** na `Predstojeće odluke` ručno pokreće proveru i šalje Telegram
-poruku (bez pasoša, samo ime/kabina/datumi/status) za svaki boravak kome period ističe u narednih 7
-dana — sa dedupe zaštitom (ista poruka se ne šalje dva puta za isti period). Ovo **nije još
-automatizovano na dnevnom rasporedu** (Vercel Cron) — to je planirano za sledeću fazu; sva logika
-(`runReminderSweep()` u `src/lib/residence/reminders.ts`) je već napisana tako da dodavanje cron
-rute kasnije znači samo pozivanje iste funkcije, bez menjanja postojećeg.
+Provera i slanje Telegram poruke (bez pasoša, samo ime/kabina/datumi/status) za svaki boravak kome
+period ističe u narednih 7 dana dešava se na dva načina, oba preko iste `runReminderSweep()`
+funkcije (`src/lib/residence/reminders.ts`) i iste dedupe zaštite (ista poruka se ne šalje dva puta
+za isti period):
+
+- **Automatski, jednom dnevno** — Vercel Cron (`vercel.json`) poziva `/api/cron/residence-reminders`
+  svaki dan oko 07:00 UTC. Ruta proverava `Authorization: Bearer <CRON_SECRET>` header koji Vercel
+  sâm dodaje kad je `CRON_SECRET` podešen u environment varijablama — bez njega, poziv vraća 401 i
+  ništa se ne šalje (proverite status na `Podešavanja → Sistem`).
+- **Ručno, kad god poželite** — dugme "Pošalji podsetnike" na `Predstojeće odluke`.
+
+Raspored (`"0 7 * * *"` u `vercel.json`) je standardni cron izraz u UTC — izmenite ga po potrebi
+(npr. za kasniji/raniji sat) i ponovo deploy-ujte.
 
 ### Skeniranje pasoša (opciono, AI)
 
@@ -410,7 +417,5 @@ komponentama.
 6. **Analytics** — dodati Google Analytics / Plausible po potrebi.
 7. **Info Board na pravoj bazi** — ako pređete na Supabase/sličnu bazu, po istom principu prebaciti
    i `data/info-board.json` i `data/residence/*.json` (vidi "Trajno skladištenje" ispod).
-8. **Automatski dnevni Telegram podsetnik** — dodati `vercel.json` cron unos (`crons`) koji jednom
-   dnevno poziva novu rutu (npr. `/api/cron/residence-reminders`, zaštićenu `CRON_SECRET`-om) koja
-   samo zove već postojeću `runReminderSweep()` iz `src/lib/residence/reminders.ts` — logika i
-   dedupe su već gotovi, ostaje samo zakazivanje (vidi "Upravljanje smeštajem" iznad).
+8. ~~**Automatski dnevni Telegram podsetnik**~~ — urađeno, vidi "Telegram podsetnici" iznad. Samo
+   treba podesiti `CRON_SECRET` u Vercel environment varijablama da bi dnevni posao proradio.

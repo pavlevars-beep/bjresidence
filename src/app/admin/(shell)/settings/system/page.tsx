@@ -16,6 +16,7 @@ const CHECKS: { label: string; envVar: string; note?: string }[] = [
   { label: "Telegram webhook (komande)", envVar: "TELEGRAM_WEBHOOK_SECRET" },
   { label: "OCR pasoša — API ključ", envVar: "ANTHROPIC_API_KEY" },
   { label: "OCR pasoša — model", envVar: "ANTHROPIC_PASSPORT_MODEL" },
+  { label: "Dnevni Telegram podsetnik (cron)", envVar: "CRON_SECRET", note: "Bez ovoga ručno dugme i dalje radi, samo dnevni automatski posao ne." },
 ];
 
 export default function SystemSettingsPage() {
