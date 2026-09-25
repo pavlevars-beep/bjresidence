@@ -55,6 +55,40 @@ export function formatBookingInquiry(payload: {
     .join("\n");
 }
 
+/**
+ * Stay-cycle reminder — deliberately excludes passport/identification data,
+ * only names/dates/status needed to act on it. See residence/reminders.ts.
+ */
+export function formatStayReminder(payload: {
+  cabinName: string;
+  residentName: string;
+  currentPeriodEnd: string;
+  nextPaymentDue: string;
+  daysRemaining: number;
+  continuationStatus: string;
+  adminUrl: string;
+  kind: "payment_due" | "move_out" | "decision_needed";
+}) {
+  const title =
+    payload.kind === "move_out"
+      ? "BJ Residence — očekivano iseljenje"
+      : "BJ Residence — odluka o nastavku boravka";
+
+  return [
+    `<b>${title}</b>`,
+    "",
+    `${escapeHtml(payload.cabinName)} — ${escapeHtml(payload.residentName)}`,
+    "",
+    `Plaćeni period ističe: ${escapeHtml(payload.currentPeriodEnd)}`,
+    `Sledeća rata dospeva: ${escapeHtml(payload.nextPaymentDue)}`,
+    `Preostalo dana: ${payload.daysRemaining}`,
+    "",
+    `Status: ${escapeHtml(payload.continuationStatus)}`,
+    "",
+    `Otvori admin: ${escapeHtml(payload.adminUrl)}`,
+  ].join("\n");
+}
+
 export function formatIssueReport(payload: {
   category?: unknown;
   location?: unknown;

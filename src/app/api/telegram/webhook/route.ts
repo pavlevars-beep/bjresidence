@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
-import { getAvailability, setAvailability } from "@/lib/availability-store";
+import { getAvailability, setAvailability, setAvailabilityOverride } from "@/lib/availability-store";
 import { sendTelegramMessage } from "@/lib/telegram";
 
 const HELP_TEXT =
   "Komande:\n" +
   "/dostupnost — prikaži trenutnu dostupnost\n" +
-  "/dostupnost [broj] — postavi broj slobodnih mesta, npr. /dostupnost 3 ili /dostupnost 0";
+  "/dostupnost [broj] — ručno postavi broj slobodnih mesta, npr. /dostupnost 3 ili /dostupnost 0\n" +
+  "/dostupnost auto — vrati automatski izračunavanje po statusu kabina";
 
 /**
  * Telegram calls this URL (set via setWebhook, see README) whenever someone
@@ -37,6 +38,9 @@ export async function POST(request: Request) {
           ? `Trenutno slobodno: ${current.freeSpots} mesta.`
           : "Trenutno nema slobodnih mesta."
       );
+    } else if (arg === "auto") {
+      const updated = await setAvailabilityOverride(false);
+      await sendTelegramMessage(`Automatski izračunato. Slobodno: ${updated.freeSpots} od ${updated.totalSpots} mesta.`);
     } else {
       const n = Number(arg);
       if (Number.isInteger(n) && n >= 0) {

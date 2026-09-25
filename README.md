@@ -33,19 +33,24 @@ src/
   app/
     (site)/              postojeći sajt: početna, /privacy, /terms (Header/Footer/WhatsApp/CTA layout)
     infopult/            /infopult — kiosk info tabla (bez sajt navigacije, vidi "Info Board")
-    admin/                /admin — prijava + upravljanje Info Board sadržajem
+    admin/                /admin — prijava, Info tabla/Info Point (nepromenjeno), Website/Upravljanje
+                          smeštajem/Podešavanja (novo, vidi "Upravljanje smeštajem")
     api/booking/          prima upite sa forme, šalje Telegram notifikaciju
-    api/availability/      vraća trenutnu dostupnost (čita je BookingForm)
-    api/telegram/webhook/  prima komande od Telegram bota (/dostupnost)
+    api/availability/      vraća trenutnu dostupnost (čita je BookingForm) — sad računa iz kabina
+    api/website-settings/  javni GET za cenu/CTA/objavu sa Website → Sadržaj sajta
+    api/telegram/webhook/  prima komande od Telegram bota (/dostupnost, /dostupnost auto)
     api/info-board/        javni GET config + weather/traffic proxy za /infopult
     api/admin/              login/logout + zaštićen GET/PUT za Info Board config
+    api/admin/residence/    zaštićene rute za kabine/goste/boravke/uplate/rezervacije/dokumenta
     layout.tsx             koren layout (html/body/fontovi) — bez sajt navigacije
   components/
     layout/               Header, Footer, WhatsApp dugme, mobilni sticky CTA (koristi (site) layout)
     sections/               svih sekcija sajta (Hero, Gallery, BookingForm, FAQ...)
     ui/                     reusable elementi (Button, Container, SectionHeading, Reveal)
     info-board/             komponente /infopult table (WeatherCard, CleaningCard, QRCard...)
-    admin/                  komponente /admin panela (login, sekcije forme)
+    admin/                  komponente /admin panela (login, AdminShell/nav, sekcije forme)
+    admin/residence/         komponente Upravljanja smeštajem (forme, tabele, pasoš OCR panel)
+    admin/website/, admin/settings/  editori za Website i Podešavanja sekcije
   config/
     site.ts                JEDINO mesto za kontakt podatke, adresu, kapacitet, cenu, dostupnost, galeriju
   i18n/
@@ -54,11 +59,15 @@ src/
     info-board-dictionary.ts SR/EN tekst za /infopult (odvojeno od sajta, svoj jezički izbor)
     InfoBoardLanguageContext.tsx  isto što LanguageContext, ali za /infopult
   lib/
-    telegram.ts             slanje poruka botu
-    availability-store.ts   čitanje/pisanje trenutne dostupnosti (data/availability.json)
+    telegram.ts             slanje poruka botu + formatiranje podsetnika o boravku
+    availability-store.ts   dostupnost — sad računa iz kabina (residence/derive.ts) + ručni override
     admin-auth.ts            provera lozinke + potpisana sesija za /admin
     info-board.ts             tipovi + podrazumevane vrednosti Info Board konfiguracije
     info-board-store.ts       čitanje/pisanje Info Board konfiguracije (data/info-board.json)
+    passport-ocr.ts           poziv Anthropic vision API-ja za očitavanje pasoša (samo ekstrakcija)
+    residence-uploads.ts      privatno čuvanje slika dokumenata (Vercel Blob/lokalni fajl)
+    residence/                 kabine/gosti/boravci/uplate/rezervacije/dokumenta/log aktivnosti,
+                               plus derive.ts (računanje statusa) i date-math.ts (mesečni ciklus)
     weather-codes.ts           mapiranje WMO kodova vremena na ikonicu/tekst
     board-format.ts            formatiranje datuma/vremena za Europe/Belgrade
     use-polled-resource.ts     hook za periodično osvežavanje sa localStorage keš-om
@@ -281,6 +290,73 @@ ključ nije obavezan, sajt radi ispravno i bez njega, sa unetom procenom.
 Info Board konfiguracija čuva se preko `src/lib/info-board-store.ts` — vidi sekciju "Trajno
 skladištenje (Vercel Blob)" ispod.
 
+## Upravljanje smeštajem (Residence Management)
+
+Privatan deo `/admin` panela za stvarno upravljanje BJ Residence smeštajem — 4 kabine (Sava,
+Kosmaj, Dunav, Avala), gosti, uplate, rezervacije i istorija boravaka. Odvojeno je od javnog sajta
+i od Info Board/Info Point sadržaja — ni Info Point ni javni sajt nikad ne prikazuju imena gostiju,
+uplate niti pasoše.
+
+Admin nav je podeljen na 4 grupe: **Website** (dostupnost, sadržaj sajta, kontakt), **Info sistem**
+(Info tabla, Info Point, QR kodovi — nepromenjeno), **Upravljanje smeštajem** (pregled, kabine,
+gosti, uplate, depoziti, rezervacije, predstojeće odluke, dokumenta, istorija boravaka) i
+**Podešavanja** (Telegram, obaveštenja, sistem).
+
+### Dostupnost na sajtu
+
+Broj "Dostupno X od Y mesta" na javnom sajtu se **automatski računa** iz statusa kabina (koliko je
+trenutno zauzeto/slobodno) — čim gost dobije aktivan boravak u kabini, broj slobodnih mesta se sam
+smanji; čim se boravak završi, kabina se sama oslobađa. Na `Website → Dostupnost` postoji ručno
+podešavanje (**override**) za privremene situacije (npr. najavljujete slobodno mesto pre nego što
+je zvanično upisano u sistem) — dok je override uključen, broj se ne računa automatski. Isti
+mehanizam koristi i postojeća Telegram komanda `/dostupnost [broj]` (postavlja override) i
+`/dostupnost auto` (vraća automatski proračun).
+
+### Mesečni ciklus kirije
+
+Svaki boravak (Stay) pamti trenutni plaćeni period (`currentPeriodStart`/`currentPeriodEnd`),
+usidren na dan u mesecu kad je gost useljen (useljenje 25. → period 25.–24.), ne na 1. u mesecu.
+Kad unesete sledeću uplatu kirije sa periodom, period se automatski pomera unapred, a odluka o
+nastavku boravka se vraća na "Neodlučeno" za novi ciklus. Na `Upravljanje smeštajem → Predstojeće
+odluke` vidite sve boravke kojima period ističe u narednih 7 dana, sa dugmadima Nastavlja /
+Iseljava se / Neodlučeno.
+
+### Telegram podsetnici
+
+Dugme **"Pošalji podsetnike"** na `Predstojeće odluke` ručno pokreće proveru i šalje Telegram
+poruku (bez pasoša, samo ime/kabina/datumi/status) za svaki boravak kome period ističe u narednih 7
+dana — sa dedupe zaštitom (ista poruka se ne šalje dva puta za isti period). Ovo **nije još
+automatizovano na dnevnom rasporedu** (Vercel Cron) — to je planirano za sledeću fazu; sva logika
+(`runReminderSweep()` u `src/lib/residence/reminders.ts`) je već napisana tako da dodavanje cron
+rute kasnije znači samo pozivanje iste funkcije, bez menjanja postojećeg.
+
+### Skeniranje pasoša (opciono, AI)
+
+Na `Upravljanje smeštajem → Gosti → Dodaj gosta` postoji opcija da se fotografiše/otpremi pasoš —
+slika se šalje Anthropic API-ju (Claude vision) da predloži polja (ime, broj pasoša, datumi...).
+**Ništa se ne čuva automatski** — admin uvek pregleda i ručno ispravi/potvrdi podatke pre nego što
+postanu deo profila gosta. Zahteva `ANTHROPIC_API_KEY` i `ANTHROPIC_PASSPORT_MODEL` (vidi
+`.env.local.example`) — bez njih, dugme jasno kaže da OCR nije podešen i admin unosi podatke ručno,
+ništa se ne pokvari. Original fotografije pasoša se **ne čuva** osim ako admin eksplicitno čekira
+"Zadrži originalni dokument" — inače se odbacuje odmah posle potvrde, čuvaju se samo potvrđena
+polja.
+
+### Bezbednost
+
+- Svaka nova admin API ruta i svaka admin stranica proveravaju `isAdminAuthenticated()` — ne
+  postoji ruta niti stranica koja se oslanja samo na to da link nije negde prikazan.
+- Dokumenti (fotografije pasoša) čuvaju se kao privatni Vercel Blob (nikad javni URL), služe se
+  isključivo kroz autentifikovanu rutu koja svaki put ponovo proverava admin sesiju.
+- Broj pasoša i slika pasoša se nikad ne šalju na Telegram niti se beleže u logovima.
+- Brisanje dokumenta ne briše istoriju gosta/boravaka/uplata — samo sam dokument.
+
+### Skladištenje
+
+Isto kao i ostatak sajta — JSON kolekcije preko `src/lib/blob-store.ts` (Vercel Blob u produkciji,
+lokalni fajlovi u `data/residence/` u razvoju), ne poseban SQL server. Svaka celina (kabine, gosti,
+boravci, uplate, rezervacije, dokumenta, log aktivnosti) je poseban fajl/kolekcija sa ID-jevima kao
+vezama — nije sve nagurano u jedan JSON.
+
 ## Trajno skladištenje (Vercel Blob)
 
 Sav sadržaj koji se menja iz `/admin` (Info Board, Info Point, prijave kvarova, dostupnost) i
@@ -321,16 +397,20 @@ komponentama.
 
 ## Sledeći koraci (predlog)
 
-1. **Prave fotografije** — zameniti SVG placeholdere u `public/images/` pravim fotografijama smeštaja.
+1. ~~**Prave fotografije**~~ — urađeno, `public/images/gallery/` i `public/images/hero/` sada sadrže
+   stvarne fotografije smeštaja.
 2. **Povezati formu** sa email servisom, Supabase ili Google Sheets (vidi sekciju iznad).
-3. **Pravi kalendar dostupnosti** — dostupnost se sada može menjati preko Telegram bota (vidi
-   sekciju "Telegram bot" iznad) i trajno se čuva preko Vercel Blob (vidi sekciju iznad); za nešto
-   ozbiljnije potrebe razmisliti o pravom kalendarskom prikazu (Google Calendar ili slično).
+3. ~~**Pravi kalendar dostupnosti**~~ — dostupnost se sada automatski računa iz statusa kabina
+   (vidi "Upravljanje smeštajem" iznad), sa ručnim override-om preko `/admin` ili Telegram bota.
 4. **Domen i deploy** — deploy na Vercel (ili sličan hosting), povezati pravi domen, ažurirati
    `metadataBase` URL u `src/app/layout.tsx` i URL-ove u `robots.ts`/`sitemap.ts`.
 5. **Google Maps embed** — ako se obezbedi API ključ, zameniti statični placeholder u sekciji
    lokacije pravom interaktivnom mapom. (Za saobraćaj na `/infopult` tabli, `GOOGLE_MAPS_API_KEY` je već
    podržan — vidi sekciju "Info Board" iznad.)
 6. **Analytics** — dodati Google Analytics / Plausible po potrebi.
-7. **Info Board na pravoj bazi** — ako pređete na Supabase/sličnu bazu za dostupnost (tačka 3), po
-   istom principu prebaciti i `data/info-board.json` (vidi "Info Board" → "Napomena o skladištenju").
+7. **Info Board na pravoj bazi** — ako pređete na Supabase/sličnu bazu, po istom principu prebaciti
+   i `data/info-board.json` i `data/residence/*.json` (vidi "Trajno skladištenje" ispod).
+8. **Automatski dnevni Telegram podsetnik** — dodati `vercel.json` cron unos (`crons`) koji jednom
+   dnevno poziva novu rutu (npr. `/api/cron/residence-reminders`, zaštićenu `CRON_SECRET`-om) koja
+   samo zove već postojeću `runReminderSweep()` iz `src/lib/residence/reminders.ts` — logika i
+   dedupe su već gotovi, ostaje samo zakazivanje (vidi "Upravljanje smeštajem" iznad).

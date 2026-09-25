@@ -4,15 +4,24 @@ import { useState } from "react";
 import type { InfoPointConfig } from "@/lib/info-point";
 import type { SaveStatus } from "./SaveBar";
 
-/** Shared "save this slice of the Info Point config" flow used by every admin subpage. */
-export function useSavePatch() {
+/**
+ * Shared "PUT a JSON patch, show save status" flow. Defaults to the Info
+ * Point config endpoint (its original, only caller) — pass a different url
+ * and generic type to reuse it for other admin editors (e.g. Residence
+ * Management), including the PATCH/POST http methods some composite actions
+ * need instead of PUT.
+ */
+export function useSavePatch<T = Partial<InfoPointConfig>>(
+  url = "/api/admin/info-point",
+  method: "PUT" | "PATCH" | "POST" = "PUT"
+) {
   const [status, setStatus] = useState<SaveStatus>("idle");
 
-  async function save(patch: Partial<InfoPointConfig>) {
+  async function save(patch: T) {
     setStatus("saving");
     try {
-      const res = await fetch("/api/admin/info-point", {
-        method: "PUT",
+      const res = await fetch(url, {
+        method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(patch),
       });

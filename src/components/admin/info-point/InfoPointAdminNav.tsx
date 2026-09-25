@@ -24,7 +24,7 @@ export function InfoPointAdminNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="flex gap-1.5 overflow-x-auto px-5 pb-1 pt-4 sm:px-8">
+    <nav className="-mx-4 flex gap-1.5 overflow-x-auto px-4 pb-1 pt-4">
       {NAV_ITEMS.map((item) => {
         const active = item.href === "/admin/info-point" ? pathname === item.href : pathname?.startsWith(item.href);
         return (

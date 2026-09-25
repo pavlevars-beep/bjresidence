@@ -19,10 +19,20 @@ const durationKeyMap: Record<(typeof siteConfig.stayDurations)[number]["id"], "1
   "6m+": "6mplus",
 };
 
+interface PublicWebsiteSettings {
+  acceptingInquiries: boolean;
+  ctaTextSr: string;
+  ctaTextEn: string;
+}
+
 export function BookingForm() {
-  const { dict } = useLanguage();
+  const { dict, locale } = useLanguage();
   const [status, setStatus] = useState<Status>("idle");
-  const [availability, setAvailability] = useState(siteConfig.availability);
+  const [availability, setAvailability] = useState({
+    ...siteConfig.availability,
+    totalSpots: siteConfig.capacity.totalSpots,
+  });
+  const [siteSettings, setSiteSettings] = useState<PublicWebsiteSettings | null>(null);
 
   useEffect(() => {
     fetch("/api/availability")
@@ -33,7 +43,17 @@ export function BookingForm() {
       .catch(() => {
         // keep the siteConfig default if the request fails
       });
+
+    fetch("/api/website-settings")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data) setSiteSettings(data);
+      })
+      .catch(() => {});
   }, []);
+
+  const ctaOverride = locale === "sr" ? siteSettings?.ctaTextSr : siteSettings?.ctaTextEn;
+  const inquiriesClosed = siteSettings?.acceptingInquiries === false;
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -85,6 +105,14 @@ export function BookingForm() {
               <CheckCircle2 className="mt-0.5 shrink-0" size={24} />
               <p className="text-base font-medium leading-relaxed">{dict.booking.success}</p>
             </motion.div>
+          ) : inquiriesClosed ? (
+            <div className="mt-8 rounded-2xl bg-ink/5 p-6 text-ink/70">
+              <p className="text-base leading-relaxed">
+                {locale === "sr"
+                  ? "Trenutno ne primamo nove upite. Pozovite nas za više informacija."
+                  : "We're not accepting new inquiries right now. Call us for more information."}
+              </p>
+            </div>
           ) : (
             <form onSubmit={handleSubmit} className="mt-8 grid gap-5 sm:grid-cols-2">
               <Field label={dict.booking.fields.moveInDate}>
@@ -139,7 +167,7 @@ export function BookingForm() {
 
               <div className="sm:col-span-2">
                 <Button type="submit" disabled={status === "submitting"} className="w-full sm:w-auto">
-                  {status === "submitting" ? dict.booking.fields.submitting : dict.booking.fields.submit}
+                  {status === "submitting" ? dict.booking.fields.submitting : ctaOverride || dict.booking.fields.submit}
                 </Button>
                 {status === "error" && <p className="mt-3 text-sm text-red-700">{dict.booking.error}</p>}
               </div>
@@ -166,7 +194,7 @@ export function BookingForm() {
 
           {availability.hasFreeSpots && (
             <p className="mt-2 text-center text-sm text-olive-dark">
-              {dict.booking.availabilityLabel}: {availability.freeSpots} / {siteConfig.capacity.totalSpots}
+              {dict.booking.availabilityLabel}: {availability.freeSpots} / {availability.totalSpots}
             </p>
           )}
         </div>
