@@ -10,7 +10,8 @@ import { PaymentForm } from "./PaymentForm";
 import { StayDecisionControl } from "./StayDecisionControl";
 import { MoveCabinModal } from "./MoveCabinModal";
 import { DocumentsList } from "./DocumentsList";
-import type { Cabin, Payment, Resident, ResidentDocument, Stay } from "@/lib/residence/types";
+import { ContractsSection } from "./ContractsSection";
+import type { Cabin, Contract, Payment, Resident, ResidentDocument, Stay } from "@/lib/residence/types";
 
 const PAYMENT_TYPE_LABEL: Record<string, string> = {
   rent: "Kirija",
@@ -28,12 +29,14 @@ export function ResidentProfile({
   stays: initialStays,
   payments: initialPayments,
   documents: initialDocuments,
+  contracts: initialContracts,
   cabins,
 }: {
   resident: Resident;
   stays: Stay[];
   payments: Payment[];
   documents: ResidentDocument[];
+  contracts: Contract[];
   cabins: Cabin[];
   /** @deprecated depositHeld is now recomputed live from `payments` so deletes/adds reflect instantly. */
   depositHeld?: number;
@@ -234,6 +237,14 @@ export function ResidentProfile({
         <DocumentsList
           documents={documents}
           onDeleted={(id) => setDocuments((prev) => prev.filter((d) => d.id !== id))}
+        />
+      </SectionCard>
+
+      <SectionCard title="Ugovori">
+        <ContractsSection
+          residentId={resident.id}
+          stayId={(activeStay ?? sortedStays[0])?.id ?? null}
+          contracts={initialContracts}
         />
       </SectionCard>
 

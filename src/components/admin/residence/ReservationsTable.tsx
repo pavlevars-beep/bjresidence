@@ -38,6 +38,8 @@ export function ReservationsTable({ reservations: initial, cabinNameById }: { re
         lastName,
         nationality: "",
         dob: "",
+        placeOfBirth: "",
+        sex: "",
         phone: "",
         email: "",
         notes: "",

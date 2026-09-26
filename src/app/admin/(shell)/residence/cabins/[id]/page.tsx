@@ -9,6 +9,7 @@ import { getResidents } from "@/lib/residence/residents-store";
 import { getPaymentsForResident } from "@/lib/residence/payments-store";
 import { getDocumentsForResident } from "@/lib/residence/documents-store";
 import { getCabins } from "@/lib/residence/cabins-store";
+import { getContractsForResident } from "@/lib/residence/contracts-store";
 import { SectionCard } from "@/components/admin/ui";
 import { CabinStatusBadge } from "@/components/admin/residence/status-badges";
 import { ResidentProfile } from "@/components/admin/residence/ResidentProfile";
@@ -36,18 +37,20 @@ export default async function CabinDetailPage({ params }: { params: { id: string
     stays: Awaited<ReturnType<typeof getStaysForResident>>;
     payments: Awaited<ReturnType<typeof getPaymentsForResident>>;
     documents: Awaited<ReturnType<typeof getDocumentsForResident>>;
+    contracts: Awaited<ReturnType<typeof getContractsForResident>>;
     cabins: Awaited<ReturnType<typeof getCabins>>;
   } | null = null;
 
   if (view.resident && view.activeStay) {
     const resident = view.resident;
-    const [residentStays, residentPayments, residentDocuments, allCabins] = await Promise.all([
+    const [residentStays, residentPayments, residentDocuments, residentContracts, allCabins] = await Promise.all([
       getStaysForResident(resident.id),
       getPaymentsForResident(resident.id),
       getDocumentsForResident(resident.id),
+      getContractsForResident(resident.id),
       getCabins(),
     ]);
-    residentProfileData = { resident, stays: residentStays, payments: residentPayments, documents: residentDocuments, cabins: allCabins };
+    residentProfileData = { resident, stays: residentStays, payments: residentPayments, documents: residentDocuments, contracts: residentContracts, cabins: allCabins };
   }
 
   return (
@@ -91,6 +94,7 @@ export default async function CabinDetailPage({ params }: { params: { id: string
           stays={residentProfileData.stays}
           payments={residentProfileData.payments}
           documents={residentProfileData.documents}
+          contracts={residentProfileData.contracts}
           cabins={residentProfileData.cabins}
         />
       ) : (

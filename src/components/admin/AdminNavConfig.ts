@@ -39,6 +39,7 @@ export const ADMIN_NAV_GROUPS: AdminNavGroup[] = [
       { href: "/admin/residence/upcoming", label: "Predstojeće odluke" },
       { href: "/admin/residence/documents", label: "Dokumenta" },
       { href: "/admin/residence/stay-history", label: "Istorija boravaka" },
+      { href: "/admin/residence/contract-templates", label: "Šabloni ugovora" },
     ],
   },
   {

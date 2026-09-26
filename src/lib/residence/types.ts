@@ -29,6 +29,8 @@ export interface Resident {
   lastName: string;
   nationality: string;
   dob: string; // ISO date, "" if unknown
+  placeOfBirth: string;
+  sex: string;
   phone: string;
   email: string;
   notes: string;
@@ -165,3 +167,58 @@ export type PaymentStatus = "current" | "due_soon" | "overdue";
 
 /** Computed, never stored — see derive.ts. */
 export type CabinLiveStatus = "available" | "occupied" | "reserved" | "maintenance";
+
+/**
+ * Contracts — DOCX template management + deterministic generation.
+ * "Type" is a free-slugged category (e.g. "monthly_individual",
+ * "company_rental", "short_term", "annex") so new contract kinds don't
+ * require a schema change — see spec's "multiple contract types" future-proofing.
+ */
+export interface ContractTemplate {
+  id: string;
+  name: string;
+  contractType: string;
+  language: string;
+  version: string;
+  active: boolean;
+  uploadedAt: string;
+  notes: string;
+  blobPathname: string;
+  originalFilename: string;
+  /** Every {{placeholder}} found in the DOCX at upload time. */
+  detectedPlaceholders: string[];
+  /** Static fallback values for placeholders not in the known variable list — see contract-variables.ts. */
+  customVariableDefaults: Record<string, string>;
+}
+
+export type ContractStatus = "draft" | "generated" | "signed" | "cancelled";
+
+export interface Contract {
+  id: string;
+  residentId: string;
+  stayId: string;
+  cabinId: string;
+  templateId: string;
+  templateVersion: string;
+  contractType: string;
+  generatedAt: string;
+  contractStartDate: string;
+  status: ContractStatus;
+  docxBlobPathname: string;
+  pdfBlobPathname: string | null;
+  signedBlobPathname: string | null;
+  signedAt: string | null;
+  notes: string;
+  /** The exact variable values used to fill this contract — audit trail independent of later resident/stay edits. */
+  dataSnapshot: Record<string, string>;
+  createdAt: string;
+  updatedAt: string;
+}
+
+/** Landlord/legal info not already covered by siteConfig (brand name, address) — used to fill contract templates. */
+export interface ContractSettings {
+  landlordName: string;
+  landlordAddress: string;
+  landlordId: string;
+  updatedAt: string;
+}
