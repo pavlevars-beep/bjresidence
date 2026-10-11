@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { Search } from "lucide-react";
 import { inputClass, Field } from "@/components/admin/ui";
+import { formatDateDisplay } from "@/lib/residence/date-math";
 
 export interface StayHistoryRow {
   stayId: string;
@@ -68,7 +69,7 @@ export function StayHistorySearch({ rows }: { rows: StayHistoryRow[] }) {
                 <div>
                   <p className="text-sm font-medium text-ink">{r.residentName} — {r.cabinName}</p>
                   <p className="text-xs text-ink/50">
-                    {r.moveInDate} → {r.moveOutDate ?? "sada"} · {r.durationDays}d
+                    {formatDateDisplay(r.moveInDate)} → {r.moveOutDate ? formatDateDisplay(r.moveOutDate) : "sada"} · {r.durationDays}d
                   </p>
                 </div>
                 <div className="text-right text-xs text-ink/50">

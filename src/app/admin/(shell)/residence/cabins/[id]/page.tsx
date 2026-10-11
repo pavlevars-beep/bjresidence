@@ -13,6 +13,7 @@ import { getContractsForResident } from "@/lib/residence/contracts-store";
 import { SectionCard } from "@/components/admin/ui";
 import { CabinStatusBadge } from "@/components/admin/residence/status-badges";
 import { ResidentProfile } from "@/components/admin/residence/ResidentProfile";
+import { formatDateDisplay } from "@/lib/residence/date-math";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Kabina — BJ Residence Admin", robots: { index: false, follow: false } };
@@ -71,7 +72,7 @@ export default async function CabinDetailPage({ params }: { params: { id: string
           </div>
           <div>
             <dt className="text-xs font-semibold uppercase tracking-wide text-ink/45">Očekivano slobodno</dt>
-            <dd className="mt-1 text-sm text-ink">{view.availableFrom ?? "—"}</dd>
+            <dd className="mt-1 text-sm text-ink">{formatDateDisplay(view.availableFrom) || "—"}</dd>
           </div>
           {view.cabin.maintenanceFlag && (
             <div>
@@ -116,7 +117,7 @@ export default async function CabinDetailPage({ params }: { params: { id: string
                     {resident ? `${resident.firstName} ${resident.lastName}` : "Nepoznat gost"}
                   </Link>
                   <span className="text-xs text-ink/50">
-                    {stay.moveInDate} → {stay.actualMoveOutDate ?? (stay.status === "active" ? "sada" : "—")}
+                    {formatDateDisplay(stay.moveInDate)} → {stay.actualMoveOutDate ? formatDateDisplay(stay.actualMoveOutDate) : (stay.status === "active" ? "sada" : "—")}
                   </span>
                 </li>
               );

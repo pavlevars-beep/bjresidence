@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { StayDecisionControl } from "./StayDecisionControl";
+import { formatDateDisplay } from "@/lib/residence/date-math";
 import type { Cabin, Resident, Stay } from "@/lib/residence/types";
 
 export interface UpcomingRow {
@@ -37,7 +38,7 @@ export function UpcomingDecisionsList({ initial }: { initial: UpcomingRow[] }) {
               <Link href={`/admin/residence/residents/${row.resident.id}`} className="text-base font-semibold text-ink hover:underline">
                 {row.cabin.name} — {row.resident.firstName} {row.resident.lastName}
               </Link>
-              <p className="text-sm text-ink/50">{row.date} · {row.daysRemaining <= 0 ? "Danas/isteklo" : `za ${row.daysRemaining} dana`}</p>
+              <p className="text-sm text-ink/50">{formatDateDisplay(row.date)} · {row.daysRemaining <= 0 ? "Danas/isteklo" : `za ${row.daysRemaining} dana`}</p>
             </div>
           </div>
           <div className="mt-3">

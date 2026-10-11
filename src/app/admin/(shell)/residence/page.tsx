@@ -7,6 +7,7 @@ import { getCabinViews, getMissingDeposits, getResidenceStats, getUpcoming } fro
 import { listActivity } from "@/lib/residence/activity-log-store";
 import { SectionCard } from "@/components/admin/ui";
 import { CabinStatusBadge, PaymentStatusBadge } from "@/components/admin/residence/status-badges";
+import { formatDateDisplay } from "@/lib/residence/date-math";
 
 export const dynamic = "force-dynamic";
 
@@ -64,7 +65,7 @@ export default async function ResidenceOverviewPage() {
                 <p className="font-medium text-ink">{view.resident.firstName} {view.resident.lastName}</p>
                 {view.activeStay && (
                   <p className="mt-0.5 text-xs text-ink/50">
-                    Plaćeno do {view.activeStay.currentPeriodEnd}
+                    Plaćeno do {formatDateDisplay(view.activeStay.currentPeriodEnd)}
                     {view.paymentStatus && (
                       <span className="ml-1.5 inline-block align-middle">
                         <PaymentStatusBadge status={view.paymentStatus} />
@@ -72,7 +73,7 @@ export default async function ResidenceOverviewPage() {
                     )}
                   </p>
                 )}
-                {view.availableFrom && <p className="mt-1 text-xs font-medium text-wood">Slobodno od {view.availableFrom}</p>}
+                {view.availableFrom && <p className="mt-1 text-xs font-medium text-wood">Slobodno od {formatDateDisplay(view.availableFrom)}</p>}
               </div>
             ) : (
               <p className="mt-2.5 text-sm text-ink/45">{view.liveStatus === "available" ? "Nema gosta" : "—"}</p>
@@ -124,7 +125,7 @@ export default async function ResidenceOverviewPage() {
                     <p className="text-sm font-medium text-ink">
                       {item.cabin.name} — {item.resident.firstName} {item.resident.lastName}
                     </p>
-                    <p className="text-xs text-ink/50">{UPCOMING_LABEL[item.kind]} · {item.date}</p>
+                    <p className="text-xs text-ink/50">{UPCOMING_LABEL[item.kind]} · {formatDateDisplay(item.date)}</p>
                   </div>
                   <Link href="/admin/residence/upcoming" className="shrink-0 rounded-full bg-wood/10 px-2.5 py-1 text-xs font-semibold text-wood hover:bg-wood/20">
                     {item.daysRemaining <= 0 ? "Danas/isteklo" : `${item.daysRemaining}d`}
@@ -143,7 +144,9 @@ export default async function ResidenceOverviewPage() {
               {activity.map((entry) => (
                 <li key={entry.id} className="text-sm">
                   <p className="text-ink/80">{entry.summary}</p>
-                  <p className="text-xs text-ink/40">{new Date(entry.at).toLocaleString("sr-RS")}</p>
+                  <p className="text-xs text-ink/40">
+                    {formatDateDisplay(entry.at.slice(0, 10))} {new Date(entry.at).toLocaleTimeString("sr-RS", { hour: "2-digit", minute: "2-digit" })}
+                  </p>
                 </li>
               ))}
             </ul>

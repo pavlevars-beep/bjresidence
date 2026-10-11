@@ -5,6 +5,7 @@ import { Check, Download, FileSignature, Trash2, Upload } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { ContractWizard } from "./ContractWizard";
 import { downloadFile } from "@/lib/download-file-client";
+import { formatDateDisplay } from "@/lib/residence/date-math";
 import type { Contract, ContractStatus } from "@/lib/residence/types";
 
 const STATUS_LABEL: Record<ContractStatus, string> = {
@@ -103,8 +104,8 @@ export function ContractsSection({
             <li key={c.id} className="flex flex-col gap-2 rounded-2xl border border-ink/10 bg-white p-3.5">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <div>
-                  <p className="text-sm font-medium text-ink">Ugovor od {c.generatedAt.slice(0, 10)}</p>
-                  <p className="text-xs text-ink/50">Datum početka: {c.contractStartDate}</p>
+                  <p className="text-sm font-medium text-ink">Ugovor od {formatDateDisplay(c.generatedAt.slice(0, 10))}</p>
+                  <p className="text-xs text-ink/50">Datum početka: {formatDateDisplay(c.contractStartDate)}</p>
                 </div>
                 <span className={`rounded-full px-2.5 py-1 text-xs font-medium ${STATUS_CLASS[c.status]}`}>
                   {STATUS_LABEL[c.status]}

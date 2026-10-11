@@ -13,6 +13,7 @@ import { StayDecisionControl } from "./StayDecisionControl";
 import { MoveCabinModal } from "./MoveCabinModal";
 import { DocumentsList } from "./DocumentsList";
 import { ContractsSection } from "./ContractsSection";
+import { formatDateDisplay } from "@/lib/residence/date-math";
 import type { Cabin, Contract, Payment, Resident, ResidentDocument, Stay } from "@/lib/residence/types";
 
 const PAYMENT_TYPE_LABEL: Record<string, string> = {
@@ -245,7 +246,7 @@ export function ResidentProfile({
             </div>
             <div>
               <p className="text-xs font-semibold uppercase tracking-wide text-ink/45">Datum rođenja</p>
-              <p className="mt-1 text-sm text-ink">{resident.dob || "—"}{resident.placeOfBirth ? `, ${resident.placeOfBirth}` : ""}</p>
+              <p className="mt-1 text-sm text-ink">{formatDateDisplay(resident.dob) || "—"}{resident.placeOfBirth ? `, ${resident.placeOfBirth}` : ""}</p>
             </div>
             <div>
               <p className="text-xs font-semibold uppercase tracking-wide text-ink/45">Telefon / Email</p>
@@ -283,11 +284,11 @@ export function ResidentProfile({
             <div className="grid gap-4 sm:grid-cols-2">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-wide text-ink/45">Useljenje</p>
-                <p className="mt-1 text-sm text-ink">{activeStay.moveInDate}</p>
+                <p className="mt-1 text-sm text-ink">{formatDateDisplay(activeStay.moveInDate)}</p>
               </div>
               <div>
                 <p className="text-xs font-semibold uppercase tracking-wide text-ink/45">Trenutni plaćeni period</p>
-                <p className="mt-1 text-sm text-ink">{activeStay.currentPeriodStart} → {activeStay.currentPeriodEnd}</p>
+                <p className="mt-1 text-sm text-ink">{formatDateDisplay(activeStay.currentPeriodStart)} → {formatDateDisplay(activeStay.currentPeriodEnd)}</p>
               </div>
               <div>
                 <p className="text-xs font-semibold uppercase tracking-wide text-ink/45">Mesečna kirija</p>
@@ -295,7 +296,7 @@ export function ResidentProfile({
               </div>
               <div>
                 <p className="text-xs font-semibold uppercase tracking-wide text-ink/45">Očekivano iseljenje</p>
-                <p className="mt-1 text-sm text-ink">{activeStay.expectedMoveOutDate ?? "—"}</p>
+                <p className="mt-1 text-sm text-ink">{formatDateDisplay(activeStay.expectedMoveOutDate) || "—"}</p>
               </div>
             </div>
           )}
@@ -344,7 +345,7 @@ export function ResidentProfile({
                   <div>
                     <p className="text-sm font-medium text-ink">{PAYMENT_TYPE_LABEL[p.type]} — {p.amount} {p.currency}</p>
                     <p className="text-xs text-ink/50">
-                      {p.paymentDate}{p.periodFrom && p.periodTo ? ` · Period: ${p.periodFrom} – ${p.periodTo}` : ""}
+                      {formatDateDisplay(p.paymentDate)}{p.periodFrom && p.periodTo ? ` · Period: ${formatDateDisplay(p.periodFrom)} – ${formatDateDisplay(p.periodTo)}` : ""}
                     </p>
                   </div>
                   <div className="flex shrink-0 items-center gap-1">
@@ -405,7 +406,7 @@ export function ResidentProfile({
                 <li key={s.id} className="flex items-center justify-between gap-3 rounded-2xl border border-ink/10 bg-white p-3.5">
                   <div>
                     <span className="text-sm text-ink">{cabinById.get(s.cabinId)?.name ?? "—"}</span>
-                    <span className="ml-2 text-xs text-ink/50">{s.moveInDate} → {s.actualMoveOutDate ?? (s.status === "active" ? "sada" : "—")}</span>
+                    <span className="ml-2 text-xs text-ink/50">{formatDateDisplay(s.moveInDate)} → {s.actualMoveOutDate ? formatDateDisplay(s.actualMoveOutDate) : (s.status === "active" ? "sada" : "—")}</span>
                   </div>
                   <div className="flex shrink-0 items-center gap-1">
                     <button

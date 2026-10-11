@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { AlertTriangle, Check, Download, X } from "lucide-react";
 import { ContractTemplateUploadForm } from "./ContractTemplateUploadForm";
+import { formatDateDisplay } from "@/lib/residence/date-math";
 import type { ContractTemplate } from "@/lib/residence/types";
 
 export function ContractTemplatesManager({ initial }: { initial: ContractTemplate[] }) {
@@ -64,7 +65,7 @@ export function ContractTemplatesManager({ initial }: { initial: ContractTemplat
             <li key={t.id} className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-ink/10 bg-white p-3.5">
               <div>
                 <p className="text-sm font-medium text-ink">{t.name} <span className="text-xs font-normal text-ink/40">v{t.version} · {t.language.toUpperCase()}</span></p>
-                <p className="text-xs text-ink/50">{t.detectedPlaceholders.length} polja · otpremljeno {new Date(t.uploadedAt).toLocaleDateString("sr-RS")}{t.notes ? ` · ${t.notes}` : ""}</p>
+                <p className="text-xs text-ink/50">{t.detectedPlaceholders.length} polja · otpremljeno {formatDateDisplay(t.uploadedAt.slice(0, 10))}{t.notes ? ` · ${t.notes}` : ""}</p>
               </div>
               <div className="flex items-center gap-2">
                 <a

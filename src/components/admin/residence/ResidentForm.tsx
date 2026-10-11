@@ -7,6 +7,7 @@ import { Field, inputClass, SectionCard, Toggle } from "@/components/admin/ui";
 import { Button } from "@/components/ui/Button";
 import { PassportOcrPanel, type ExtractedPassportFields } from "./PassportOcrPanel";
 import { ContractWizard } from "./ContractWizard";
+import { formatDateDisplay } from "@/lib/residence/date-math";
 import type { CabinView } from "@/lib/residence/derive";
 import type { Contract } from "@/lib/residence/types";
 
@@ -328,7 +329,7 @@ export function ResidentForm({ cabins }: { cabins: CabinView[] }) {
             {assignCabin && (
               <>
                 <div className="flex justify-between gap-2 text-sm"><dt className="text-ink/50">Kabina</dt><dd className="font-medium text-ink">{cabinName}</dd></div>
-                <div className="flex justify-between gap-2 text-sm"><dt className="text-ink/50">Datum useljenja</dt><dd className="font-medium text-ink">{moveInDate}</dd></div>
+                <div className="flex justify-between gap-2 text-sm"><dt className="text-ink/50">Datum useljenja</dt><dd className="font-medium text-ink">{formatDateDisplay(moveInDate)}</dd></div>
                 <div className="flex justify-between gap-2 text-sm"><dt className="text-ink/50">Mesečna kirija</dt><dd className="font-medium text-ink">{monthlyRent} {currency}</dd></div>
               </>
             )}

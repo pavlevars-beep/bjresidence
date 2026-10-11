@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { formatDateDisplay } from "@/lib/residence/date-math";
 import type { CleaningDueItem } from "@/lib/residence/derive";
 
 /** Posteljina/peškiri change every 15 days per the contract — computed, nothing here is stored as "done". */
@@ -20,10 +21,10 @@ export function CleaningScheduleList({ items }: { items: CleaningDueItem[] }) {
             <Link href={`/admin/residence/residents/${item.resident.id}`} className="text-sm font-medium text-ink hover:underline">
               {item.cabin.name} — {item.resident.firstName} {item.resident.lastName}
             </Link>
-            <p className="text-xs text-ink/50">Useljenje: {item.stay.moveInDate}</p>
+            <p className="text-xs text-ink/50">Useljenje: {formatDateDisplay(item.stay.moveInDate)}</p>
           </div>
           <div className="text-right">
-            <p className={`text-sm font-medium ${item.overdue ? "text-red-700" : "text-ink"}`}>{item.dueDate}</p>
+            <p className={`text-sm font-medium ${item.overdue ? "text-red-700" : "text-ink"}`}>{formatDateDisplay(item.dueDate)}</p>
             <p className="text-xs text-ink/50">
               {item.overdue ? `kasni ${-item.daysRemaining} dana` : item.daysRemaining === 0 ? "danas" : `za ${item.daysRemaining} dana`}
             </p>

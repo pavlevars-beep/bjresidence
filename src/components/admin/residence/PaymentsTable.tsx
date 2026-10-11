@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { inputClass } from "@/components/admin/ui";
+import { formatDateDisplay } from "@/lib/residence/date-math";
 import type { Payment } from "@/lib/residence/types";
 
 const TYPE_LABEL: Record<string, string> = {
@@ -72,12 +73,12 @@ export function PaymentsTable({ rows }: { rows: PaymentRow[] }) {
                   {p.residentName}
                 </Link>
                 <p className="text-xs text-ink/50">
-                  {p.cabinName} · {TYPE_LABEL[p.type]}{p.periodFrom && p.periodTo ? ` · ${p.periodFrom} – ${p.periodTo}` : ""}
+                  {p.cabinName} · {TYPE_LABEL[p.type]}{p.periodFrom && p.periodTo ? ` · ${formatDateDisplay(p.periodFrom)} – ${formatDateDisplay(p.periodTo)}` : ""}
                 </p>
               </div>
               <div className="text-right">
                 <p className="text-sm font-semibold text-ink">{p.amount} {p.currency}</p>
-                <p className="text-xs text-ink/40">{p.paymentDate}</p>
+                <p className="text-xs text-ink/40">{formatDateDisplay(p.paymentDate)}</p>
               </div>
             </li>
           ))}

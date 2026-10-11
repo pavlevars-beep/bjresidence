@@ -1,4 +1,5 @@
 import { siteConfig } from "@/config/site";
+import { formatDateDisplay } from "./date-math";
 import type { Cabin, ContractSettings, Resident, Stay } from "./types";
 
 /**
@@ -60,22 +61,26 @@ export function buildContractVariables(input: BuildVariablesInput): Record<strin
   const { resident, stay, cabin, contractSettings } = input;
 
   return {
-    contract_date: new Date().toISOString().slice(0, 10),
+    // Dates are formatted DD-MM-YYYY for display in the generated document —
+    // the underlying Resident/Stay records stay ISO (required for sorting,
+    // date-math and <input type="date">); this is the one place that ISO
+    // data turns into contract-facing text.
+    contract_date: formatDateDisplay(new Date().toISOString().slice(0, 10)),
     resident_first_name: resident.firstName,
     resident_last_name: resident.lastName,
     resident_full_name: `${resident.firstName} ${resident.lastName}`.trim(),
     nationality: resident.nationality,
-    date_of_birth: resident.dob,
+    date_of_birth: formatDateDisplay(resident.dob),
     place_of_birth: resident.placeOfBirth,
     sex: resident.sex,
     passport_number: resident.passportNumber,
     passport_country: resident.passportCountry,
-    passport_issue_date: resident.passportIssueDate,
-    passport_expiry: resident.passportExpiryDate,
+    passport_issue_date: formatDateDisplay(resident.passportIssueDate),
+    passport_expiry: formatDateDisplay(resident.passportExpiryDate),
     cabin_number: String(cabin.number),
     cabin_name: cabin.name,
-    move_in_date: stay.moveInDate,
-    expected_move_out_date: stay.expectedMoveOutDate ?? "",
+    move_in_date: formatDateDisplay(stay.moveInDate),
+    expected_move_out_date: formatDateDisplay(stay.expectedMoveOutDate),
     expected_stay_label: stay.estimatedDurationLabel,
     monthly_rent: String(stay.monthlyRent),
     deposit_amount: input.depositAmount != null ? String(input.depositAmount) : "",
@@ -84,7 +89,7 @@ export function buildContractVariables(input: BuildVariablesInput): Record<strin
         ? String(stay.monthlyRent + input.depositAmount)
         : "",
     currency: stay.currency,
-    payment_date: input.initialPaymentDate ?? stay.moveInDate,
+    payment_date: formatDateDisplay(input.initialPaymentDate ?? stay.moveInDate),
     property_name: siteConfig.brand.name,
     property_address: siteConfig.location.address,
     landlord_name: contractSettings.landlordName,

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { FileText, Trash2 } from "lucide-react";
+import { formatDateDisplay } from "@/lib/residence/date-math";
 import type { ResidentDocument } from "@/lib/residence/types";
 
 export function DocumentsList({
@@ -42,7 +43,7 @@ export function DocumentsList({
                 {showResidentName && doc.residentName ? ` — ${doc.residentName}` : ""}
               </p>
               <p className="text-xs text-ink/50">
-                {new Date(doc.uploadedAt).toLocaleDateString("sr-RS")} · {doc.retained ? "Original sačuvan" : "Original nije zadržan (samo podaci)"}
+                {formatDateDisplay(doc.uploadedAt.slice(0, 10))} · {doc.retained ? "Original sačuvan" : "Original nije zadržan (samo podaci)"}
               </p>
             </div>
           </div>

@@ -6,6 +6,7 @@ import { Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { ReservationStatusBadge } from "./status-badges";
 import { ReservationForm } from "./ReservationForm";
+import { formatDateDisplay } from "@/lib/residence/date-math";
 import type { Cabin, Reservation } from "@/lib/residence/types";
 
 export function ReservationsTable({
@@ -116,7 +117,7 @@ export function ReservationsTable({
             <div>
               <p className="text-sm font-medium text-ink">{cabinNameById[r.cabinId] ?? "—"} — {r.residentName}</p>
               <p className="text-xs text-ink/50">
-                Od {r.startDate}{r.expectedEndDate ? ` do ${r.expectedEndDate}` : ""}
+                Od {formatDateDisplay(r.startDate)}{r.expectedEndDate ? ` do ${formatDateDisplay(r.expectedEndDate)}` : ""}
                 {r.price ? ` · ${r.price} €` : ""}
               </p>
             </div>

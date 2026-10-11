@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { formatDateDisplay } from "@/lib/residence/date-math";
 import type { StayDeadlines } from "@/lib/residence/derive";
 
 function urgencyClass(days: number): string {
@@ -34,13 +35,13 @@ export function AllStayDeadlinesList({ items }: { items: StayDeadlines[] }) {
                 <span className="ml-1 text-xs text-ink/45">({item.cabin.name})</span>
               </td>
               <td className={`py-2 pr-3 ${urgencyClass(item.daysToNoticeDeadline)}`}>
-                {item.noticeDeadline}
+                {formatDateDisplay(item.noticeDeadline)}
                 <span className="ml-1 text-xs">
                   ({item.daysToNoticeDeadline < 0 ? `prošao pre ${-item.daysToNoticeDeadline}d` : item.daysToNoticeDeadline === 0 ? "danas" : `za ${item.daysToNoticeDeadline}d`})
                 </span>
               </td>
-              <td className="py-2 pr-3 text-ink/70">{item.periodEnd}</td>
-              <td className="py-2 pr-3 text-ink/70">{item.nextPaymentDue}</td>
+              <td className="py-2 pr-3 text-ink/70">{formatDateDisplay(item.periodEnd)}</td>
+              <td className="py-2 pr-3 text-ink/70">{formatDateDisplay(item.nextPaymentDue)}</td>
             </tr>
           ))}
         </tbody>

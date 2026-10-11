@@ -1,3 +1,5 @@
+import { formatDateDisplay } from "./residence/date-math";
+
 const TELEGRAM_API = "https://api.telegram.org";
 
 function escapeHtml(text: string) {
@@ -79,8 +81,8 @@ export function formatStayReminder(payload: {
     "",
     `${escapeHtml(payload.cabinName)} — ${escapeHtml(payload.residentName)}`,
     "",
-    `Plaćeni period ističe: ${escapeHtml(payload.currentPeriodEnd)}`,
-    `Sledeća rata dospeva: ${escapeHtml(payload.nextPaymentDue)}`,
+    `Plaćeni period ističe: ${escapeHtml(formatDateDisplay(payload.currentPeriodEnd))}`,
+    `Sledeća rata dospeva: ${escapeHtml(formatDateDisplay(payload.nextPaymentDue))}`,
     `Preostalo dana: ${payload.daysRemaining}`,
     "",
     `Status: ${escapeHtml(payload.continuationStatus)}`,

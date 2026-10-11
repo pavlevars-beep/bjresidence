@@ -89,6 +89,21 @@ export function todayISO(): string {
   return new Date().toISOString().slice(0, 10);
 }
 
+/**
+ * Display-only: formats a stored ISO date ("YYYY-MM-DD") as "DD-MM-YYYY".
+ * Never use this on a value headed for an `<input type="date">` — those
+ * require ISO, and the browser already renders them in the user's own
+ * locale regardless of the stored value. This is for plain-text date
+ * readouts everywhere else (lists, tables, the contract template, Telegram
+ * messages).
+ */
+export function formatDateDisplay(iso: string | null | undefined): string {
+  if (!iso) return "";
+  const [y, m, d] = iso.slice(0, 10).split("-");
+  if (!y || !m || !d) return iso;
+  return `${d}-${m}-${y}`;
+}
+
 /** "current" if the period end is more than 7 days away, "due_soon" within 7 days, "overdue" if past. */
 export function computePaymentStatus(currentPeriodEnd: string): "current" | "due_soon" | "overdue" {
   const days = daysBetween(todayISO(), currentPeriodEnd);
