@@ -68,6 +68,17 @@ function addOneDay(iso: string): string {
   return toISODate(date);
 }
 
+/** Adds (or, with a negative count, subtracts) N calendar days to an ISO date. */
+export function addDays(iso: string, count: number): string {
+  const date = parseISODate(iso);
+  date.setUTCDate(date.getUTCDate() + count);
+  return toISODate(date);
+}
+
+export function subtractDays(iso: string, count: number): string {
+  return addDays(iso, -count);
+}
+
 export function daysBetween(fromISO: string, toISO: string): number {
   const from = parseISODate(fromISO);
   const to = parseISODate(toISO);

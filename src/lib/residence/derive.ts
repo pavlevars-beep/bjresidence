@@ -3,7 +3,7 @@ import { getResidents } from "./residents-store";
 import { getStays } from "./stays-store";
 import { getReservations } from "./reservations-store";
 import { getDepositHeld } from "./payments-store";
-import { computePaymentStatus, daysBetween, todayISO } from "./date-math";
+import { addDays, computePaymentStatus, daysBetween, subtractDays, todayISO } from "./date-math";
 import type { Cabin, CabinLiveStatus, PaymentStatus, Reservation, Resident, Stay } from "./types";
 
 export interface CabinView {
@@ -135,6 +135,101 @@ export async function getUpcoming(withinDays = 7): Promise<UpcomingItem[]> {
         });
       }
     }
+  }
+
+  return items.sort((a, b) => a.daysRemaining - b.daysRemaining);
+}
+
+export interface StayDeadlines {
+  stay: Stay;
+  cabin: Cabin;
+  resident: Resident;
+  /** 7 days before currentPeriodEnd — the contractual cutoff to notify if not continuing. */
+  noticeDeadline: string;
+  daysToNoticeDeadline: number;
+  /** currentPeriodEnd itself — when the current paid period actually runs out. */
+  periodEnd: string;
+  daysToPeriodEnd: number;
+  /** The day after periodEnd — when rent for the next period is due if continuing. */
+  nextPaymentDue: string;
+}
+
+/**
+ * Every active stay's decision/payment dates, computed now, with no day-window
+ * filtering — the full picture "unapred" (in advance), not just what's already
+ * urgent. getUpcoming() stays untouched since the Telegram reminder sweep's
+ * dedupe timing depends on its exact semantics; this is a separate, additive
+ * read for the admin UI.
+ */
+export async function getAllStayDeadlines(): Promise<StayDeadlines[]> {
+  const [cabins, stays, residents] = await Promise.all([getCabins(), getStays(), getResidents()]);
+  const cabinById = new Map(cabins.map((c) => [c.id, c]));
+  const residentById = new Map(residents.map((r) => [r.id, r]));
+  const today = todayISO();
+  const items: StayDeadlines[] = [];
+
+  for (const stay of stays) {
+    if (stay.status !== "active") continue;
+    const cabin = cabinById.get(stay.cabinId);
+    const resident = residentById.get(stay.residentId);
+    if (!cabin || !resident) continue;
+
+    const noticeDeadline = subtractDays(stay.currentPeriodEnd, 7);
+    const nextPaymentDue = addDays(stay.currentPeriodEnd, 1);
+
+    items.push({
+      stay,
+      cabin,
+      resident,
+      noticeDeadline,
+      daysToNoticeDeadline: daysBetween(today, noticeDeadline),
+      periodEnd: stay.currentPeriodEnd,
+      daysToPeriodEnd: daysBetween(today, stay.currentPeriodEnd),
+      nextPaymentDue,
+    });
+  }
+
+  return items.sort((a, b) => a.daysToNoticeDeadline - b.daysToNoticeDeadline);
+}
+
+const CLEANING_CYCLE_DAYS = 15;
+
+export interface CleaningDueItem {
+  stay: Stay;
+  cabin: Cabin;
+  resident: Resident;
+  /** The most recent 15-day change-cycle date (bedding/towels, per the contract's included-services clause). */
+  dueDate: string;
+  daysRemaining: number;
+  overdue: boolean;
+}
+
+/**
+ * Bedsheets/towels are contractually changed every 15 days from move-in —
+ * this has no stored "last done" state (nothing tracks actual completion),
+ * so it always surfaces the most recent 15-day checkpoint: upcoming if none
+ * has passed yet, or the latest one (flagged overdue) once it has.
+ */
+export async function getCleaningSchedule(): Promise<CleaningDueItem[]> {
+  const [cabins, stays, residents] = await Promise.all([getCabins(), getStays(), getResidents()]);
+  const cabinById = new Map(cabins.map((c) => [c.id, c]));
+  const residentById = new Map(residents.map((r) => [r.id, r]));
+  const today = todayISO();
+  const items: CleaningDueItem[] = [];
+
+  for (const stay of stays) {
+    if (stay.status !== "active") continue;
+    const cabin = cabinById.get(stay.cabinId);
+    const resident = residentById.get(stay.residentId);
+    if (!cabin || !resident) continue;
+
+    const daysSinceMoveIn = daysBetween(stay.moveInDate, today);
+    const cyclesPassed = Math.floor(daysSinceMoveIn / CLEANING_CYCLE_DAYS);
+    const currentCycle = cyclesPassed >= 1 ? cyclesPassed : 1;
+    const dueDate = addDays(stay.moveInDate, currentCycle * CLEANING_CYCLE_DAYS);
+    const daysRemaining = daysBetween(today, dueDate);
+
+    items.push({ stay, cabin, resident, dueDate, daysRemaining, overdue: daysRemaining < 0 });
   }
 
   return items.sort((a, b) => a.daysRemaining - b.daysRemaining);
