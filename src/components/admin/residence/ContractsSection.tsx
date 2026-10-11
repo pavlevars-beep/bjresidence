@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Check, Download, FileSignature, Trash2, Upload } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { ContractWizard } from "./ContractWizard";
+import { downloadFile } from "@/lib/download-file-client";
 import type { Contract, ContractStatus } from "@/lib/residence/types";
 
 const STATUS_LABEL: Record<ContractStatus, string> = {
@@ -33,8 +34,22 @@ export function ContractsSection({
   const [showWizard, setShowWizard] = useState(false);
   const [signingId, setSigningId] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [downloadingKey, setDownloadingKey] = useState<string | null>(null);
+  const [downloadError, setDownloadError] = useState("");
 
   const sorted = [...contracts].sort((a, b) => b.generatedAt.localeCompare(a.generatedAt));
+
+  async function handleDownload(contractId: string, signed: boolean) {
+    const key = `${contractId}-${signed ? "signed" : "docx"}`;
+    setDownloadingKey(key);
+    setDownloadError("");
+    const url = signed
+      ? `/api/admin/residence/contracts/${contractId}/file?type=signed`
+      : `/api/admin/residence/contracts/${contractId}/file`;
+    const result = await downloadFile(url, signed ? "potpisan-ugovor" : "ugovor.docx");
+    if (!result.ok) setDownloadError(result.error);
+    setDownloadingKey(null);
+  }
 
   async function handleSignUpload(contractId: string, file: File) {
     setSigningId(contractId);
@@ -79,6 +94,7 @@ export function ContractsSection({
 
   return (
     <div className="flex flex-col gap-4">
+      {downloadError && <p className="text-sm text-red-700">{downloadError}</p>}
       {sorted.length === 0 ? (
         <p className="text-sm text-ink/50">Još nema generisanih ugovora.</p>
       ) : (
@@ -95,21 +111,23 @@ export function ContractsSection({
                 </span>
               </div>
               <div className="flex flex-wrap items-center gap-2">
-                <a
-                  href={`/api/admin/residence/contracts/${c.id}/file?dl=${Date.now()}`}
-                  download
+                <button
+                  type="button"
+                  onClick={() => handleDownload(c.id, false)}
+                  disabled={downloadingKey === `${c.id}-docx`}
                   className="flex items-center gap-1.5 rounded-full border border-ink/15 px-3 py-1.5 text-xs font-medium text-ink hover:bg-ink/5"
                 >
-                  <Download size={13} /> DOCX
-                </a>
+                  <Download size={13} /> {downloadingKey === `${c.id}-docx` ? "Preuzimanje..." : "DOCX"}
+                </button>
                 {c.signedBlobPathname && (
-                  <a
-                    href={`/api/admin/residence/contracts/${c.id}/file?type=signed&dl=${Date.now()}`}
-                    download
+                  <button
+                    type="button"
+                    onClick={() => handleDownload(c.id, true)}
+                    disabled={downloadingKey === `${c.id}-signed`}
                     className="flex items-center gap-1.5 rounded-full border border-ink/15 px-3 py-1.5 text-xs font-medium text-ink hover:bg-ink/5"
                   >
-                    <Download size={13} /> Potpisana kopija
-                  </a>
+                    <Download size={13} /> {downloadingKey === `${c.id}-signed` ? "Preuzimanje..." : "Potpisana kopija"}
+                  </button>
                 )}
                 {c.status !== "signed" && c.status !== "cancelled" && (
                   <>

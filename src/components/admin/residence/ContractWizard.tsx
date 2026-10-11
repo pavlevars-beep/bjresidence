@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { AlertTriangle, Check, Download, Eye, SkipForward } from "lucide-react";
 import { inputClass, Field } from "@/components/admin/ui";
 import { Button } from "@/components/ui/Button";
+import { downloadFile } from "@/lib/download-file-client";
 import type { Contract, ContractTemplate } from "@/lib/residence/types";
 import type { ContractVariableDef } from "@/lib/residence/contract-variables";
 
@@ -47,6 +48,17 @@ export function ContractWizard({
   const [missing, setMissing] = useState<ContractVariableDef[]>([]);
   const [overrideMissing, setOverrideMissing] = useState(false);
   const [contract, setContract] = useState<Contract | null>(null);
+  const [downloading, setDownloading] = useState(false);
+  const [downloadError, setDownloadError] = useState("");
+
+  async function handleDownload() {
+    if (!contract) return;
+    setDownloading(true);
+    setDownloadError("");
+    const result = await downloadFile(`/api/admin/residence/contracts/${contract.id}/file`, "ugovor.docx");
+    if (!result.ok) setDownloadError(result.error);
+    setDownloading(false);
+  }
 
   useEffect(() => {
     fetch("/api/admin/residence/contract-templates")
@@ -129,14 +141,16 @@ export function ContractWizard({
           <Check size={16} /> Ugovor je generisan.
         </p>
         <div className="flex flex-wrap gap-2">
-          <a
-            href={`/api/admin/residence/contracts/${contract.id}/file?dl=${Date.now()}`}
-            download
+          <button
+            type="button"
+            onClick={handleDownload}
+            disabled={downloading}
             className="flex items-center gap-1.5 rounded-full bg-olive-dark px-4 py-2 text-sm font-medium text-cream hover:bg-[#4a5241]"
           >
-            <Download size={15} /> Preuzmi DOCX
-          </a>
+            <Download size={15} /> {downloading ? "Preuzimanje..." : "Preuzmi DOCX"}
+          </button>
         </div>
+        {downloadError && <p className="text-sm text-red-700">{downloadError}</p>}
       </div>
     );
   }
