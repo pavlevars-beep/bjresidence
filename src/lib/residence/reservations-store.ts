@@ -67,6 +67,30 @@ export async function updateReservationStatus(id: string, status: ReservationSta
   return updated;
 }
 
+export type ReservationPatch = Partial<
+  Pick<Reservation, "cabinId" | "residentName" | "startDate" | "expectedEndDate" | "price" | "deposit" | "currency" | "notes">
+>;
+
+/** Plain field edit for correcting a mistaken entry — never touches status/conversion fields. */
+export async function updateReservation(id: string, patch: ReservationPatch): Promise<Reservation | null> {
+  const items = await getReservations();
+  const index = items.findIndex((r) => r.id === id);
+  if (index === -1) return null;
+  const updated: Reservation = { ...items[index], ...patch, updatedAt: new Date().toISOString() };
+  const next = [...items];
+  next[index] = updated;
+  await writeCollection(BLOB_PATH, next);
+  return updated;
+}
+
+export async function deleteReservation(id: string): Promise<boolean> {
+  const items = await getReservations();
+  const next = items.filter((r) => r.id !== id);
+  if (next.length === items.length) return false;
+  await writeCollection(BLOB_PATH, next);
+  return true;
+}
+
 /**
  * Converts a reservation into a real resident + active stay (creating the
  * resident record first if one wasn't already linked), and marks the

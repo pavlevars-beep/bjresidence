@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Check, Download, FileSignature, Upload } from "lucide-react";
+import { Check, Download, FileSignature, Trash2, Upload } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { ContractWizard } from "./ContractWizard";
 import type { Contract, ContractStatus } from "@/lib/residence/types";
@@ -32,6 +32,7 @@ export function ContractsSection({
   const [contracts, setContracts] = useState(initialContracts);
   const [showWizard, setShowWizard] = useState(false);
   const [signingId, setSigningId] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const sorted = [...contracts].sort((a, b) => b.generatedAt.localeCompare(a.generatedAt));
 
@@ -60,6 +61,19 @@ export function ContractsSection({
     const data = await res.json();
     if (res.ok && data.ok) {
       setContracts((prev) => prev.map((c) => (c.id === contractId ? data.contract : c)));
+    }
+  }
+
+  async function handleDelete(contractId: string) {
+    if (!confirm("Obrisati ovaj ugovor? Ova radnja se ne može poništiti — generisani i potpisani fajl biće trajno obrisani.")) return;
+    setDeletingId(contractId);
+    try {
+      const res = await fetch(`/api/admin/residence/contracts/${contractId}`, { method: "DELETE" });
+      if (res.ok) {
+        setContracts((prev) => prev.filter((c) => c.id !== contractId));
+      }
+    } finally {
+      setDeletingId(null);
     }
   }
 
@@ -122,6 +136,14 @@ export function ContractsSection({
                     </button>
                   </>
                 )}
+                <button
+                  type="button"
+                  onClick={() => handleDelete(c.id)}
+                  disabled={deletingId === c.id}
+                  className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium text-red-700 hover:bg-red-50"
+                >
+                  <Trash2 size={13} /> Obriši
+                </button>
               </div>
             </li>
           ))}

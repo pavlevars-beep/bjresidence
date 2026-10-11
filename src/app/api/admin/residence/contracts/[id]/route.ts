@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
-import { getContract, updateContractStatus } from "@/lib/residence/contracts-store";
+import { deleteContract, getContract, updateContractStatus } from "@/lib/residence/contracts-store";
+import { deleteContractFile } from "@/lib/contract-uploads";
 import { logActivity } from "@/lib/residence/activity-log-store";
 import type { ContractStatus } from "@/lib/residence/types";
 
@@ -41,4 +42,21 @@ export async function PATCH(request: Request, { params }: { params: { id: string
   );
 
   return NextResponse.json({ ok: true, contract: updated });
+}
+
+/** Removes the contract record and its generated/signed files — e.g. a run against the wrong template. */
+export async function DELETE(_request: Request, { params }: { params: { id: string } }) {
+  if (!isAdminAuthenticated()) {
+    return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 });
+  }
+
+  const deleted = await deleteContract(params.id);
+  if (!deleted) return NextResponse.json({ ok: false, error: "not_found" }, { status: 404 });
+
+  if (deleted.docxBlobPathname) await deleteContractFile(deleted.docxBlobPathname);
+  if (deleted.signedBlobPathname) await deleteContractFile(deleted.signedBlobPathname);
+
+  await logActivity("contract_deleted", "Ugovor obrisan", "contract", params.id);
+
+  return NextResponse.json({ ok: true });
 }

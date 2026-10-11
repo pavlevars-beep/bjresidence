@@ -2,11 +2,13 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Trash2 } from "lucide-react";
+import { Pencil, Trash2 } from "lucide-react";
 import { Field, inputClass, SectionCard } from "@/components/admin/ui";
 import { Button } from "@/components/ui/Button";
 import { ContinuationBadge, ResidentStatusBadge } from "./status-badges";
 import { PaymentForm } from "./PaymentForm";
+import { ResidentEditForm } from "./ResidentEditForm";
+import { StayEditForm } from "./StayEditForm";
 import { StayDecisionControl } from "./StayDecisionControl";
 import { MoveCabinModal } from "./MoveCabinModal";
 import { DocumentsList } from "./DocumentsList";
@@ -51,7 +53,13 @@ export function ResidentProfile({
   const [showMoveCabin, setShowMoveCabin] = useState(false);
   const [editingNotes, setEditingNotes] = useState(false);
   const [notesDraft, setNotesDraft] = useState(resident.notes);
+  const [editingPaymentId, setEditingPaymentId] = useState<string | null>(null);
   const [deletingPaymentId, setDeletingPaymentId] = useState<string | null>(null);
+  const [editingResident, setEditingResident] = useState(false);
+  const [deletingResident, setDeletingResident] = useState(false);
+  const [editingActiveStay, setEditingActiveStay] = useState(false);
+  const [editingStayId, setEditingStayId] = useState<string | null>(null);
+  const [deletingStayId, setDeletingStayId] = useState<string | null>(null);
 
   const cabinById = new Map(cabins.map((c) => [c.id, c]));
   const activeStay = stays.find((s) => s.status === "active") ?? null;
@@ -105,6 +113,20 @@ export function ResidentProfile({
     }
   }
 
+  async function handleDeleteStay(id: string) {
+    if (!confirm("Obrisati ovaj boravak? Sve uplate vezane za njega biće takođe obrisane. Ova radnja se ne može poništiti.")) return;
+    setDeletingStayId(id);
+    try {
+      const res = await fetch(`/api/admin/residence/stays/${id}`, { method: "DELETE" });
+      if (res.ok) {
+        setStays((prev) => prev.filter((s) => s.id !== id));
+        setPayments((prev) => prev.filter((p) => p.stayId !== id));
+      }
+    } finally {
+      setDeletingStayId(null);
+    }
+  }
+
   async function handleSaveNotes() {
     const res = await fetch(`/api/admin/residence/residents/${resident.id}`, {
       method: "PATCH",
@@ -115,6 +137,26 @@ export function ResidentProfile({
     if (res.ok && data.ok) {
       setResident(data.resident);
       setEditingNotes(false);
+    }
+  }
+
+  async function handleDeleteResident() {
+    if (
+      !confirm(
+        `Obrisati gosta ${resident.firstName} ${resident.lastName}? Ovo trajno briše i sve njihove boravke, uplate, dokumenta i ugovore. Ova radnja se ne može poništiti.`
+      )
+    )
+      return;
+    setDeletingResident(true);
+    try {
+      const res = await fetch(`/api/admin/residence/residents/${resident.id}`, { method: "DELETE" });
+      if (res.ok) {
+        router.push("/admin/residence/residents");
+      } else {
+        setDeletingResident(false);
+      }
+    } catch {
+      setDeletingResident(false);
     }
   }
 
@@ -136,6 +178,14 @@ export function ResidentProfile({
               <Button type="button" variant="outline" onClick={handleEndStay}>Završi boravak</Button>
             </>
           )}
+          <button
+            type="button"
+            onClick={handleDeleteResident}
+            disabled={deletingResident}
+            className="flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-medium text-red-700 hover:bg-red-50"
+          >
+            <Trash2 size={15} /> {deletingResident ? "Brisanje..." : "Obriši gosta"}
+          </button>
         </div>
       </div>
 
@@ -168,26 +218,87 @@ export function ResidentProfile({
         />
       )}
 
-      {activeStay && (
-        <SectionCard title="Trenutni boravak">
+      <SectionCard
+        title="Osnovni podaci i identifikacija"
+        headerRight={
+          !editingResident && (
+            <Button type="button" variant="outline" onClick={() => setEditingResident(true)}>
+              <Pencil size={13} /> Izmeni
+            </Button>
+          )
+        }
+      >
+        {editingResident ? (
+          <ResidentEditForm
+            resident={resident}
+            onSaved={(updated) => {
+              setResident(updated);
+              setEditingResident(false);
+            }}
+            onCancel={() => setEditingResident(false)}
+          />
+        ) : (
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-wide text-ink/45">Useljenje</p>
-              <p className="mt-1 text-sm text-ink">{activeStay.moveInDate}</p>
+              <p className="text-xs font-semibold uppercase tracking-wide text-ink/45">Državljanstvo</p>
+              <p className="mt-1 text-sm text-ink">{resident.nationality || "—"}</p>
             </div>
             <div>
-              <p className="text-xs font-semibold uppercase tracking-wide text-ink/45">Trenutni plaćeni period</p>
-              <p className="mt-1 text-sm text-ink">{activeStay.currentPeriodStart} → {activeStay.currentPeriodEnd}</p>
+              <p className="text-xs font-semibold uppercase tracking-wide text-ink/45">Datum rođenja</p>
+              <p className="mt-1 text-sm text-ink">{resident.dob || "—"}{resident.placeOfBirth ? `, ${resident.placeOfBirth}` : ""}</p>
             </div>
             <div>
-              <p className="text-xs font-semibold uppercase tracking-wide text-ink/45">Mesečna kirija</p>
-              <p className="mt-1 text-sm text-ink">{activeStay.monthlyRent} {activeStay.currency}</p>
+              <p className="text-xs font-semibold uppercase tracking-wide text-ink/45">Telefon / Email</p>
+              <p className="mt-1 text-sm text-ink">{resident.phone || "—"}{resident.email ? ` · ${resident.email}` : ""}</p>
             </div>
             <div>
-              <p className="text-xs font-semibold uppercase tracking-wide text-ink/45">Očekivano iseljenje</p>
-              <p className="mt-1 text-sm text-ink">{activeStay.expectedMoveOutDate ?? "—"}</p>
+              <p className="text-xs font-semibold uppercase tracking-wide text-ink/45">Broj pasoša</p>
+              <p className="mt-1 text-sm text-ink">{resident.passportNumber || "—"}{resident.passportCountry ? ` (${resident.passportCountry})` : ""}</p>
             </div>
           </div>
+        )}
+      </SectionCard>
+
+      {activeStay && (
+        <SectionCard
+          title="Trenutni boravak"
+          headerRight={
+            !editingActiveStay && (
+              <Button type="button" variant="outline" onClick={() => setEditingActiveStay(true)}>
+                <Pencil size={13} /> Izmeni
+              </Button>
+            )
+          }
+        >
+          {editingActiveStay ? (
+            <StayEditForm
+              stay={activeStay}
+              onSaved={(updated) => {
+                upsertStay(updated);
+                setEditingActiveStay(false);
+              }}
+              onCancel={() => setEditingActiveStay(false)}
+            />
+          ) : (
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-wide text-ink/45">Useljenje</p>
+                <p className="mt-1 text-sm text-ink">{activeStay.moveInDate}</p>
+              </div>
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-wide text-ink/45">Trenutni plaćeni period</p>
+                <p className="mt-1 text-sm text-ink">{activeStay.currentPeriodStart} → {activeStay.currentPeriodEnd}</p>
+              </div>
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-wide text-ink/45">Mesečna kirija</p>
+                <p className="mt-1 text-sm text-ink">{activeStay.monthlyRent} {activeStay.currency}</p>
+              </div>
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-wide text-ink/45">Očekivano iseljenje</p>
+                <p className="mt-1 text-sm text-ink">{activeStay.expectedMoveOutDate ?? "—"}</p>
+              </div>
+            </div>
+          )}
           <div className="mt-5">
             <StayDecisionControl stay={activeStay} onUpdated={upsertStay} />
           </div>
@@ -212,23 +323,48 @@ export function ResidentProfile({
           <p className="text-sm text-ink/50">Još nema uplata.</p>
         ) : (
           <ul className="flex flex-col gap-2">
-            {sortedPayments.map((p) => (
-              <li key={p.id} className="flex items-center justify-between gap-3 rounded-2xl border border-ink/10 bg-white p-3.5">
-                <div>
-                  <p className="text-sm font-medium text-ink">{PAYMENT_TYPE_LABEL[p.type]} — {p.amount} {p.currency}</p>
-                  <p className="text-xs text-ink/50">
-                    {p.paymentDate}{p.periodFrom && p.periodTo ? ` · Period: ${p.periodFrom} – ${p.periodTo}` : ""}
-                  </p>
-                </div>
-                <button
-                  onClick={() => handleDeletePayment(p.id)}
-                  disabled={deletingPaymentId === p.id}
-                  className="flex shrink-0 items-center gap-1 rounded-full px-3 py-1.5 text-xs font-medium text-red-700 hover:bg-red-50"
-                >
-                  <Trash2 size={13} /> Obriši
-                </button>
-              </li>
-            ))}
+            {sortedPayments.map((p) =>
+              editingPaymentId === p.id ? (
+                <li key={p.id}>
+                  <PaymentForm
+                    residentId={p.residentId}
+                    cabinId={p.cabinId}
+                    stayId={p.stayId}
+                    currency={p.currency}
+                    initial={p}
+                    onSaved={(updated) => {
+                      setPayments((prev) => prev.map((x) => (x.id === updated.id ? updated : x)));
+                      setEditingPaymentId(null);
+                    }}
+                    onCancel={() => setEditingPaymentId(null)}
+                  />
+                </li>
+              ) : (
+                <li key={p.id} className="flex items-center justify-between gap-3 rounded-2xl border border-ink/10 bg-white p-3.5">
+                  <div>
+                    <p className="text-sm font-medium text-ink">{PAYMENT_TYPE_LABEL[p.type]} — {p.amount} {p.currency}</p>
+                    <p className="text-xs text-ink/50">
+                      {p.paymentDate}{p.periodFrom && p.periodTo ? ` · Period: ${p.periodFrom} – ${p.periodTo}` : ""}
+                    </p>
+                  </div>
+                  <div className="flex shrink-0 items-center gap-1">
+                    <button
+                      onClick={() => setEditingPaymentId(p.id)}
+                      className="flex items-center gap-1 rounded-full px-3 py-1.5 text-xs font-medium text-ink/60 hover:bg-ink/5"
+                    >
+                      <Pencil size={13} /> Izmeni
+                    </button>
+                    <button
+                      onClick={() => handleDeletePayment(p.id)}
+                      disabled={deletingPaymentId === p.id}
+                      className="flex items-center gap-1 rounded-full px-3 py-1.5 text-xs font-medium text-red-700 hover:bg-red-50"
+                    >
+                      <Trash2 size={13} /> Obriši
+                    </button>
+                  </div>
+                </li>
+              )
+            )}
           </ul>
         )}
       </SectionCard>
@@ -253,12 +389,42 @@ export function ResidentProfile({
           <p className="text-sm text-ink/50">Nema boravaka.</p>
         ) : (
           <ul className="flex flex-col gap-2">
-            {sortedStays.map((s) => (
-              <li key={s.id} className="flex items-center justify-between gap-3 rounded-2xl border border-ink/10 bg-white p-3.5">
-                <span className="text-sm text-ink">{cabinById.get(s.cabinId)?.name ?? "—"}</span>
-                <span className="text-xs text-ink/50">{s.moveInDate} → {s.actualMoveOutDate ?? (s.status === "active" ? "sada" : "—")}</span>
-              </li>
-            ))}
+            {sortedStays.map((s) =>
+              editingStayId === s.id ? (
+                <li key={s.id}>
+                  <StayEditForm
+                    stay={s}
+                    onSaved={(updated) => {
+                      upsertStay(updated);
+                      setEditingStayId(null);
+                    }}
+                    onCancel={() => setEditingStayId(null)}
+                  />
+                </li>
+              ) : (
+                <li key={s.id} className="flex items-center justify-between gap-3 rounded-2xl border border-ink/10 bg-white p-3.5">
+                  <div>
+                    <span className="text-sm text-ink">{cabinById.get(s.cabinId)?.name ?? "—"}</span>
+                    <span className="ml-2 text-xs text-ink/50">{s.moveInDate} → {s.actualMoveOutDate ?? (s.status === "active" ? "sada" : "—")}</span>
+                  </div>
+                  <div className="flex shrink-0 items-center gap-1">
+                    <button
+                      onClick={() => setEditingStayId(s.id)}
+                      className="flex items-center gap-1 rounded-full px-3 py-1.5 text-xs font-medium text-ink/60 hover:bg-ink/5"
+                    >
+                      <Pencil size={13} /> Izmeni
+                    </button>
+                    <button
+                      onClick={() => handleDeleteStay(s.id)}
+                      disabled={deletingStayId === s.id}
+                      className="flex items-center gap-1 rounded-full px-3 py-1.5 text-xs font-medium text-red-700 hover:bg-red-50"
+                    >
+                      <Trash2 size={13} /> Obriši
+                    </button>
+                  </div>
+                </li>
+              )
+            )}
           </ul>
         )}
       </SectionCard>

@@ -66,12 +66,40 @@ export async function createPayment(input: NewPaymentInput): Promise<Payment> {
   return payment;
 }
 
+export type PaymentPatch = Partial<
+  Pick<Payment, "type" | "amount" | "currency" | "paymentDate" | "periodFrom" | "periodTo" | "method" | "note">
+>;
+
+/** Plain field edit for correcting a mistaken entry — does not touch the Stay's period tracking. */
+export async function updatePayment(id: string, patch: PaymentPatch): Promise<Payment | null> {
+  const items = await getPayments();
+  const index = items.findIndex((p) => p.id === id);
+  if (index === -1) return null;
+
+  const updated: Payment = { ...items[index], ...patch };
+  const next = [...items];
+  next[index] = updated;
+  await writeCollection(BLOB_PATH, next);
+  return updated;
+}
+
 export async function deletePayment(id: string): Promise<boolean> {
   const items = await getPayments();
   const next = items.filter((p) => p.id !== id);
   if (next.length === items.length) return false;
   await writeCollection(BLOB_PATH, next);
   return true;
+}
+
+/** Used when cascading a Stay or Resident deletion — removes every payment tied to it. */
+export async function deletePaymentsForStay(stayId: string): Promise<void> {
+  const items = await getPayments();
+  await writeCollection(BLOB_PATH, items.filter((p) => p.stayId !== stayId));
+}
+
+export async function deletePaymentsForResident(residentId: string): Promise<void> {
+  const items = await getPayments();
+  await writeCollection(BLOB_PATH, items.filter((p) => p.residentId !== residentId));
 }
 
 /** Deposit currently held for a resident = deposits paid - deposit returns. Keyed by resident, not stay, so it survives a cabin move. */

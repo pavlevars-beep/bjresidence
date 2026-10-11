@@ -29,7 +29,7 @@ export function ReservationsPageClient({ initialReservations, cabins }: { initia
           onCancel={() => setShowForm(false)}
         />
       )}
-      <ReservationsTable reservations={reservations} cabinNameById={cabinNameById} />
+      <ReservationsTable reservations={reservations} cabins={cabins} cabinNameById={cabinNameById} />
     </div>
   );
 }

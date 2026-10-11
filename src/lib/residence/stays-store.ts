@@ -139,6 +139,33 @@ export async function endStay(stayId: string, actualMoveOutDate: string): Promis
   return saveStay(items, updated);
 }
 
+export type StayPatch = Partial<
+  Pick<Stay, "moveInDate" | "estimatedDurationLabel" | "expectedMoveOutDate" | "monthlyRent" | "currency">
+>;
+
+/** Plain field edit for correcting a mistaken entry — does not recompute the paid-through period; use a rent payment for that. */
+export async function updateStay(stayId: string, patch: StayPatch): Promise<Stay | null> {
+  const items = await getStays();
+  const stay = items.find((s) => s.id === stayId);
+  if (!stay) return null;
+  const updated: Stay = { ...stay, ...patch, updatedAt: new Date().toISOString() };
+  return saveStay(items, updated);
+}
+
+export async function deleteStay(stayId: string): Promise<boolean> {
+  const items = await getStays();
+  const next = items.filter((s) => s.id !== stayId);
+  if (next.length === items.length) return false;
+  await writeCollection(BLOB_PATH, next);
+  return true;
+}
+
+/** Used when cascading a Resident deletion — removes every stay tied to it. */
+export async function deleteStaysForResident(residentId: string): Promise<void> {
+  const items = await getStays();
+  await writeCollection(BLOB_PATH, items.filter((s) => s.residentId !== residentId));
+}
+
 /** Moves a resident to a new cabin: ends the old Stay, creates a new one, preserving history. */
 export async function moveCabin(
   stayId: string,

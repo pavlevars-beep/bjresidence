@@ -28,6 +28,14 @@ export async function createContract(input: NewContractInput): Promise<Contract>
   return contract;
 }
 
+export async function deleteContract(id: string): Promise<Contract | null> {
+  const items = await getContracts();
+  const contract = items.find((c) => c.id === id);
+  if (!contract) return null;
+  await writeCollection(BLOB_PATH, items.filter((c) => c.id !== id));
+  return contract;
+}
+
 export async function updateContractStatus(
   id: string,
   status: ContractStatus,

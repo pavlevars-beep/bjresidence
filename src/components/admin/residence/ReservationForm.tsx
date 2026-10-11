@@ -9,33 +9,47 @@ function todayISO(): string {
   return new Date().toISOString().slice(0, 10);
 }
 
-export function ReservationForm({ cabins, onSaved, onCancel }: { cabins: Cabin[]; onSaved: (r: Reservation) => void; onCancel: () => void }) {
-  const [cabinId, setCabinId] = useState(cabins[0]?.id ?? "");
-  const [residentName, setResidentName] = useState("");
-  const [startDate, setStartDate] = useState(todayISO());
-  const [expectedEndDate, setExpectedEndDate] = useState("");
-  const [price, setPrice] = useState("");
-  const [deposit, setDeposit] = useState("");
-  const [notes, setNotes] = useState("");
+export function ReservationForm({
+  cabins,
+  initial,
+  onSaved,
+  onCancel,
+}: {
+  cabins: Cabin[];
+  initial?: Reservation;
+  onSaved: (r: Reservation) => void;
+  onCancel: () => void;
+}) {
+  const [cabinId, setCabinId] = useState(initial?.cabinId ?? cabins[0]?.id ?? "");
+  const [residentName, setResidentName] = useState(initial?.residentName ?? "");
+  const [startDate, setStartDate] = useState(initial?.startDate ?? todayISO());
+  const [expectedEndDate, setExpectedEndDate] = useState(initial?.expectedEndDate ?? "");
+  const [price, setPrice] = useState(initial ? String(initial.price) : "");
+  const [deposit, setDeposit] = useState(initial ? String(initial.deposit) : "");
+  const [notes, setNotes] = useState(initial?.notes ?? "");
   const [status, setStatus] = useState<"idle" | "saving" | "error">("idle");
 
   async function handleSubmit() {
     if (!cabinId || !residentName || !startDate) return;
     setStatus("saving");
     try {
-      const res = await fetch("/api/admin/residence/reservations", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          cabinId,
-          residentName,
-          startDate,
-          expectedEndDate: expectedEndDate || null,
-          price: Number(price) || 0,
-          deposit: Number(deposit) || 0,
-          notes,
-        }),
-      });
+      const body = {
+        cabinId,
+        residentName,
+        startDate,
+        expectedEndDate: expectedEndDate || null,
+        price: Number(price) || 0,
+        deposit: Number(deposit) || 0,
+        notes,
+      };
+      const res = await fetch(
+        initial ? `/api/admin/residence/reservations/${initial.id}` : "/api/admin/residence/reservations",
+        {
+          method: initial ? "PATCH" : "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        }
+      );
       const data = await res.json();
       if (!res.ok || !data.ok) throw new Error("failed");
       onSaved(data.reservation);
@@ -63,7 +77,7 @@ export function ReservationForm({ cabins, onSaved, onCancel }: { cabins: Cabin[]
       </div>
       <div className="mt-3 flex items-center gap-3">
         <Button type="button" onClick={handleSubmit} disabled={status === "saving"}>
-          {status === "saving" ? "Čuvanje..." : "Sačuvaj rezervaciju"}
+          {status === "saving" ? "Čuvanje..." : initial ? "Sačuvaj izmene" : "Sačuvaj rezervaciju"}
         </Button>
         <Button type="button" variant="ghost" onClick={onCancel}>Otkaži</Button>
         {status === "error" && <span className="text-sm text-red-700">Greška.</span>}

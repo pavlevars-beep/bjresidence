@@ -23,6 +23,14 @@ export async function createResident(input: NewResidentInput): Promise<Resident>
   return resident;
 }
 
+export async function deleteResident(id: string): Promise<boolean> {
+  const items = await getResidents();
+  const next = items.filter((r) => r.id !== id);
+  if (next.length === items.length) return false;
+  await writeCollection(BLOB_PATH, next);
+  return true;
+}
+
 export async function updateResident(id: string, patch: Partial<Resident>): Promise<Resident | null> {
   const items = await getResidents();
   const index = items.findIndex((r) => r.id === id);

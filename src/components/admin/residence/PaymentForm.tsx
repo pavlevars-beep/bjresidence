@@ -21,6 +21,7 @@ export function PaymentForm({
   cabinId,
   stayId,
   currency,
+  initial,
   onSaved,
   onCancel,
 }: {
@@ -28,42 +29,47 @@ export function PaymentForm({
   cabinId: string;
   stayId: string;
   currency: string;
+  initial?: Payment;
   onSaved: (payment: Payment) => void;
   onCancel: () => void;
 }) {
-  const [type, setType] = useState<PaymentType>("rent");
-  const [amount, setAmount] = useState("");
-  const [paymentDate, setPaymentDate] = useState(todayISO());
-  const [periodFrom, setPeriodFrom] = useState("");
-  const [periodTo, setPeriodTo] = useState("");
-  const [method, setMethod] = useState("");
-  const [note, setNote] = useState("");
+  const [type, setType] = useState<PaymentType>(initial?.type ?? "rent");
+  const [amount, setAmount] = useState(initial ? String(initial.amount) : "");
+  const [paymentDate, setPaymentDate] = useState(initial?.paymentDate ?? todayISO());
+  const [periodFrom, setPeriodFrom] = useState(initial?.periodFrom ?? "");
+  const [periodTo, setPeriodTo] = useState(initial?.periodTo ?? "");
+  const [method, setMethod] = useState(initial?.method ?? "");
+  const [note, setNote] = useState(initial?.note ?? "");
   const [status, setStatus] = useState<"idle" | "saving" | "error">("idle");
 
   async function handleSubmit() {
     if (!amount) return;
     setStatus("saving");
     try {
-      const res = await fetch("/api/admin/residence/payments", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          residentId,
-          cabinId,
-          stayId,
-          type,
-          amount: Number(amount),
-          currency,
-          paymentDate,
-          periodFrom: type === "rent" ? periodFrom || null : null,
-          periodTo: type === "rent" ? periodTo || null : null,
-          method,
-          note,
-        }),
-      });
+      const body = {
+        residentId,
+        cabinId,
+        stayId,
+        type,
+        amount: Number(amount),
+        currency,
+        paymentDate,
+        periodFrom: type === "rent" ? periodFrom || null : null,
+        periodTo: type === "rent" ? periodTo || null : null,
+        method,
+        note,
+      };
+      const res = await fetch(
+        initial ? `/api/admin/residence/payments/${initial.id}` : "/api/admin/residence/payments",
+        {
+          method: initial ? "PATCH" : "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        }
+      );
       const data = await res.json();
       if (!res.ok || !data.ok) throw new Error("failed");
-      onSaved(data.payment);
+      onSaved(initial ? data.payment : data.payment);
     } catch {
       setStatus("error");
     }
@@ -92,7 +98,7 @@ export function PaymentForm({
       </div>
       <div className="mt-3 flex items-center gap-3">
         <Button type="button" onClick={handleSubmit} disabled={status === "saving" || !amount}>
-          {status === "saving" ? "Čuvanje..." : "Sačuvaj uplatu"}
+          {status === "saving" ? "Čuvanje..." : initial ? "Sačuvaj izmene" : "Sačuvaj uplatu"}
         </Button>
         <Button type="button" variant="ghost" onClick={onCancel}>Otkaži</Button>
         {status === "error" && <span className="text-sm text-red-700">Greška.</span>}
