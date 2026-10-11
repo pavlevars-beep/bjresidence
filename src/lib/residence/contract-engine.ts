@@ -63,11 +63,19 @@ function sanitizeFilenamePart(value: string): string {
 }
 
 /** Never includes the passport number — only name, cabin, date. */
-export function buildContractFilename(resident: Resident, cabin: Cabin, dateISO: string): string {
+/**
+ * uniqueSuffix (first 8 chars of the contract id) guarantees two distinct
+ * contracts for the same resident/cabin/day never collide on filename —
+ * without it, a corrected re-generation (same resident, same day) downloads
+ * under the exact same name as the earlier one, and phone browsers/file
+ * managers can then show the stale cached file instead of re-fetching.
+ */
+export function buildContractFilename(resident: Resident, cabin: Cabin, dateISO: string, uniqueSuffix?: string): string {
   const first = sanitizeFilenamePart(resident.firstName) || "Gost";
   const last = sanitizeFilenamePart(resident.lastName) || "";
   const cabinName = sanitizeFilenamePart(cabin.name);
-  return `BJ-Residence_${first}-${last}_${cabinName}_${dateISO}.docx`;
+  const suffix = uniqueSuffix ? `_${uniqueSuffix}` : "";
+  return `BJ-Residence_${first}-${last}_${cabinName}_${dateISO}${suffix}.docx`;
 }
 
 export type GenerateContractResult =

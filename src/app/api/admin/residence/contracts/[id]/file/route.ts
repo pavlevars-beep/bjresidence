@@ -32,7 +32,10 @@ export async function GET(request: Request, { params }: { params: { id: string }
   let filename = `potpisan-ugovor-${contract.id.slice(0, 8)}`;
   if (!wantSigned) {
     const [resident, cabin] = await Promise.all([getResident(contract.residentId), getCabin(contract.cabinId)]);
-    filename = resident && cabin ? buildContractFilename(resident, cabin, contract.generatedAt.slice(0, 10)) : `ugovor-${contract.id.slice(0, 8)}.docx`;
+    filename =
+      resident && cabin
+        ? buildContractFilename(resident, cabin, contract.generatedAt.slice(0, 10), contract.id.slice(0, 8))
+        : `ugovor-${contract.id.slice(0, 8)}.docx`;
   } else {
     const ext = file.contentType === "application/pdf" ? "pdf" : file.contentType === "image/png" ? "png" : "jpg";
     filename = `${filename}.${ext}`;
