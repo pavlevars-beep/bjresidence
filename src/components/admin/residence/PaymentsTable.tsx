@@ -23,7 +23,7 @@ export function PaymentsTable({ rows }: { rows: PaymentRow[] }) {
     return Array.from(set).sort().reverse();
   }, [rows]);
 
-  const [month, setMonth] = useState(months[0] ?? "");
+  const [month, setMonth] = useState("");
 
   const filtered = useMemo(() => {
     if (!month) return rows;
@@ -31,6 +31,16 @@ export function PaymentsTable({ rows }: { rows: PaymentRow[] }) {
   }, [rows, month]);
 
   const sorted = [...filtered].sort((a, b) => b.paymentDate.localeCompare(a.paymentDate));
+
+  // Scoped to the selected period (or all payments when "Svi" is chosen) — deposits
+  // held is the exception, since it's a current balance, not a period total.
+  const revenue = filtered.reduce((s, p) => s + (p.type === "deposit_return" ? -p.amount : p.amount), 0);
+  const rentCollected = filtered.filter((p) => p.type === "rent").reduce((s, p) => s + p.amount, 0);
+  const depositsCollected = filtered.filter((p) => p.type === "deposit").reduce((s, p) => s + p.amount, 0);
+  const depositsHeld =
+    rows.filter((p) => p.type === "deposit").reduce((s, p) => s + p.amount, 0) -
+    rows.filter((p) => p.type === "deposit_return").reduce((s, p) => s + p.amount, 0);
+  const periodLabel = month ? `za ${month}` : "(sve)";
 
   return (
     <div className="flex flex-col gap-4">
@@ -42,6 +52,13 @@ export function PaymentsTable({ rows }: { rows: PaymentRow[] }) {
             <option key={m} value={m}>{m}</option>
           ))}
         </select>
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <StatTile label={`Prihod ${periodLabel}`} value={`${revenue} €`} />
+        <StatTile label={`Naplaćena kirija ${periodLabel}`} value={`${rentCollected} €`} />
+        <StatTile label={`Naplaćeni depoziti ${periodLabel}`} value={`${depositsCollected} €`} />
+        <StatTile label="Depoziti na čuvanju" value={`${depositsHeld} €`} />
       </div>
 
       {sorted.length === 0 ? (
@@ -66,6 +83,15 @@ export function PaymentsTable({ rows }: { rows: PaymentRow[] }) {
           ))}
         </ul>
       )}
+    </div>
+  );
+}
+
+function StatTile({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-2xl border border-ink/8 bg-white/70 p-4 shadow-soft">
+      <p className="text-xs font-semibold uppercase tracking-wide text-ink/45">{label}</p>
+      <p className="mt-1.5 text-xl font-semibold text-ink">{value}</p>
     </div>
   );
 }
