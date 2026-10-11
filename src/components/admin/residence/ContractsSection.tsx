@@ -82,14 +82,16 @@ export function ContractsSection({
               </div>
               <div className="flex flex-wrap items-center gap-2">
                 <a
-                  href={`/api/admin/residence/contracts/${c.id}/file`}
+                  href={`/api/admin/residence/contracts/${c.id}/file?dl=${Date.now()}`}
+                  download
                   className="flex items-center gap-1.5 rounded-full border border-ink/15 px-3 py-1.5 text-xs font-medium text-ink hover:bg-ink/5"
                 >
                   <Download size={13} /> DOCX
                 </a>
                 {c.signedBlobPathname && (
                   <a
-                    href={`/api/admin/residence/contracts/${c.id}/file?type=signed`}
+                    href={`/api/admin/residence/contracts/${c.id}/file?type=signed&dl=${Date.now()}`}
+                    download
                     className="flex items-center gap-1.5 rounded-full border border-ink/15 px-3 py-1.5 text-xs font-medium text-ink hover:bg-ink/5"
                   >
                     <Download size={13} /> Potpisana kopija

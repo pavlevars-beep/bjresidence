@@ -130,7 +130,8 @@ export function ContractWizard({
         </p>
         <div className="flex flex-wrap gap-2">
           <a
-            href={`/api/admin/residence/contracts/${contract.id}/file`}
+            href={`/api/admin/residence/contracts/${contract.id}/file?dl=${Date.now()}`}
+            download
             className="flex items-center gap-1.5 rounded-full bg-olive-dark px-4 py-2 text-sm font-medium text-cream hover:bg-[#4a5241]"
           >
             <Download size={15} /> Preuzmi DOCX
