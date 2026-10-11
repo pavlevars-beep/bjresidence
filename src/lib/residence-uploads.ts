@@ -58,7 +58,7 @@ export async function readResidentDocument(pathname: string): Promise<{ buffer: 
 
   if (hasBlobToken()) {
     try {
-      const result = await get(pathname, { access: "private" });
+      const result = await get(pathname, { access: "private", useCache: false });
       if (!result || !result.stream) return null;
       const buffer = Buffer.from(await new Response(result.stream).arrayBuffer());
       return { buffer, contentType: result.blob.contentType || "application/octet-stream" };

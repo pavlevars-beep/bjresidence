@@ -65,7 +65,7 @@ export async function readIssuePhoto(filename: string): Promise<Buffer | null> {
 
   if (hasBlobToken()) {
     try {
-      const result = await get(`${BLOB_PREFIX}${filename}`, { access: "private" });
+      const result = await get(`${BLOB_PREFIX}${filename}`, { access: "private", useCache: false });
       if (!result || !result.stream) return null;
       return Buffer.from(await new Response(result.stream).arrayBuffer());
     } catch {

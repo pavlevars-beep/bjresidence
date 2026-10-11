@@ -29,7 +29,12 @@ function localFilePath(pathname: string): string {
 export async function readJsonBlob<T>(pathname: string): Promise<T | null> {
   if (hasBlobToken()) {
     try {
-      const result = await get(pathname, { access: "private" });
+      // useCache defaults to true in the SDK, which reads through Vercel Blob's
+      // CDN cache and can serve a stale pre-write version for a short window
+      // right after a write — invisible in local dev (filesystem fallback, no
+      // caching), but the cause of intermittent "just-created record not found"
+      // 404s in production. Always read fresh from origin.
+      const result = await get(pathname, { access: "private", useCache: false });
       if (!result || !result.stream) return null;
       const text = await new Response(result.stream).text();
       return JSON.parse(text) as T;
