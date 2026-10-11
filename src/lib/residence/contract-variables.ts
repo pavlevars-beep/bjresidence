@@ -33,6 +33,7 @@ export const CONTRACT_VARIABLES: ContractVariableDef[] = [
   { key: "expected_stay_label", label: "Očekivano trajanje boravka", source: "Stay.estimatedDurationLabel", required: false },
   { key: "monthly_rent", label: "Mesečna kirija", source: "Stay.monthlyRent", required: true },
   { key: "deposit_amount", label: "Iznos depozita", source: "Payment (deposit) / podrazumevana vrednost", required: true },
+  { key: "total_initial_payment", label: "Ukupno pri useljenju", source: "Izračunato: monthly_rent + deposit_amount", required: true },
   { key: "currency", label: "Valuta", source: "Stay.currency", required: true },
   { key: "payment_date", label: "Datum prve uplate", source: "Payment (rent) / datum useljenja", required: false },
   { key: "property_name", label: "Naziv objekta", source: "Podešavanja sajta (siteConfig.brand.name)", required: true },
@@ -78,6 +79,10 @@ export function buildContractVariables(input: BuildVariablesInput): Record<strin
     expected_stay_label: stay.estimatedDurationLabel,
     monthly_rent: String(stay.monthlyRent),
     deposit_amount: input.depositAmount != null ? String(input.depositAmount) : "",
+    total_initial_payment:
+      input.depositAmount != null && Number.isFinite(stay.monthlyRent)
+        ? String(stay.monthlyRent + input.depositAmount)
+        : "",
     currency: stay.currency,
     payment_date: input.initialPaymentDate ?? stay.moveInDate,
     property_name: siteConfig.brand.name,
