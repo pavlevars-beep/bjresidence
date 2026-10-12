@@ -15,6 +15,7 @@ const sectionLinks = [
   { id: "location", href: "/#location" },
   { id: "forCompanies", href: "/#for-companies" },
   { id: "faq", href: "/#faq" },
+  { id: "blog", href: "/blog" },
 ] as const;
 
 export function Footer() {

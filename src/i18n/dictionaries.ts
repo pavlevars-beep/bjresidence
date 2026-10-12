@@ -13,6 +13,7 @@ export const sr = {
     forCompanies: "Za firme",
     faq: "FAQ",
     contact: "Kontakt",
+    blog: "Blog",
     checkAvailability: "Proveri dostupnost",
   },
   hero: {
@@ -356,6 +357,7 @@ export const en: Dictionary = {
     forCompanies: "For Companies",
     faq: "FAQ",
     contact: "Contact",
+    blog: "Blog",
     checkAvailability: "Check availability",
   },
   hero: {
@@ -696,6 +698,7 @@ export const ru: Dictionary = {
     forCompanies: "Для компаний",
     faq: "Вопросы и ответы",
     contact: "Контакты",
+    blog: "Блог",
     checkAvailability: "Проверить наличие мест",
   },
   hero: {

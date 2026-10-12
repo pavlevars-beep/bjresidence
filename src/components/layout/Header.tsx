@@ -17,6 +17,7 @@ const navSections = [
   { id: "location", href: "/#location" },
   { id: "forCompanies", href: "/#for-companies" },
   { id: "faq", href: "/#faq" },
+  { id: "blog", href: "/blog" },
   { id: "contact", href: "/#booking" },
 ] as const;
 
