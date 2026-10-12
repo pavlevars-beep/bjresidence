@@ -26,25 +26,29 @@ export function WebsiteContentEditor({ initial }: { initial: WebsiteSettings }) 
       </SectionCard>
 
       <SectionCard title="Prijave" headerRight={<Toggle checked={settings.acceptingInquiries} onChange={(v) => set("acceptingInquiries", v)} label="Primamo upite" />}>
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid gap-4 sm:grid-cols-3">
           <Field label="Tekst CTA dugmeta (SR)"><input value={settings.ctaTextSr} onChange={(e) => set("ctaTextSr", e.target.value)} className={inputClass} /></Field>
           <Field label="CTA button text (EN)"><input value={settings.ctaTextEn} onChange={(e) => set("ctaTextEn", e.target.value)} className={inputClass} /></Field>
+          <Field label="Текст кнопки CTA (RU)"><input value={settings.ctaTextRu} onChange={(e) => set("ctaTextRu", e.target.value)} className={inputClass} /></Field>
         </div>
       </SectionCard>
 
       <SectionCard title="Objava na sajtu" headerRight={<Toggle checked={settings.announcementEnabled} onChange={(v) => set("announcementEnabled", v)} label="Prikaži objavu" />}>
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid gap-4 sm:grid-cols-3">
           <Field label="Tekst objave (SR)"><textarea value={settings.announcementTextSr} onChange={(e) => set("announcementTextSr", e.target.value)} rows={2} className={inputClass} /></Field>
           <Field label="Announcement text (EN)"><textarea value={settings.announcementTextEn} onChange={(e) => set("announcementTextEn", e.target.value)} rows={2} className={inputClass} /></Field>
+          <Field label="Текст объявления (RU)"><textarea value={settings.announcementTextRu} onChange={(e) => set("announcementTextRu", e.target.value)} rows={2} className={inputClass} /></Field>
         </div>
       </SectionCard>
 
       <SectionCard title="Promotivni tekst i istaknuta napomena">
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid gap-4 sm:grid-cols-3">
           <Field label="Promo tekst (SR)"><input value={settings.promoTextSr} onChange={(e) => set("promoTextSr", e.target.value)} className={inputClass} /></Field>
           <Field label="Promo text (EN)"><input value={settings.promoTextEn} onChange={(e) => set("promoTextEn", e.target.value)} className={inputClass} /></Field>
+          <Field label="Промо текст (RU)"><input value={settings.promoTextRu} onChange={(e) => set("promoTextRu", e.target.value)} className={inputClass} /></Field>
           <Field label="Istaknuta napomena (SR)"><input value={settings.featuredNoticeSr} onChange={(e) => set("featuredNoticeSr", e.target.value)} className={inputClass} /></Field>
           <Field label="Featured notice (EN)"><input value={settings.featuredNoticeEn} onChange={(e) => set("featuredNoticeEn", e.target.value)} className={inputClass} /></Field>
+          <Field label="Важное примечание (RU)"><input value={settings.featuredNoticeRu} onChange={(e) => set("featuredNoticeRu", e.target.value)} className={inputClass} /></Field>
         </div>
       </SectionCard>
 

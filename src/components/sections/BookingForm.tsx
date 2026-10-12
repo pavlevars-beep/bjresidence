@@ -23,6 +23,7 @@ interface PublicWebsiteSettings {
   acceptingInquiries: boolean;
   ctaTextSr: string;
   ctaTextEn: string;
+  ctaTextRu: string;
 }
 
 export function BookingForm() {
@@ -52,7 +53,8 @@ export function BookingForm() {
       .catch(() => {});
   }, []);
 
-  const ctaOverride = locale === "sr" ? siteSettings?.ctaTextSr : siteSettings?.ctaTextEn;
+  const ctaOverride =
+    locale === "sr" ? siteSettings?.ctaTextSr : locale === "ru" ? siteSettings?.ctaTextRu : siteSettings?.ctaTextEn;
   const inquiriesClosed = siteSettings?.acceptingInquiries === false;
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
@@ -107,11 +109,7 @@ export function BookingForm() {
             </motion.div>
           ) : inquiriesClosed ? (
             <div className="mt-8 rounded-2xl bg-ink/5 p-6 text-ink/70">
-              <p className="text-base leading-relaxed">
-                {locale === "sr"
-                  ? "Trenutno ne primamo nove upite. Pozovite nas za više informacija."
-                  : "We're not accepting new inquiries right now. Call us for more information."}
-              </p>
+              <p className="text-base leading-relaxed">{dict.booking.inquiriesClosed}</p>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="mt-8 grid gap-5 sm:grid-cols-2">

@@ -1,9 +1,9 @@
 "use client";
 
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
-import { sr, en, type Dictionary } from "./dictionaries";
+import { sr, en, ru, type Dictionary } from "./dictionaries";
 
-export type Locale = "sr" | "en";
+export type Locale = "sr" | "en" | "ru";
 
 interface LanguageContextValue {
   locale: Locale;
@@ -14,13 +14,14 @@ interface LanguageContextValue {
 const LanguageContext = createContext<LanguageContextValue | null>(null);
 
 const STORAGE_KEY = "bj-residence-locale";
+const DICTS: Record<Locale, Dictionary> = { sr, en, ru };
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const [locale, setLocaleState] = useState<Locale>("sr");
 
   useEffect(() => {
     const stored = window.localStorage.getItem(STORAGE_KEY);
-    if (stored === "sr" || stored === "en") {
+    if (stored === "sr" || stored === "en" || stored === "ru") {
       setLocaleState(stored);
     }
   }, []);
@@ -31,7 +32,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     document.documentElement.lang = next;
   };
 
-  const dict = useMemo(() => (locale === "sr" ? sr : en), [locale]);
+  const dict = useMemo(() => DICTS[locale], [locale]);
 
   return (
     <LanguageContext.Provider value={{ locale, setLocale, dict }}>{children}</LanguageContext.Provider>

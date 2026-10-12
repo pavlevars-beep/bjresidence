@@ -8,10 +8,11 @@ interface WebsiteSettings {
   announcementEnabled: boolean;
   announcementTextSr: string;
   announcementTextEn: string;
+  announcementTextRu: string;
 }
 
 export function AnnouncementBanner() {
-  const { locale } = useLanguage();
+  const { locale, dict } = useLanguage();
   const [settings, setSettings] = useState<WebsiteSettings | null>(null);
   const [dismissed, setDismissed] = useState(false);
 
@@ -22,7 +23,8 @@ export function AnnouncementBanner() {
       .catch(() => {});
   }, []);
 
-  const text = locale === "sr" ? settings?.announcementTextSr : settings?.announcementTextEn;
+  const text =
+    locale === "sr" ? settings?.announcementTextSr : locale === "ru" ? settings?.announcementTextRu : settings?.announcementTextEn;
   if (!settings?.announcementEnabled || !text || dismissed) return null;
 
   return (
@@ -30,7 +32,7 @@ export function AnnouncementBanner() {
       <p className="mx-auto max-w-3xl pr-6">{text}</p>
       <button
         onClick={() => setDismissed(true)}
-        aria-label="Zatvori"
+        aria-label={dict.gallery.close}
         className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1.5 text-cream/70 hover:bg-cream/10 hover:text-cream"
       >
         <X size={15} />

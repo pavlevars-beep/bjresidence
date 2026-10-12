@@ -140,14 +140,18 @@ export interface WebsiteSettings {
   announcementEnabled: boolean;
   announcementTextSr: string;
   announcementTextEn: string;
+  announcementTextRu: string;
   minimumStayLabel: string;
   promoTextSr: string;
   promoTextEn: string;
+  promoTextRu: string;
   acceptingInquiries: boolean;
   ctaTextSr: string;
   ctaTextEn: string;
+  ctaTextRu: string;
   featuredNoticeSr: string;
   featuredNoticeEn: string;
+  featuredNoticeRu: string;
   contactOverrideEnabled: boolean;
   phone: string;
   email: string;

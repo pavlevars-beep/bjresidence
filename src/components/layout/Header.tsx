@@ -127,8 +127,8 @@ function LanguageToggle({
   locale,
   setLocale,
 }: {
-  locale: "sr" | "en";
-  setLocale: (l: "sr" | "en") => void;
+  locale: "sr" | "en" | "ru";
+  setLocale: (l: "sr" | "en" | "ru") => void;
 }) {
   return (
     <div className="flex items-center rounded-full border border-ink/15 p-0.5 text-xs font-semibold">
@@ -149,6 +149,15 @@ function LanguageToggle({
         )}
       >
         EN
+      </button>
+      <button
+        onClick={() => setLocale("ru")}
+        className={cn(
+          "rounded-full px-2.5 py-1.5 transition-colors",
+          locale === "ru" ? "bg-olive-dark text-cream" : "text-ink/60 hover:text-ink"
+        )}
+      >
+        RU
       </button>
     </div>
   );
