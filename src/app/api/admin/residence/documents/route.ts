@@ -21,10 +21,17 @@ export async function GET() {
   return NextResponse.json({ ok: true, documents: enriched });
 }
 
+const MAX_IMAGES = 4;
+
 /**
  * Called at "CONFIRM AND SAVE" time. If retain=false (the default), no image
  * is written to storage at all — only a metadata record of what was
  * confirmed, for audit. Never logs the extracted fields' values.
+ *
+ * A document can span more than one image (e.g. a residence permit's front
+ * and back) — pass each under repeated "images" entries. When retained,
+ * one ResidentDocument record is created per image, all sharing the same
+ * extractedFieldsSnapshot, so each page stays individually viewable/deletable.
  */
 export async function POST(request: Request) {
   if (!isAdminAuthenticated()) {
@@ -42,10 +49,13 @@ export async function POST(request: Request) {
   const type = String(formData.get("type") ?? "passport") as DocumentType;
   const retain = formData.get("retain") === "true";
   const snapshotRaw = formData.get("extractedFieldsSnapshot");
-  const image = formData.get("image");
+  const images = formData.getAll("images").filter((f): f is File => f instanceof File && f.size > 0);
 
   if (!residentId) {
     return NextResponse.json({ ok: false, error: "missing_resident" }, { status: 400 });
+  }
+  if (images.length > MAX_IMAGES) {
+    return NextResponse.json({ ok: false, error: "too_many_images" }, { status: 400 });
   }
 
   let extractedFieldsSnapshot: Record<string, string> | null = null;
@@ -57,36 +67,53 @@ export async function POST(request: Request) {
     }
   }
 
-  let blobPathname = "";
-  let originalFilename = "";
-  let contentType = "";
-
   if (retain) {
-    if (!(image instanceof File) || image.size === 0) {
+    if (images.length === 0) {
       return NextResponse.json({ ok: false, error: "missing_image" }, { status: 400 });
     }
-    if (!isAllowedDocumentType(image.type)) {
-      return NextResponse.json({ ok: false, error: "unsupported_type" }, { status: 400 });
+    for (const image of images) {
+      if (!isAllowedDocumentType(image.type)) {
+        return NextResponse.json({ ok: false, error: "unsupported_type" }, { status: 400 });
+      }
+      if (image.size > MAX_UPLOAD_BYTES) {
+        return NextResponse.json({ ok: false, error: "too_large" }, { status: 400 });
+      }
     }
-    if (image.size > MAX_UPLOAD_BYTES) {
-      return NextResponse.json({ ok: false, error: "too_large" }, { status: 400 });
-    }
-    blobPathname = await saveResidentDocument(image);
-    originalFilename = image.name;
-    contentType = image.type;
   }
 
-  const document = await createDocumentRecord({
-    residentId,
-    type,
-    blobPathname,
-    originalFilename,
-    contentType,
-    retained: retain,
-    extractedFieldsSnapshot,
-  });
+  const documents = retain
+    ? await Promise.all(
+        images.map(async (image) => {
+          const blobPathname = await saveResidentDocument(image);
+          return createDocumentRecord({
+            residentId,
+            type,
+            blobPathname,
+            originalFilename: image.name,
+            contentType: image.type,
+            retained: true,
+            extractedFieldsSnapshot,
+          });
+        })
+      )
+    : [
+        await createDocumentRecord({
+          residentId,
+          type,
+          blobPathname: "",
+          originalFilename: "",
+          contentType: "",
+          retained: false,
+          extractedFieldsSnapshot,
+        }),
+      ];
 
-  await logActivity("document_uploaded", `Dokument (${type}) sačuvan${retain ? "" : " (original nije zadržan)"}`, "resident", residentId);
+  await logActivity(
+    "document_uploaded",
+    `Dokument (${type}) sačuvan${retain ? ` — ${documents.length} slika` : " (original nije zadržan)"}`,
+    "resident",
+    residentId
+  );
 
-  return NextResponse.json({ ok: true, document });
+  return NextResponse.json({ ok: true, document: documents[0], documents });
 }

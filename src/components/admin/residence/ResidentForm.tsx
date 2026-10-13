@@ -5,7 +5,8 @@ import { useRouter } from "next/navigation";
 import { ArrowLeft, ArrowRight, Check } from "lucide-react";
 import { Field, inputClass, SectionCard, Toggle } from "@/components/admin/ui";
 import { Button } from "@/components/ui/Button";
-import { PassportOcrPanel, type ExtractedPassportFields } from "./PassportOcrPanel";
+import { DocumentOcrPanel, type ExtractedDocumentFields } from "./DocumentOcrPanel";
+import type { DocumentType } from "@/lib/residence/types";
 import { ContractWizard } from "./ContractWizard";
 import { formatDateDisplay } from "@/lib/residence/date-math";
 import type { CabinView } from "@/lib/residence/derive";
@@ -28,12 +29,19 @@ function addMonthSuggestion(iso: string): string {
 type StepKey = "passport" | "details" | "stay" | "financial" | "contract" | "confirm";
 
 const STEP_LABELS: Record<StepKey, string> = {
-  passport: "Pasoš",
+  passport: "Dokument",
   details: "Podaci o gostu",
   stay: "Boravak",
   financial: "Finansije",
   contract: "Ugovor",
   confirm: "Potvrda",
+};
+
+const DOCUMENT_TYPE_LABELS: Record<string, string> = {
+  passport: "Pasoš",
+  national_id: "Lična karta",
+  residence_permit: "Boravišna dozvola",
+  other: "Drugi dokument",
 };
 
 export function ResidentForm({ cabins }: { cabins: CabinView[] }) {
@@ -74,7 +82,12 @@ export function ResidentForm({ cabins }: { cabins: CabinView[] }) {
   const [depositAmount, setDepositAmount] = useState("");
   const [depositPaymentDate, setDepositPaymentDate] = useState(todayISO());
 
-  const [passportScan, setPassportScan] = useState<{ fields: ExtractedPassportFields; retain: boolean; file: File | null } | null>(null);
+  const [documentScan, setDocumentScan] = useState<{
+    documentType: string;
+    fields: ExtractedDocumentFields;
+    retain: boolean;
+    files: File[];
+  } | null>(null);
 
   const [createdResidentId, setCreatedResidentId] = useState("");
   const [createdStayId, setCreatedStayId] = useState("");
@@ -93,18 +106,25 @@ export function ResidentForm({ cabins }: { cabins: CabinView[] }) {
     setPeriodTo(addMonthSuggestion(value));
   }
 
-  function handleOcrConfirm(fields: ExtractedPassportFields, retain: boolean, file: File | null) {
+  function handleOcrConfirm(documentType: string, fields: ExtractedDocumentFields, retain: boolean, files: File[]) {
     setFirstName((v) => v || fields.firstName);
     setLastName((v) => v || fields.lastName);
     setNationality((v) => v || fields.nationality);
     setDob((v) => v || fields.dob);
     setPlaceOfBirth((v) => v || fields.placeOfBirth);
     setSex((v) => v || fields.sex);
-    setPassportNumber((v) => v || fields.passportNumber);
-    setPassportCountry((v) => v || fields.issuingCountry);
-    setPassportIssueDate((v) => v || fields.passportIssueDate);
-    setPassportExpiryDate((v) => v || fields.passportExpiryDate);
-    setPassportScan({ fields, retain, file });
+
+    if (documentType === "passport") {
+      setPassportNumber((v) => v || fields.documentNumber);
+      setPassportCountry((v) => v || fields.issuingCountry);
+      setPassportIssueDate((v) => v || fields.issueDate);
+      setPassportExpiryDate((v) => v || fields.expiryDate);
+    } else {
+      setOtherDocType((v) => v || DOCUMENT_TYPE_LABELS[documentType] || "Dokument");
+      setOtherDocNumber((v) => v || fields.documentNumber || fields.personalIdNumber);
+    }
+
+    setDocumentScan({ documentType, fields, retain, files });
   }
 
   async function handleCreateAndProceed() {
@@ -167,13 +187,23 @@ export function ResidentForm({ cabins }: { cabins: CabinView[] }) {
       const data = await res.json();
       if (!res.ok || !data.ok) throw new Error("failed");
 
-      if (passportScan) {
+      if (documentScan) {
         const formData = new FormData();
         formData.append("residentId", data.resident.id);
-        formData.append("type", "passport");
-        formData.append("retain", String(passportScan.retain));
-        formData.append("extractedFieldsSnapshot", JSON.stringify(passportScan.fields));
-        if (passportScan.retain && passportScan.file) formData.append("image", passportScan.file);
+        formData.append("type", documentScan.documentType as DocumentType);
+        formData.append("retain", String(documentScan.retain));
+        const flatSnapshot: Record<string, string> = {};
+        for (const [key, value] of Object.entries(documentScan.fields)) {
+          if (key === "additionalFields") continue;
+          if (typeof value === "string" && value) flatSnapshot[key] = value;
+        }
+        for (const pair of documentScan.fields.additionalFields) {
+          flatSnapshot[`extra_${pair.label}`] = pair.value;
+        }
+        formData.append("extractedFieldsSnapshot", JSON.stringify(flatSnapshot));
+        if (documentScan.retain) {
+          for (const file of documentScan.files) formData.append("images", file);
+        }
         await fetch("/api/admin/residence/documents", { method: "POST", body: formData }).catch(() => {});
       }
 
@@ -222,8 +252,8 @@ export function ResidentForm({ cabins }: { cabins: CabinView[] }) {
   let stepContent: ReactNode = null;
   if (currentKey === "passport") {
     stepContent = (
-      <SectionCard title="Skeniranje pasoša" description="Opciono — možete uneti podatke i ručno u sledećem koraku.">
-        <PassportOcrPanel onConfirm={handleOcrConfirm} />
+      <SectionCard title="Skeniranje dokumenta" description="Opciono — možete uneti podatke i ručno u sledećem koraku.">
+        <DocumentOcrPanel onConfirm={handleOcrConfirm} />
       </SectionCard>
     );
   } else if (currentKey === "details") {

@@ -108,7 +108,7 @@ export interface Reservation {
   updatedAt: string;
 }
 
-export type DocumentType = "passport" | "other";
+export type DocumentType = "passport" | "national_id" | "residence_permit" | "other";
 
 export interface ResidentDocument {
   id: string;

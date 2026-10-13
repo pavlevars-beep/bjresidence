@@ -3,7 +3,14 @@
 import { useState } from "react";
 import { FileText, Trash2 } from "lucide-react";
 import { formatDateDisplay } from "@/lib/residence/date-math";
-import type { ResidentDocument } from "@/lib/residence/types";
+import type { DocumentType, ResidentDocument } from "@/lib/residence/types";
+
+const DOCUMENT_TYPE_LABELS: Record<DocumentType, string> = {
+  passport: "Pasoš",
+  national_id: "Lična karta",
+  residence_permit: "Boravišna dozvola",
+  other: "Dokument",
+};
 
 export function DocumentsList({
   documents,
@@ -39,7 +46,7 @@ export function DocumentsList({
             <FileText size={18} className="shrink-0 text-ink/40" />
             <div>
               <p className="text-sm font-medium text-ink">
-                {doc.type === "passport" ? "Pasoš" : "Dokument"}
+                {DOCUMENT_TYPE_LABELS[doc.type] ?? "Dokument"}
                 {showResidentName && doc.residentName ? ` — ${doc.residentName}` : ""}
               </p>
               <p className="text-xs text-ink/50">

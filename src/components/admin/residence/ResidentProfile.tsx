@@ -12,6 +12,7 @@ import { StayEditForm } from "./StayEditForm";
 import { StayDecisionControl } from "./StayDecisionControl";
 import { MoveCabinModal } from "./MoveCabinModal";
 import { DocumentsList } from "./DocumentsList";
+import { DocumentOcrPanel, type ExtractedDocumentFields } from "./DocumentOcrPanel";
 import { ContractsSection } from "./ContractsSection";
 import { formatDateDisplay } from "@/lib/residence/date-math";
 import type { Cabin, Contract, Payment, Resident, ResidentDocument, Stay } from "@/lib/residence/types";
@@ -53,6 +54,8 @@ export function ResidentProfile({
   const [showPaymentForm, setShowPaymentForm] = useState(false);
   const [showMoveCabin, setShowMoveCabin] = useState(false);
   const [editingNotes, setEditingNotes] = useState(false);
+  const [showAddDocument, setShowAddDocument] = useState(false);
+  const [addingDocument, setAddingDocument] = useState(false);
   const [notesDraft, setNotesDraft] = useState(resident.notes);
   const [editingPaymentId, setEditingPaymentId] = useState<string | null>(null);
   const [deletingPaymentId, setDeletingPaymentId] = useState<string | null>(null);
@@ -138,6 +141,36 @@ export function ResidentProfile({
     if (res.ok && data.ok) {
       setResident(data.resident);
       setEditingNotes(false);
+    }
+  }
+
+  async function handleAddDocument(documentType: string, fields: ExtractedDocumentFields, retain: boolean, files: File[]) {
+    setAddingDocument(true);
+    try {
+      const formData = new FormData();
+      formData.append("residentId", resident.id);
+      formData.append("type", documentType);
+      formData.append("retain", String(retain));
+      const flatSnapshot: Record<string, string> = {};
+      for (const [key, value] of Object.entries(fields)) {
+        if (key === "additionalFields") continue;
+        if (typeof value === "string" && value) flatSnapshot[key] = value;
+      }
+      for (const pair of fields.additionalFields) {
+        flatSnapshot[`extra_${pair.label}`] = pair.value;
+      }
+      formData.append("extractedFieldsSnapshot", JSON.stringify(flatSnapshot));
+      if (retain) {
+        for (const file of files) formData.append("images", file);
+      }
+      const res = await fetch("/api/admin/residence/documents", { method: "POST", body: formData });
+      const data = await res.json();
+      if (res.ok && data.ok && Array.isArray(data.documents)) {
+        setDocuments((prev) => [...data.documents, ...prev]);
+        setShowAddDocument(false);
+      }
+    } finally {
+      setAddingDocument(false);
     }
   }
 
@@ -370,7 +403,33 @@ export function ResidentProfile({
         )}
       </SectionCard>
 
-      <SectionCard title="Dokumenta">
+      <SectionCard
+        title="Dokumenta"
+        headerRight={
+          !showAddDocument && (
+            <button
+              type="button"
+              onClick={() => setShowAddDocument(true)}
+              className="rounded-full bg-ink/5 px-3 py-1.5 text-xs font-medium text-ink/70 hover:bg-ink/10"
+            >
+              + Dodaj dokument
+            </button>
+          )
+        }
+      >
+        {showAddDocument && (
+          <div className="mb-4">
+            <DocumentOcrPanel onConfirm={handleAddDocument} />
+            {addingDocument && <p className="mt-2 text-xs text-ink/50">Čuvanje...</p>}
+            <button
+              type="button"
+              onClick={() => setShowAddDocument(false)}
+              className="mt-2 text-xs font-medium text-ink/50 hover:underline"
+            >
+              Otkaži
+            </button>
+          </div>
+        )}
         <DocumentsList
           documents={documents}
           onDeleted={(id) => setDocuments((prev) => prev.filter((d) => d.id !== id))}
