@@ -17,9 +17,9 @@ export default function HomePage() {
     <>
       <Hero />
       <QuickDistances />
+      <Gallery />
       <WhyUs />
       <Manifesto />
-      <Gallery />
       <PersonalUnit />
       <Included />
       <Location />

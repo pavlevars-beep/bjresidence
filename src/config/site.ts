@@ -47,42 +47,50 @@ export const siteConfig = {
   },
 
   gallery: {
+    // Order here is the order images appear in the horizontal gallery strip.
+    // width/height are each file's real pixel dimensions (post-optimization) —
+    // used to size each carousel card at its native aspect ratio.
     categories: [
+      {
+        id: "exterior",
+        images: [
+          { src: "/images/gallery/ulaz.webp", captionKey: "exterior.img1", width: 1086, height: 1448 },
+          { src: "/images/gallery/ulaz2.webp", captionKey: "exterior.img2", width: 1086, height: 1448 },
+        ],
+      },
       {
         id: "livingRoom",
         images: [
-          { src: "/images/gallery/living-room-1.webp", captionKey: "livingRoom.img1" },
-          { src: "/images/gallery/living-room-2.webp", captionKey: "livingRoom.img2" },
+          { src: "/images/gallery/dnevniboravak1.webp", captionKey: "livingRoom.img1", width: 1448, height: 1086 },
+          { src: "/images/gallery/dnevniboravak2.webp", captionKey: "livingRoom.img2", width: 1448, height: 1086 },
         ],
       },
       {
         id: "bedrooms",
         images: [
-          { src: "/images/gallery/bedroom-1.webp", captionKey: "bedrooms.img1" },
-          { src: "/images/gallery/bedroom-2.webp", captionKey: "bedrooms.img2" },
+          { src: "/images/gallery/kabina.webp", captionKey: "bedrooms.img1", width: 1086, height: 1448 },
+          { src: "/images/gallery/kabina2.webp", captionKey: "bedrooms.img2", width: 1086, height: 1448 },
         ],
       },
       {
         id: "kitchen",
         images: [
-          { src: "/images/gallery/kitchen-1.webp", captionKey: "kitchen.img1" },
-          { src: "/images/gallery/kitchen-2.webp", captionKey: "kitchen.img2" },
+          { src: "/images/gallery/kuhinja.webp", captionKey: "kitchen.img1", width: 1086, height: 1448 },
+          { src: "/images/gallery/kuhinja2.webp", captionKey: "kitchen.img2", width: 1448, height: 1086 },
+          { src: "/images/gallery/kuhinja3.webp", captionKey: "kitchen.img3", width: 1448, height: 1086 },
         ],
       },
       {
         id: "bathroom",
-        images: [{ src: "/images/gallery/bathroom-1.webp", captionKey: "bathroom.img1" }],
+        images: [{ src: "/images/gallery/kupatilo.webp", captionKey: "bathroom.img1", width: 1448, height: 1086 }],
       },
       {
         id: "details",
         images: [
-          { src: "/images/gallery/entrance-1.webp", captionKey: "details.img1" },
-          { src: "/images/gallery/corridor-1.webp", captionKey: "details.img2" },
+          { src: "/images/gallery/hodnik.webp", captionKey: "details.img1", width: 1600, height: 900 },
+          { src: "/images/gallery/kabine3.webp", captionKey: "details.img2", width: 1448, height: 1086 },
+          { src: "/images/gallery/kabine4.webp", captionKey: "details.img3", width: 1086, height: 1448 },
         ],
-      },
-      {
-        id: "exterior",
-        images: [{ src: "/images/gallery/exterior-1.webp", captionKey: "exterior.img1" }],
       },
     ],
   },
