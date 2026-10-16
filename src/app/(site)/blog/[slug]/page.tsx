@@ -15,7 +15,7 @@ export function generateMetadata({ params }: { params: { slug: string } }): Meta
   if (!post) return {};
 
   return {
-    title: `${post.title} | BJ Residence Blog`,
+    title: post.seoTitle ?? `${post.title} | BJ Residence Blog`,
     description: post.description,
     alternates: { canonical: `/blog/${post.slug}` },
     openGraph: {
@@ -57,6 +57,20 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
     mainEntityOfPage: `${siteConfig.url}/blog/${post.slug}`,
   };
 
+  const faqSection = post.sections.find((s) => s.type === "faq");
+  const faqSchema =
+    faqSection && faqSection.type === "faq"
+      ? {
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: faqSection.items.map((item) => ({
+            "@type": "Question",
+            name: item.q,
+            acceptedAnswer: { "@type": "Answer", text: item.a },
+          })),
+        }
+      : null;
+
   return (
     <article className="py-16 sm:py-24">
       <script
@@ -64,6 +78,13 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
         // eslint-disable-next-line react/no-danger
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
       />
+      {faqSchema && (
+        <script
+          type="application/ld+json"
+          // eslint-disable-next-line react/no-danger
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+        />
+      )}
       <Container className="max-w-2xl">
         <BlogBackLink />
 

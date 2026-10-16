@@ -57,6 +57,26 @@ export function formatBookingInquiry(payload: {
     .join("\n");
 }
 
+export function formatCompanyInquiry(payload: {
+  employeeCount?: unknown;
+  arrivalDate?: unknown;
+  duration?: unknown;
+  email?: unknown;
+}) {
+  const line = (label: string, value: unknown) =>
+    value ? `${label}: ${escapeHtml(String(value))}` : null;
+
+  return [
+    "<b>Novi B2B upit — smeštaj za zaposlene (blog)</b>",
+    line("Broj zaposlenih", payload.employeeCount),
+    line("Očekivani datum dolaska", payload.arrivalDate),
+    line("Očekivano trajanje boravka", payload.duration),
+    line("Kontakt email", payload.email),
+  ]
+    .filter(Boolean)
+    .join("\n");
+}
+
 /**
  * Stay-cycle reminder — deliberately excludes passport/identification data,
  * only names/dates/status needed to act on it. See residence/reminders.ts.

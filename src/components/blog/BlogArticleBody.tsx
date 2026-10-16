@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import type { BlogSection } from "@/content/blog";
 import { LinkButton } from "@/components/ui/Button";
+import { CompanyQuoteCta } from "./CompanyQuoteCta";
 
 export function BlogArticleBody({ sections }: { sections: BlogSection[] }) {
   return (
@@ -34,8 +35,57 @@ export function BlogArticleBody({ sections }: { sections: BlogSection[] }) {
                 ))}
               </ul>
             );
+          case "ol":
+            return (
+              <ol key={i} className="list-decimal space-y-2 pl-5 text-base leading-relaxed text-ink/75">
+                {section.items.map((item, j) => (
+                  <li key={j}>{item}</li>
+                ))}
+              </ol>
+            );
+          case "table":
+            return (
+              <div key={i} className="overflow-x-auto rounded-2xl border border-ink/10">
+                <table className="w-full min-w-[420px] border-collapse text-sm">
+                  <thead>
+                    <tr className="bg-beige/50">
+                      {section.headers.map((h, j) => (
+                        <th key={j} className="px-4 py-3 text-left font-semibold text-ink">
+                          {h}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {section.rows.map((row, j) => (
+                      <tr key={j} className={j % 2 === 1 ? "bg-beige/20" : ""}>
+                        {row.map((cell, k) => (
+                          <td key={k} className={`px-4 py-3 text-ink/80 ${k === 0 ? "" : "font-medium text-ink"}`}>
+                            {cell}
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                {section.note && <p className="border-t border-ink/10 bg-cream/60 px-4 py-2.5 text-xs text-ink/50">{section.note}</p>}
+              </div>
+            );
+          case "faq":
+            return (
+              <div key={i} className="space-y-5">
+                {section.items.map((item, j) => (
+                  <div key={j}>
+                    <h3 className="text-base font-semibold text-ink">{item.q}</h3>
+                    <p className="mt-1.5 text-base leading-relaxed text-ink/75">{item.a}</p>
+                  </div>
+                ))}
+              </div>
+            );
           case "cta":
             return <BlogCta key={i} />;
+          case "companyCta":
+            return <CompanyQuoteCta key={i} />;
           case "sources":
             return (
               <div key={i} className="mt-10 border-t border-ink/10 pt-5">

@@ -9,12 +9,18 @@ export type BlogSection =
   | { type: "h2"; text: string }
   | { type: "h3"; text: string }
   | { type: "ul"; items: string[] }
+  | { type: "ol"; items: string[] }
+  | { type: "table"; headers: string[]; rows: string[][]; note?: string }
+  | { type: "faq"; items: { q: string; a: string }[] }
   | { type: "cta" }
+  | { type: "companyCta" }
   | { type: "sources"; items: string[] };
 
 export interface BlogPost {
   slug: string;
   title: string;
+  /** Verbatim <title> tag override for posts with hand-crafted SEO titles. Falls back to `${title} | BJ Residence Blog` when omitted. */
+  seoTitle?: string;
   description: string;
   excerpt: string;
   category: string;
@@ -26,6 +32,220 @@ export interface BlogPost {
 }
 
 export const blogPosts: BlogPost[] = [
+  {
+    slug: "accommodation-prices-belgrade-2026",
+    seoTitle: "Accommodation Prices in Belgrade 2026 | Monthly Housing Guide",
+    title: "Accommodation Prices in Belgrade in 2026: Hotels, Monthly Rentals and Employee Housing",
+    description:
+      "How much does accommodation in Belgrade cost in 2026? Compare hotels, monthly rentals and affordable employee housing, with options from €200 per person.",
+    excerpt:
+      "What hotels, monthly apartment rentals and shared employee housing actually cost in Belgrade right now — including a company rate for housing several staff at once.",
+    category: "Pricing guide",
+    coverImage: "/images/gallery/kabina.webp",
+    publishedAt: "2026-10-16",
+    updatedAt: "2026-10-16",
+    readingTime: "9 min read",
+    sections: [
+      {
+        type: "p",
+        text:
+          "A practical guide for individuals, international workers and companies looking for accommodation in Belgrade, Serbia. How much it actually costs to stay depends on how long you plan to stay, where you want to live and how much privacy you need. A hotel may be convenient for a few nights, but for someone spending several months in Serbia, the calculation looks very different.",
+      },
+      {
+        type: "p",
+        text:
+          "This is especially important for companies bringing employees, contractors or international staff to Belgrade. Accommodation can become a significant recurring expense, particularly when several people need housing at the same time. Here is a practical look at accommodation prices in Belgrade in 2026, including monthly apartment rents, hotel prices, additional living costs and more affordable alternatives for longer stays.",
+      },
+
+      { type: "h2", text: "How Much Does Monthly Accommodation in Belgrade Cost?" },
+      {
+        type: "p",
+        text:
+          "Belgrade's rental market has become more stable compared with the sharp price increases experienced a few years ago. However, location, property size and furnishing still make a considerable difference. According to advertised rental prices on Serbian property platform 4zida, the following figures provide a snapshot of the city's furnished apartment market:",
+      },
+      {
+        type: "table",
+        headers: ["Apartment type", "Average monthly advertised rent"],
+        rows: [
+          ["Studio apartment", "€379"],
+          ["One-room apartment", "€464"],
+          ["Two-room apartment", "€717"],
+          ["Three-room apartment", "€1,073"],
+        ],
+        note:
+          "Source: 4zida.rs, October 2026 snapshot. These are advertised averages, not guaranteed transaction prices. Room categories follow Serbian property-listing terminology and do not necessarily correspond to the number of separate bedrooms.",
+      },
+      {
+        type: "p",
+        text:
+          "Properties in central districts such as Stari Grad, Vračar and Savski Venac are generally more expensive, while areas farther from the city centre can offer better value. City Expert's 2026 market review places many studios and small apartments in central and popular districts in the €450–700 monthly range.",
+      },
+      {
+        type: "p",
+        text:
+          "The important point is that monthly rent is not necessarily the total cost of accommodation. Utilities, internet, deposits and potential agency fees can increase the initial and ongoing budget.",
+      },
+
+      { type: "h2", text: "How Much Do Hotels Cost in Belgrade?" },
+      {
+        type: "p",
+        text:
+          "Hotels are convenient for business visitors, conferences and short assignments. They become considerably more expensive when a stay extends to several weeks. As a market reference, Skyscanner lists approximate average nightly hotel prices in Belgrade of around €69 per night for 3-star hotels and around €105 per night for 4-star hotels.",
+      },
+      {
+        type: "p",
+        text:
+          "At those rates, a 30-night stay would cost approximately €2,070 or €3,150 for one hotel room, before any special discounts or additional charges. Actual rates depend on the dates, events, property and booking conditions.",
+      },
+      {
+        type: "p",
+        text:
+          "For a short business trip, that may be perfectly reasonable. For an employee working in Belgrade for three or six months, a hotel is often difficult to justify financially. This is why companies increasingly need to consider monthly rentals, shared housing and other long-term accommodation options when planning their staffing budgets.",
+      },
+
+      { type: "h2", text: "The Hidden Costs of Renting an Apartment" },
+      {
+        type: "p",
+        text:
+          "Suppose a company finds a furnished apartment for €700 per month to accommodate employees. The monthly rent is only the starting point. Additional expenses may include electricity, heating, water, building maintenance, internet and cleaning. A refundable security deposit is also commonly required, often equivalent to one or two months of rent.",
+      },
+      {
+        type: "p",
+        text:
+          "For companies, there is another cost that is easy to overlook: time. Someone has to find a suitable property, communicate with the landlord, arrange payments, handle utilities and manage practical problems during the tenancy. When accommodating multiple employees, these responsibilities can become an administrative burden. An all-inclusive monthly accommodation arrangement can make budgeting and day-to-day management considerably simpler.",
+      },
+
+      { type: "h2", text: "Affordable Employee Accommodation in Belgrade: An Alternative to Renting Apartments" },
+      {
+        type: "p",
+        text:
+          "For companies that need to accommodate workers or contractors for an extended period, a conventional apartment is not always the most efficient solution. A different model is shared residential accommodation with individual sleeping spaces and communal facilities.",
+      },
+      {
+        type: "p",
+        text:
+          "One example is BJ Residence, a small accommodation property located in the Braće Jerković neighbourhood of Belgrade. The property offers four individual sleeping cabins within a shared residential space, designed for people who need practical and affordable monthly accommodation rather than an entire private apartment. Residents have access to a shared kitchen and dining area, bathroom and living space. The monthly price includes utilities and regular maintenance of shared areas, making costs more predictable.",
+      },
+      {
+        type: "table",
+        headers: ["Accommodation option", "Monthly price"],
+        rows: [
+          ["Individual sleeping cabin", "from €250 per person"],
+          ["Company arrangement for all four cabins", "€800 total"],
+          ["Effective company rate at full occupancy", "€200 per person"],
+        ],
+        note:
+          "Prices are indicative and subject to availability and agreed booking conditions. Sleeping cabins are not separate apartments, and kitchen, bathroom and living facilities are shared.",
+      },
+      {
+        type: "p",
+        text:
+          "For a company accommodating four employees, the complete four-cabin arrangement represents a monthly accommodation budget of €800, or €200 per person. This is a particularly relevant option for employers whose staff need accommodation for several months and who prefer a predictable monthly cost over managing a separate apartment lease.",
+      },
+      { type: "companyCta" },
+
+      { type: "h2", text: "Why Location Matters for Long-Term Accommodation" },
+      {
+        type: "p",
+        text:
+          "A cheaper property is not necessarily the more economical choice if employees have to spend considerable time and money commuting. When comparing long-term accommodation in Belgrade, employers should consider access to public transport, shops, essential services and the actual workplace.",
+      },
+      {
+        type: "p",
+        text:
+          "There is one particularly useful advantage in Belgrade: public city transport has been free of charge since January 1, 2025. This makes residential neighbourhoods outside the expensive central districts more practical for people who do not need to drive every day. BJ Residence is located in Braće Jerković, a residential neighbourhood with access to Belgrade's public transport network. For employees staying for several months, this combination of monthly pricing and transport connectivity can be an important consideration.",
+      },
+
+      { type: "h2", text: "Choosing Accommodation for Foreign Workers and International Staff" },
+      {
+        type: "p",
+        text:
+          "Foreign employees relocating to Serbia often face additional practical challenges. They may be unfamiliar with local rental procedures, Serbian-language contracts, deposits, utility payments and the process of arranging accommodation shortly after arriving.",
+      },
+      {
+        type: "p",
+        text: "For employers, choosing accommodation becomes easier when the following questions are answered in advance:",
+      },
+      {
+        type: "ol",
+        items: [
+          "Is the accommodation furnished and ready to use?",
+          "Are utilities included in the monthly price?",
+          "Is the total cost clear for each employee?",
+          "Can the accommodation provider explain the required guest registration process?",
+          "Is the location suitable for the employees' workplaces?",
+          "Can the arrangement cover the expected length of the assignment?",
+        ],
+      },
+      {
+        type: "p",
+        text:
+          "For longer stays, the cheapest advertised rent should not be the only deciding factor. Predictable costs, clear terms and suitable living conditions are equally important.",
+      },
+
+      { type: "h2", text: "Hotel, Private Apartment or Shared Accommodation: Which Is Best?" },
+      {
+        type: "p",
+        text:
+          "There is no single accommodation type that works for everyone. Hotels are generally most convenient for short visits, when flexible arrival dates and hotel services matter more than monthly cost. Private apartments are more suitable for individuals or families who need independent living space, a private kitchen and greater flexibility in their daily routines.",
+      },
+      {
+        type: "p",
+        text:
+          "Shared monthly accommodation can be particularly attractive for students, individual workers, contractors and companies arranging housing for several employees. It offers a different balance between personal space, communal facilities and price. For an employer, the right decision depends on the number of employees, their assignment duration and the standard of accommodation required.",
+      },
+
+      { type: "h2", text: "Frequently Asked Questions About Accommodation in Belgrade" },
+      {
+        type: "faq",
+        items: [
+          {
+            q: "How much does it cost to rent accommodation in Belgrade per month?",
+            a: "Advertised studio rents average around €379 per month across Belgrade, although prices vary significantly by neighbourhood. Shared accommodation may offer lower per-person costs, while larger private apartments generally cost more.",
+          },
+          {
+            q: "Can I find long-term accommodation in Belgrade for under €300 per month?",
+            a: "Yes. Shared housing and individual sleeping spaces can fall within this budget. BJ Residence, for example, offers individual monthly accommodation from €250 per person, subject to availability.",
+          },
+          {
+            q: "Is accommodation in Belgrade suitable for foreign workers?",
+            a: "Yes. Belgrade has a range of hotels, private rentals and shared accommodation options. Employers should check the property's conditions, capacity and arrangements for foreign guest registration before making a booking.",
+          },
+          {
+            q: "Do monthly rental prices in Belgrade include utilities?",
+            a: "Not always. In conventional apartment rentals, electricity, heating, internet and other household expenses are frequently charged separately. All-inclusive accommodation options can simplify budgeting.",
+          },
+          {
+            q: "Can a company arrange accommodation for several employees in Belgrade?",
+            a: "Yes. Some accommodation providers offer group or company arrangements. BJ Residence has a four-person capacity, with a company accommodation option priced at €800 per month for all four sleeping cabins, subject to availability and agreed terms.",
+          },
+        ],
+      },
+
+      { type: "h2", text: "Looking for Monthly Employee Accommodation in Belgrade?" },
+      {
+        type: "p",
+        text:
+          "Finding accommodation for one person is relatively straightforward. Finding a practical and affordable solution for an entire team requires more planning. At BJ Residence, we focus on providing straightforward, affordable monthly accommodation in Belgrade, with clearly defined sleeping spaces, shared facilities and predictable costs.",
+      },
+      {
+        type: "p",
+        text:
+          "Our accommodation may be suitable for companies bringing employees or contractors to Serbia, as well as individuals who plan to stay in Belgrade for an extended period. Contact BJ Residence with the number of people, expected arrival date and estimated duration of stay — we can discuss availability and the most suitable arrangement for your needs.",
+      },
+      { type: "companyCta" },
+      {
+        type: "sources",
+        items: [
+          "4zida.rs — Belgrade rental market averages, October 2026 snapshot",
+          "City Expert — Renting an Apartment in Belgrade in 2026",
+          "City Expert — Apartment Prices and Monthly Bills",
+          "Skyscanner — Belgrade hotel price averages",
+          "Belgrade public transport — official fare information (free since 1 January 2025)",
+        ],
+      },
+    ],
+  },
   {
     slug: "cheap-accommodation-belgrade-price-guide",
     title: "Cheap Accommodation in Belgrade: A Realistic Price Guide",
