@@ -11,6 +11,7 @@ import { ResidentEditForm } from "./ResidentEditForm";
 import { StayEditForm } from "./StayEditForm";
 import { StayDecisionControl } from "./StayDecisionControl";
 import { MoveCabinModal } from "./MoveCabinModal";
+import { StartStayModal } from "./StartStayModal";
 import { DocumentsList } from "./DocumentsList";
 import { DocumentOcrPanel, type ExtractedDocumentFields } from "./DocumentOcrPanel";
 import { ContractsSection } from "./ContractsSection";
@@ -53,6 +54,7 @@ export function ResidentProfile({
 
   const [showPaymentForm, setShowPaymentForm] = useState(false);
   const [showMoveCabin, setShowMoveCabin] = useState(false);
+  const [showStartStay, setShowStartStay] = useState(false);
   const [editingNotes, setEditingNotes] = useState(false);
   const [showAddDocument, setShowAddDocument] = useState(false);
   const [addingDocument, setAddingDocument] = useState(false);
@@ -205,12 +207,14 @@ export function ResidentProfile({
           <p className="mt-1 text-sm text-ink/55">{activeCabin ? `Kabina ${activeCabin.name}` : "Bez dodeljene kabine"}</p>
         </div>
         <div className="flex flex-wrap gap-2">
-          {activeStay && (
+          {activeStay ? (
             <>
               <Button type="button" variant="outline" onClick={() => setShowPaymentForm((v) => !v)}>Dodaj uplatu</Button>
               <Button type="button" variant="outline" onClick={() => setShowMoveCabin((v) => !v)}>Premesti kabinu</Button>
               <Button type="button" variant="outline" onClick={handleEndStay}>Završi boravak</Button>
             </>
+          ) : (
+            <Button type="button" onClick={() => setShowStartStay((v) => !v)}>Dodeli kabinu / pokreni boravak</Button>
           )}
           <button
             type="button"
@@ -249,6 +253,20 @@ export function ResidentProfile({
             router.refresh();
           }}
           onCancel={() => setShowMoveCabin(false)}
+        />
+      )}
+
+      {showStartStay && !activeStay && (
+        <StartStayModal
+          residentId={resident.id}
+          cabins={cabins}
+          onStarted={({ stay, resident: updatedResident }) => {
+            upsertStay(stay);
+            setResident(updatedResident);
+            setShowStartStay(false);
+            router.refresh();
+          }}
+          onCancel={() => setShowStartStay(false)}
         />
       )}
 
