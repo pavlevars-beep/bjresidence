@@ -39,7 +39,7 @@ export const blogPosts: BlogPost[] = [
     seoTitle: "Employee Accommodation in Belgrade | Company Housing Guide 2026",
     title: "Employee Accommodation in Belgrade: A Practical Guide for Companies in 2026",
     description:
-      "Looking for employee accommodation in Belgrade? Explore affordable monthly staff housing, company rentals and practical options from €200 per person.",
+      "Looking for employee accommodation in Belgrade? Explore affordable monthly staff housing, company rentals and practical options from €250 per person.",
     excerpt:
       "A practical guide for HR teams, employers and agencies arranging monthly housing for staff in Belgrade — what it costs, what to check before booking, and a shared-accommodation alternative to separate apartment leases.",
     category: "For companies",
@@ -122,15 +122,15 @@ export const blogPosts: BlogPost[] = [
         headers: ["Accommodation arrangement", "Monthly price"],
         rows: [
           ["Individual sleeping cabin", "from €250"],
-          ["Four-cabin company arrangement", "€800 total"],
-          ["Cost per employee with four occupants", "€200"],
+          ["Four-cabin company arrangement", "from €1,000 total"],
+          ["Cost per employee with four occupants", "from €250"],
         ],
-        note: "Rates are indicative and subject to availability and agreed rental conditions.",
+        note: "Indicative prices, subject to availability.",
       },
       {
         type: "p",
         text:
-          "For a team of four, booking four individual cabins at the €250 starting rate would amount to around €1,000 per month. Under the company arrangement, the cost is €800 for the same four sleeping cabins — a saving of roughly €200 per month, or around €1,200 over a six-month assignment, compared with four separately priced cabins.",
+          "For a team of four, the four-cabin company arrangement currently starts from €1,000 total, or €250 per person — one monthly figure instead of negotiating four separate rentals.",
       },
       {
         type: "p",
@@ -265,7 +265,7 @@ export const blogPosts: BlogPost[] = [
         items: [
           {
             q: "How much does employee accommodation cost in Belgrade?",
-            a: "Prices depend on the type of housing and the number of employees. Individual sleeping cabins at BJ Residence start from €250 per month, while its four-person company arrangement is €800 monthly, equivalent to €200 per person at full occupancy.",
+            a: "Prices depend on the type of housing and the number of employees. Individual sleeping cabins at BJ Residence start from €250 per month, while its four-person company arrangement currently starts from €1,000 monthly, equivalent to €250 per person at full occupancy.",
           },
           {
             q: "Can a company rent accommodation for several employees in Belgrade?",
@@ -317,7 +317,7 @@ export const blogPosts: BlogPost[] = [
     seoTitle: "Accommodation Prices in Belgrade 2026 | Monthly Housing Guide",
     title: "Accommodation Prices in Belgrade in 2026: Hotels, Monthly Rentals and Employee Housing",
     description:
-      "How much does accommodation in Belgrade cost in 2026? Compare hotels, monthly rentals and affordable employee housing, with options from €200 per person.",
+      "How much does accommodation in Belgrade cost in 2026? Compare hotels, monthly rentals and affordable employee housing, with options from €250 per person.",
     excerpt:
       "What hotels, monthly apartment rentals and shared employee housing actually cost in Belgrade right now — including a company rate for housing several staff at once.",
     category: "Pricing guide",
@@ -352,8 +352,7 @@ export const blogPosts: BlogPost[] = [
           ["Two-room apartment", "€717"],
           ["Three-room apartment", "€1,073"],
         ],
-        note:
-          "Source: 4zida.rs, October 2026 snapshot. These are advertised averages, not guaranteed transaction prices. Room categories follow Serbian property-listing terminology and do not necessarily correspond to the number of separate bedrooms.",
+        note: "Source: 4zida.rs, October 2026. Indicative prices, not transaction prices.",
       },
       {
         type: "p",
@@ -411,16 +410,15 @@ export const blogPosts: BlogPost[] = [
         headers: ["Accommodation option", "Monthly price"],
         rows: [
           ["Individual sleeping cabin", "from €250 per person"],
-          ["Company arrangement for all four cabins", "€800 total"],
-          ["Effective company rate at full occupancy", "€200 per person"],
+          ["Company arrangement for all four cabins", "from €1,000 total"],
+          ["Effective company rate at full occupancy", "from €250 per person"],
         ],
-        note:
-          "Prices are indicative and subject to availability and agreed booking conditions. Sleeping cabins are not separate apartments, and kitchen, bathroom and living facilities are shared.",
+        note: "Indicative prices, subject to availability.",
       },
       {
         type: "p",
         text:
-          "For a company accommodating four employees, the complete four-cabin arrangement represents a monthly accommodation budget of €800, or €200 per person. This is a particularly relevant option for employers whose staff need accommodation for several months and who prefer a predictable monthly cost over managing a separate apartment lease.",
+          "For a company accommodating four employees, the four-cabin arrangement currently starts from €1,000 total, or €250 per person. This is a particularly relevant option for employers whose staff need accommodation for several months and who prefer a predictable monthly cost over managing a separate apartment lease.",
       },
       { type: "companyCta" },
 
@@ -497,7 +495,7 @@ export const blogPosts: BlogPost[] = [
           },
           {
             q: "Can a company arrange accommodation for several employees in Belgrade?",
-            a: "Yes. Some accommodation providers offer group or company arrangements. BJ Residence has a four-person capacity, with a company accommodation option priced at €800 per month for all four sleeping cabins, subject to availability and agreed terms.",
+            a: "Yes. Some accommodation providers offer group or company arrangements. BJ Residence has a four-person capacity, with a company accommodation option starting from €1,000 per month for all four sleeping cabins, subject to availability and agreed terms.",
           },
         ],
       },
