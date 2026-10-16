@@ -1,6 +1,7 @@
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import type { BlogSection } from "@/content/blog";
+import { getBlogPost, type BlogSection } from "@/content/blog";
 import { LinkButton } from "@/components/ui/Button";
 import { CompanyQuoteCta } from "./CompanyQuoteCta";
 
@@ -82,6 +83,34 @@ export function BlogArticleBody({ sections }: { sections: BlogSection[] }) {
                 ))}
               </div>
             );
+          case "image":
+            return (
+              <figure key={i} className="my-2">
+                <div className="relative h-56 w-full overflow-hidden rounded-3xl sm:h-72">
+                  <Image src={section.src} alt={section.alt} fill className="object-cover" />
+                </div>
+                {section.caption && (
+                  <figcaption className="mt-2 text-center text-xs text-ink/45">{section.caption}</figcaption>
+                )}
+              </figure>
+            );
+          case "relatedPost": {
+            const related = getBlogPost(section.slug);
+            if (!related) return null;
+            return (
+              <Link
+                key={i}
+                href={`/blog/${related.slug}`}
+                className="group my-2 flex items-center justify-between gap-3 rounded-2xl border border-ink/10 bg-beige/30 px-5 py-4 transition-colors hover:border-olive-dark/30 hover:bg-beige/50"
+              >
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-wide text-wood">Related reading</p>
+                  <p className="mt-1 text-sm font-medium text-ink">{related.title}</p>
+                </div>
+                <ArrowRight size={18} className="shrink-0 text-ink/40 transition-transform group-hover:translate-x-0.5" />
+              </Link>
+            );
+          }
           case "cta":
             return <BlogCta key={i} />;
           case "companyCta":

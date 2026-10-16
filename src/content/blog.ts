@@ -12,6 +12,8 @@ export type BlogSection =
   | { type: "ol"; items: string[] }
   | { type: "table"; headers: string[]; rows: string[][]; note?: string }
   | { type: "faq"; items: { q: string; a: string }[] }
+  | { type: "image"; src: string; alt: string; caption?: string }
+  | { type: "relatedPost"; slug: string }
   | { type: "cta" }
   | { type: "companyCta" }
   | { type: "sources"; items: string[] };
@@ -32,6 +34,284 @@ export interface BlogPost {
 }
 
 export const blogPosts: BlogPost[] = [
+  {
+    slug: "employee-accommodation-belgrade",
+    seoTitle: "Employee Accommodation in Belgrade | Company Housing Guide 2026",
+    title: "Employee Accommodation in Belgrade: A Practical Guide for Companies in 2026",
+    description:
+      "Looking for employee accommodation in Belgrade? Explore affordable monthly staff housing, company rentals and practical options from €200 per person.",
+    excerpt:
+      "A practical guide for HR teams, employers and agencies arranging monthly housing for staff in Belgrade — what it costs, what to check before booking, and a shared-accommodation alternative to separate apartment leases.",
+    category: "For companies",
+    coverImage: "/images/gallery/ulaz.webp",
+    publishedAt: "2026-10-16",
+    updatedAt: "2026-10-16",
+    readingTime: "10 min read",
+    sections: [
+      {
+        type: "p",
+        text:
+          "Finding affordable and reliable housing for employees in Belgrade does not have to mean renting expensive apartments or booking hotel rooms for months at a time. Whether your company is opening a local office, sending a small project team to Serbia or bringing international employees to Belgrade, arranging accommodation is one of the first practical challenges.",
+      },
+      {
+        type: "p",
+        text:
+          "For a short business trip, a hotel usually works. But when employees are staying for several months, the situation changes. Costs accumulate, contracts become more complicated, and someone within the company has to manage the accommodation.",
+      },
+      {
+        type: "p",
+        text:
+          "This guide explains how to find employee accommodation in Belgrade, what companies should consider before booking and how different housing arrangements affect the total monthly budget.",
+      },
+
+      { type: "h2", text: "Why Employee Accommodation Matters for Businesses" },
+      {
+        type: "p",
+        text:
+          "Accommodation is often treated as a simple administrative task. In practice, it can affect employee satisfaction, operational costs and the overall success of a project.",
+      },
+      {
+        type: "p",
+        text:
+          "Consider a company sending four employees to Belgrade for a six-month assignment. The employer needs to find suitable housing, negotiate rental terms, arrange deposits, manage utility payments and make sure the employees can comfortably reach their workplace. If everyone rents separately, these responsibilities multiply. A single coordinated accommodation arrangement can make the process considerably easier.",
+      },
+      { type: "p", text: "For companies planning temporary assignments or longer-term operations in Serbia, three factors usually matter most:" },
+      {
+        type: "ul",
+        items: [
+          "Predictable monthly costs: a clear housing budget without unexpected utility expenses.",
+          "Practical living conditions: furnished accommodation with access to a kitchen, bathroom and everyday facilities.",
+          "Flexible planning: rental arrangements that correspond to the expected duration of the assignment.",
+        ],
+      },
+      { type: "p", text: "Finding the lowest advertised rent is not necessarily the same as finding the most economical solution." },
+
+      { type: "h2", text: "What Types of Employee Accommodation Are Available in Belgrade?" },
+      { type: "p", text: "Companies generally have three main options when arranging staff accommodation." },
+      { type: "h3", text: "1. Hotels and Serviced Apartments" },
+      {
+        type: "p",
+        text:
+          "Hotels work well for short business visits, training sessions and executive travel. They offer furnished rooms and daily services, but become expensive when an employee needs to stay for several weeks or months. Serviced apartments may offer better monthly rates, although they can still represent a substantial expense for companies accommodating multiple employees.",
+      },
+      { type: "h3", text: "2. Private Apartment Rentals" },
+      {
+        type: "p",
+        text:
+          "Renting a furnished apartment is a popular option for employees relocating to Belgrade. It offers greater independence, particularly for people staying with family or those requiring their own living space. However, companies should consider additional costs such as security deposits, utilities, internet, building maintenance and possible agency fees. A conventional apartment can be a good long-term solution, but managing several separate rentals takes time.",
+      },
+      { type: "h3", text: "3. Shared Monthly Accommodation" },
+      {
+        type: "p",
+        text:
+          "For employees who do not require a complete private apartment, shared residential accommodation can be a practical alternative. This model typically provides an individual sleeping space, while residents share facilities such as the kitchen, bathroom and living area. It is particularly relevant for smaller teams, individual workers and contractors who need affordable accommodation during a longer assignment. The main advantage is straightforward: companies can reduce housing costs while providing furnished living space with essential facilities.",
+      },
+
+      { type: "h2", text: "How Much Does Employee Accommodation in Belgrade Cost?" },
+      {
+        type: "p",
+        text:
+          "Monthly costs vary considerably depending on location, accommodation type, room sharing and the services included. When calculating a budget, companies should compare the total monthly expense rather than the advertised room or apartment price alone.",
+      },
+      {
+        type: "p",
+        text: "For example, BJ Residence, a small residential accommodation property in Belgrade, offers the following monthly arrangements:",
+      },
+      {
+        type: "table",
+        headers: ["Accommodation arrangement", "Monthly price"],
+        rows: [
+          ["Individual sleeping cabin", "from €250"],
+          ["Four-cabin company arrangement", "€800 total"],
+          ["Cost per employee with four occupants", "€200"],
+        ],
+        note: "Rates are indicative and subject to availability and agreed rental conditions.",
+      },
+      {
+        type: "p",
+        text:
+          "For a team of four, booking four individual cabins at the €250 starting rate would amount to around €1,000 per month. Under the company arrangement, the cost is €800 for the same four sleeping cabins — a saving of roughly €200 per month, or around €1,200 over a six-month assignment, compared with four separately priced cabins.",
+      },
+      {
+        type: "p",
+        text:
+          "The shared facilities and living arrangements remain the same; this is a group pricing advantage rather than a comparison with private apartments. For employers, such a model can help make accommodation expenses more predictable.",
+      },
+      { type: "relatedPost", slug: "accommodation-prices-belgrade-2026" },
+
+      { type: "h2", text: "What Should Companies Look for When Booking Staff Housing?" },
+      { type: "p", text: "Price matters, but it should not be the only criterion. Before arranging long-term employee accommodation in Belgrade, employers should check several practical details." },
+      { type: "h3", text: "Location and commuting" },
+      { type: "p", text: "Employees need reasonable access to their workplace. A cheaper property on the opposite side of the city may create unnecessary commuting difficulties." },
+      { type: "h3", text: "Furnished accommodation" },
+      { type: "p", text: "Ready-to-use accommodation eliminates the need to purchase beds, furniture and essential household equipment for a temporary assignment." },
+      { type: "h3", text: "Utilities and maintenance" },
+      { type: "p", text: "Clarify whether electricity, heating, water, internet and maintenance are included in the monthly rent. These costs can make a significant difference when comparing options." },
+      { type: "h3", text: "Privacy and shared facilities" },
+      { type: "p", text: "Not every employee needs a private apartment, but everyone should understand the arrangement before arrival. Companies should confirm which facilities are individual and which are shared." },
+      { type: "h3", text: "Clear rental terms" },
+      { type: "p", text: "The rental period, deposit, payment schedule and cancellation arrangements should be established in advance." },
+      {
+        type: "p",
+        text: "For a company, good accommodation is not simply somewhere employees can sleep. It is housing that fits the assignment, the budget and the employees' daily needs.",
+      },
+
+      {
+        type: "image",
+        src: "/images/gallery/kuhinja2.webp",
+        alt: "Shared kitchen at BJ Residence in Belgrade",
+        caption: "The shared kitchen at BJ Residence — one of the facilities residents use together.",
+      },
+
+      { type: "h2", text: "Affordable Staff Accommodation in Braće Jerković, Belgrade" },
+      {
+        type: "p",
+        text: "For smaller companies seeking monthly worker accommodation in Belgrade, BJ Residence provides an alternative to conventional apartment rentals.",
+      },
+      {
+        type: "p",
+        text:
+          "Located in the residential neighbourhood of Braće Jerković, the property is organised around four individual sleeping cabins and shared living facilities. The concept is designed for people who need practical accommodation at a predictable monthly price.",
+      },
+      { type: "p", text: "The property includes:" },
+      {
+        type: "ul",
+        items: [
+          "Four individual sleeping cabins",
+          "Shared kitchen and dining area",
+          "Shared bathroom",
+          "Common living room",
+          "Furnished residential facilities",
+          "Utilities included in the monthly price",
+          "Regular maintenance of common areas",
+        ],
+      },
+      {
+        type: "p",
+        text:
+          "This is shared residential accommodation, not a collection of separate studio apartments. Residents have their own sleeping spaces while using the common facilities together. The company arrangement accommodates up to four people in the four available cabins.",
+      },
+      {
+        type: "p",
+        text: "For a small team of technicians, contractors or employees working temporarily in Belgrade, this can be a cost-conscious alternative to arranging multiple separate rentals.",
+      },
+
+      { type: "h2", text: "Public Transport and Getting Around Belgrade" },
+      { type: "p", text: "Location is an important consideration when selecting accommodation for employees." },
+      {
+        type: "p",
+        text:
+          "BJ Residence is situated in Braće Jerković, an established residential neighbourhood with access to public transport connections. An additional advantage for employees living in Belgrade is that the city's integrated public transport network has been free for passengers since January 1, 2025, which can reduce commuting expenses for employees who use buses, trams or other eligible city transport services.",
+      },
+      { type: "p", text: "Companies should still check travel routes and journey times to the specific workplace before choosing accommodation." },
+
+      { type: "h2", text: "Accommodation for Foreign Employees in Serbia" },
+      {
+        type: "p",
+        text:
+          "International companies and employment agencies face additional considerations when arranging housing for foreign staff. Employees arriving from abroad may need assistance understanding local rental procedures, accommodation requirements and residence registration.",
+      },
+      {
+        type: "p",
+        text:
+          "Under Serbian regulations, providers accommodating foreign nationals are generally required to register their stay with the competent authorities within 24 hours of providing accommodation. This registration is a separate procedure from obtaining a visa, residence permit or work authorisation, where applicable.",
+      },
+      {
+        type: "p",
+        text: "For employers organising accommodation for foreign workers in Serbia, it is important to confirm that the housing provider understands the relevant registration requirements.",
+      },
+
+      { type: "h2", text: "Who Is Shared Employee Accommodation Best Suited For?" },
+      { type: "p", text: "Shared monthly housing is not the right choice for every employee or assignment." },
+      {
+        type: "p",
+        text: "A private apartment may be preferable for people relocating with their families, senior employees who require independent accommodation or individuals who need greater privacy.",
+      },
+      { type: "p", text: "However, shared accommodation can make financial and practical sense for:" },
+      {
+        type: "ul",
+        items: [
+          "Small project teams working in Belgrade for several months",
+          "Technicians and contractors on temporary assignments",
+          "International workers relocating individually to Serbia",
+          "Companies arranging accommodation for two to four employees",
+          "Employers who prefer predictable monthly housing expenses",
+        ],
+      },
+      {
+        type: "p",
+        text: "The key is choosing an arrangement that matches the employees' requirements rather than automatically booking the same type of accommodation for every assignment.",
+      },
+
+      { type: "h2", text: "How to Arrange Accommodation for Your Employees" },
+      { type: "p", text: "Before contacting an accommodation provider, companies should prepare a few basic details." },
+      {
+        type: "p",
+        text: "The most important are the number of employees, expected arrival date, length of stay and preferred location.",
+      },
+      {
+        type: "p",
+        text:
+          "It is also useful to establish whether employees require separate sleeping spaces, which shared facilities are acceptable and whether the company has any specific contractual or payment requirements. With these details, providers can give a more relevant offer and confirm availability.",
+      },
+      {
+        type: "p",
+        text: "For small teams, planning in advance is particularly important because properties with limited capacity may not have several spaces available at short notice.",
+      },
+
+      { type: "h2", text: "Frequently Asked Questions" },
+      {
+        type: "faq",
+        items: [
+          {
+            q: "How much does employee accommodation cost in Belgrade?",
+            a: "Prices depend on the type of housing and the number of employees. Individual sleeping cabins at BJ Residence start from €250 per month, while its four-person company arrangement is €800 monthly, equivalent to €200 per person at full occupancy.",
+          },
+          {
+            q: "Can a company rent accommodation for several employees in Belgrade?",
+            a: "Yes. Companies can arrange accommodation through private rental agreements or providers offering group housing. The available capacity, contract and payment arrangements should be confirmed before booking.",
+          },
+          {
+            q: "Is long-term accommodation cheaper than a hotel?",
+            a: "For stays lasting several months, monthly rentals and shared accommodation are often more economical than paying standard hotel nightly rates. The actual difference depends on the property, occupancy and services included.",
+          },
+          {
+            q: "Are utilities included in employee accommodation?",
+            a: "It depends on the provider. Traditional apartment rentals often charge utilities separately. BJ Residence includes utility costs in its advertised monthly accommodation prices.",
+          },
+          {
+            q: "Is BJ Residence suitable for a team of ten or more employees?",
+            a: "BJ Residence currently has four individual sleeping cabins, accommodating up to four people. Its company arrangement is therefore intended for smaller teams rather than large-scale workforce housing.",
+          },
+        ],
+      },
+
+      { type: "h2", text: "Looking for Employee Accommodation in Belgrade?" },
+      {
+        type: "p",
+        text:
+          "Arranging accommodation for employees should be straightforward, especially when your team is arriving from another country or working on a time-sensitive assignment. BJ Residence offers affordable monthly accommodation for individuals and small company teams in Belgrade.",
+      },
+      {
+        type: "p",
+        text:
+          "With four individual sleeping cabins, shared residential facilities and a predictable monthly pricing structure, the property provides a practical option for employers who do not need conventional private apartments for every employee.",
+      },
+      {
+        type: "p",
+        text:
+          "If your company is planning an assignment in Belgrade, get in touch with the expected number of employees, arrival date and duration of stay — we can discuss availability, accommodation details and suitable rental arrangements. Even if all four cabins are currently booked, we keep a record of company inquiries for the next opening, so it's worth reaching out ahead of your planned dates.",
+      },
+      { type: "companyCta" },
+      {
+        type: "sources",
+        items: [
+          "Belgrade public transport — official fare information (free since 1 January 2025)",
+          "Welcome to Serbia — official government portal on registering foreign nationals' accommodation",
+        ],
+      },
+    ],
+  },
   {
     slug: "accommodation-prices-belgrade-2026",
     seoTitle: "Accommodation Prices in Belgrade 2026 | Monthly Housing Guide",
@@ -233,6 +513,7 @@ export const blogPosts: BlogPost[] = [
         text:
           "Our accommodation may be suitable for companies bringing employees or contractors to Serbia, as well as individuals who plan to stay in Belgrade for an extended period. Contact BJ Residence with the number of people, expected arrival date and estimated duration of stay — we can discuss availability and the most suitable arrangement for your needs.",
       },
+      { type: "relatedPost", slug: "employee-accommodation-belgrade" },
       { type: "companyCta" },
       {
         type: "sources",

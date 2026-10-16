@@ -81,7 +81,8 @@ export function CompanyQuoteCta() {
       <div>
         <p className="text-sm font-semibold uppercase tracking-wide text-olive-dark">BJ Residence for companies</p>
         <p className="mt-1 max-w-md text-base text-ink/75">
-          Housing employees or contractors in Belgrade? Get a quote for the full residence or individual rooms.
+          Housing employees or contractors in Belgrade? Get a quote for the full residence or individual rooms — and
+          if we&apos;re fully booked right now, we&apos;ll keep your request on file for the next opening.
         </p>
       </div>
       <Button type="button" onClick={() => setStatus("open")} className="shrink-0">
