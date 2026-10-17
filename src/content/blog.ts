@@ -35,6 +35,180 @@ export interface BlogPost {
 
 export const blogPosts: BlogPost[] = [
   {
+    slug: "accommodation-foreign-workers-serbia",
+    seoTitle: "Accommodation for Foreign Workers in Serbia | Employer Guide 2026",
+    title: "Accommodation for Foreign Workers in Serbia: What Employers Need to Know",
+    description:
+      "Bringing foreign employees to Serbia? A practical guide to accommodation, address registration and what employers should arrange before their team arrives.",
+    excerpt:
+      "What employers relocating staff to Serbia actually need to sort out — address registration, the single work and residence permit, and how accommodation fits into the process.",
+    category: "For companies",
+    coverImage: "/images/gallery/hodnik.webp",
+    publishedAt: "2026-10-17",
+    updatedAt: "2026-10-17",
+    readingTime: "9 min read",
+    sections: [
+      {
+        type: "p",
+        text:
+          "Relocating a foreign employee to Serbia involves more than booking a flight and finding somewhere to stay. Where that employee lives during their first weeks is tied directly to Serbia's address-registration requirements — and, for longer assignments, to the paperwork behind their work and residence permit. This guide covers what employers, HR teams and relocation agencies should understand before a foreign hire's arrival date, and how accommodation fits into the process.",
+      },
+      {
+        type: "p",
+        text:
+          "None of this is legal advice. Requirements and processing times are set out in Serbia's Law on Foreigners and related regulations, administered by the Ministry of Interior and the National Employment Service, and they do change. Treat this as a practical starting point, and confirm current specifics with the official Welcome to Serbia portal or a licensed immigration lawyer before relying on any deadline or figure below.",
+      },
+
+      { type: "h2", text: "Why Accommodation Planning Matters for Foreign Hires" },
+      {
+        type: "p",
+        text:
+          "For a domestic hire, accommodation is mostly a personal matter. For a foreign employee, it's also an administrative one: their address has to be registered with the authorities, and that registration can feed into later paperwork if they end up staying longer than a short visit. Sorting out stable, registration-ready accommodation before arrival avoids a scramble in the employee's first few days — and avoids putting an administrative task on someone who's just landed in a new country.",
+      },
+
+      { type: "h2", text: "Registering a Foreign Employee's Address in Serbia" },
+      {
+        type: "p",
+        text:
+          "Foreign nationals staying in Serbia generally need their stay registered with the police, within a set window of arrival or of any change of address — commonly cited as 24 hours, though sources differ on the exact figure for privately arranged accommodation, so it's worth confirming directly. Hotels, hostels and other registered accommodation providers typically handle this automatically as part of check-in. If an employee is staying in a private apartment or with a host instead, the responsibility usually falls on that host to register them in person.",
+      },
+      {
+        type: "p",
+        text:
+          "Registration produces a confirmation of registered stay, sometimes referred to informally as a white card. For a short stay, that confirmation is generally all that's needed. For a longer assignment, it becomes one of the supporting steps toward a residence permit application.",
+      },
+      {
+        type: "p",
+        text:
+          "Because the rules — and the fines for missing the deadline — are specific and do get updated, this is one area where it's worth asking your accommodation provider directly whether registration is handled as standard, rather than assuming.",
+      },
+
+      { type: "h2", text: "The Single Work and Residence Permit" },
+      {
+        type: "p",
+        text:
+          "Most foreign employees working in Serbia need what's officially called the Single Permit — a combined temporary residence and work authorization, replacing the separate permits Serbia used previously. It can be requested by the foreign employee or by the employer on their behalf, which matters for companies coordinating several hires at once.",
+      },
+      {
+        type: "p",
+        text:
+          "In practice, the process generally involves a long-stay visa for nationalities that require one, address registration after arrival, a biometric appointment, and collection of a physical ID card once the permit is issued. Official guidance cites a 15-day processing window once a complete application is submitted, with the permit valid for up to 36 months — though real-world timelines reported by employers and relocation services vary, so it's sensible to build some buffer into a start date rather than plan around the fastest-case figure.",
+      },
+      {
+        type: "p",
+        text:
+          "Some short engagements — broadly, up to 90 days within a 180-day period, under specific contract categories — may be exempt from needing the full Single Permit. Whether that applies depends on the employee's nationality and the nature of the assignment, so it's worth checking case by case rather than assuming.",
+      },
+
+      { type: "h2", text: "What to Check With an Accommodation Provider Before Booking" },
+      {
+        type: "p",
+        text: "A handful of direct questions before booking can save real time once the employee has arrived:",
+      },
+      {
+        type: "ul",
+        items: [
+          "Do they register guests' stay with the authorities as part of check-in, or is that left to the guest?",
+          "Can they confirm registration happens within the required window?",
+          "Is the accommodation address stable for the length of the assignment — moving mid-stay means re-registering, and can complicate a permit application in progress?",
+          "Do they understand the difference between a short stay (registration only) and a longer one that feeds into a residence permit?",
+          "Can they provide documentation — a registration confirmation or proof of address — if the employee or their immigration lawyer needs it later?",
+        ],
+      },
+
+      { type: "h2", text: "Accommodation Costs for Relocating Foreign Employees" },
+      {
+        type: "p",
+        text:
+          "Cost is rarely the first concern in a relocation, but it adds up quickly once hotel nights turn into weeks and then months. A private apartment offers independence but comes with its own deposit, utility and contract overhead for a short-to-medium assignment. Shared monthly accommodation — an individual room with shared kitchen, bathroom and living space — tends to be the more predictable option for a single relocating employee, and the only one of the three that stays genuinely affordable past the first month.",
+      },
+      { type: "relatedPost", slug: "accommodation-prices-belgrade-2026" },
+
+      { type: "h2", text: "Planning Accommodation for Larger Teams or Long-Term Assignments" },
+      {
+        type: "p",
+        text:
+          "When a relocation involves several employees arriving over an extended period — a project team, a group of technicians, an office being staffed up from abroad — it's often cleaner to standardize on one accommodation arrangement for the whole group rather than coordinate several separate leases with different start dates, landlords and registration timelines.",
+      },
+      {
+        type: "p",
+        text:
+          "BJ Residence's four cabins can be booked individually or as a single company arrangement, including on a longer-term basis for employers who expect to keep housing staff in Belgrade on a rolling basis rather than for one isolated assignment. A single, stable, consistently registered address for the whole group is often worth more to an HR team than a marginally cheaper patchwork of separate apartments.",
+      },
+      { type: "relatedPost", slug: "employee-accommodation-belgrade" },
+      { type: "companyCta" },
+
+      { type: "h2", text: "Who Should Be Involved in the Process" },
+      {
+        type: "p",
+        text:
+          "Getting a foreign hire settled smoothly usually involves three parties working from the same information: the employer or HR team coordinating dates and documents, the accommodation provider confirming the address and handling registration, and — for anything beyond a short stay — an immigration lawyer or licensed agency managing the permit application itself. An accommodation provider can confirm an address and register a stay; it generally shouldn't be relied on as a substitute for immigration advice on the permit process itself.",
+      },
+      {
+        type: "p",
+        text: "Before an employee's arrival date, it's worth having answered:",
+      },
+      {
+        type: "ul",
+        items: [
+          "Which visa, if any, does the employee need before travelling?",
+          "Who is filing the Single Permit application — the employee, or the employer on their behalf?",
+          "Is the accommodation booked and confirmed before the arrival date, with registration handled on check-in?",
+          "Who is the employee's point of contact for the permit process once they've arrived?",
+        ],
+      },
+
+      { type: "h2", text: "Frequently Asked Questions" },
+      {
+        type: "faq",
+        items: [
+          {
+            q: "Do foreign employees need to register their address in Serbia?",
+            a: "Yes. Foreign nationals generally need their stay registered with the police within a set window of arrival or any change of address. Hotels and registered accommodation providers typically handle this at check-in; a private host is usually responsible for registering a guest staying with them.",
+          },
+          {
+            q: "How long does it take to get a work and residence permit in Serbia?",
+            a: "Official guidance cites around 15 days once a complete application is submitted, with the permit valid for up to 36 months. Real-world timelines can vary, so it's sensible to plan with some buffer rather than the fastest-case figure.",
+          },
+          {
+            q: "Can an employer apply for a work permit on behalf of an employee?",
+            a: "Yes. Serbia's Single Permit — the combined residence and work authorization — can be requested by the employee or by the employer on their behalf, which is particularly relevant for companies coordinating several hires at once.",
+          },
+          {
+            q: "Does BJ Residence register guests' stay with the authorities?",
+            a: "Yes, as part of standard check-in for guests staying with us, the same as any registered accommodation provider. For anything beyond that — visas, work permits, residence applications — we'd point you to the official Welcome to Serbia portal or a licensed immigration lawyer rather than guess.",
+          },
+          {
+            q: "Is this article legal advice?",
+            a: "No. It's a practical starting point for employers, not a substitute for current official guidance. Requirements and processing times change, so confirm specifics with the Ministry of Interior, the National Employment Service, or a licensed immigration lawyer before relying on them.",
+          },
+        ],
+      },
+
+      { type: "h2", text: "Relocating a Team to Serbia?" },
+      {
+        type: "p",
+        text:
+          "Accommodation is one of the few parts of a relocation an employer can sort out completely in advance. BJ Residence offers individual sleeping cabins and a company arrangement for the full four-person capacity in Braće Jerković, Belgrade, with guest registration handled as standard and one predictable monthly price per arrangement.",
+      },
+      {
+        type: "p",
+        text:
+          "If you're planning to bring foreign employees or contractors to Belgrade — whether it's one person or a full team, for one assignment or on an ongoing basis — get in touch with the expected number of people, arrival date and length of stay, and we can confirm availability and the most suitable arrangement.",
+      },
+      { type: "relatedPost", slug: "monthly-accommodation-belgrade" },
+      { type: "companyCta" },
+      {
+        type: "sources",
+        items: [
+          "Welcome to Serbia — official government portal on the Single Permit and foreign nationals' registration",
+          "Law on Foreigners (Zakon o strancima) and Law on Employment of Foreigners, Republic of Serbia",
+          "Ministry of Interior of the Republic of Serbia — foreigner registration and residence procedures",
+        ],
+      },
+    ],
+  },
+  {
     slug: "monthly-accommodation-belgrade",
     seoTitle: "Monthly Accommodation in Belgrade: Prices & Options 2026",
     title: "Monthly Accommodation in Belgrade: Better Alternatives to Hotels and Apartments in 2026",
@@ -183,6 +357,7 @@ export const blogPosts: BlogPost[] = [
           "BJ Residence has four individual sleeping cabins and offers a dedicated company arrangement for the full four-person capacity. This can be relevant for small project teams, technicians and international employees staying in Belgrade for an extended assignment. Companies should confirm that the available facilities, degree of privacy and rental conditions meet their employees' requirements before booking.",
       },
       { type: "relatedPost", slug: "employee-accommodation-belgrade" },
+      { type: "relatedPost", slug: "accommodation-foreign-workers-serbia" },
       { type: "companyCta" },
 
       { type: "h2", text: "Frequently Asked Questions About Monthly Accommodation in Belgrade" },
@@ -343,6 +518,7 @@ export const blogPosts: BlogPost[] = [
       },
       { type: "relatedPost", slug: "accommodation-prices-belgrade-2026" },
       { type: "relatedPost", slug: "monthly-accommodation-belgrade" },
+      { type: "relatedPost", slug: "accommodation-foreign-workers-serbia" },
 
       { type: "h2", text: "What Should Companies Look for When Booking Staff Housing?" },
       { type: "p", text: "Price matters, but it should not be the only criterion. Before arranging long-term employee accommodation in Belgrade, employers should check several practical details." },
@@ -718,6 +894,7 @@ export const blogPosts: BlogPost[] = [
       },
       { type: "relatedPost", slug: "employee-accommodation-belgrade" },
       { type: "relatedPost", slug: "monthly-accommodation-belgrade" },
+      { type: "relatedPost", slug: "accommodation-foreign-workers-serbia" },
       { type: "companyCta" },
       {
         type: "sources",
