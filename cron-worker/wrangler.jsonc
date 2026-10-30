@@ -13,6 +13,6 @@
     // Not secret — just which deployment to hit. Update once the Cloudflare
     // Workers/Pages app has its real URL (workers.dev subdomain or the
     // production custom domain, once DNS is cut over).
-    "TARGET_URL": "https://bjresidence.workers.dev/api/cron/residence-reminders"
+    "TARGET_URL": "https://bjresidence.pavlevars.workers.dev/api/cron/residence-reminders"
   }
 }
