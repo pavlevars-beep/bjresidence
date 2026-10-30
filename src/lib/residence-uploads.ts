@@ -2,12 +2,14 @@ import { del, get, put } from "@vercel/blob";
 import { promises as fs } from "fs";
 import path from "path";
 import { randomUUID } from "crypto";
+import { getR2Bucket } from "./cloudflare-r2";
 
 /**
- * Storage for resident identification documents (passport photos) — private
- * Vercel Blob in production, never reachable by a public URL, only through
- * this file's functions using BLOB_READ_WRITE_TOKEN; a local disk folder in
- * dev. Pathnames are random UUIDs, never derived from resident name/number.
+ * Storage for resident identification documents (passport photos) — never
+ * reachable by a public URL, only through this file's functions. Cloudflare
+ * R2 on the Workers deployment, private Vercel Blob on the Vercel
+ * deployment, a local disk folder in dev. Pathnames are random UUIDs, never
+ * derived from resident name/number.
  */
 const uploadsDir = path.join(process.cwd(), "data", "uploads", "residence-documents");
 const BLOB_PREFIX = "uploads/residence-documents/";
@@ -36,6 +38,12 @@ export async function saveResidentDocument(file: File): Promise<string> {
 
   const filename = `${randomUUID()}.${ext}`;
 
+  const bucket = await getR2Bucket();
+  if (bucket) {
+    await bucket.put(`${BLOB_PREFIX}${filename}`, await file.arrayBuffer(), { httpMetadata: { contentType: file.type } });
+    return `${BLOB_PREFIX}${filename}`;
+  }
+
   if (hasBlobToken()) {
     await put(`${BLOB_PREFIX}${filename}`, file, {
       access: "private",
@@ -55,6 +63,17 @@ export async function saveResidentDocument(file: File): Promise<string> {
 export async function readResidentDocument(pathname: string): Promise<{ buffer: Buffer; contentType: string } | null> {
   if (!pathname.startsWith(BLOB_PREFIX)) return null;
   const filename = pathname.slice(BLOB_PREFIX.length);
+
+  const bucket = await getR2Bucket();
+  if (bucket) {
+    try {
+      const obj = await bucket.get(pathname);
+      if (!obj) return null;
+      return { buffer: Buffer.from(await obj.arrayBuffer()), contentType: obj.httpMetadata?.contentType || "application/octet-stream" };
+    } catch {
+      return null;
+    }
+  }
 
   if (hasBlobToken()) {
     try {
@@ -80,6 +99,16 @@ export async function readResidentDocument(pathname: string): Promise<{ buffer: 
 export async function deleteResidentDocument(pathname: string): Promise<void> {
   if (!pathname.startsWith(BLOB_PREFIX)) return;
   const filename = pathname.slice(BLOB_PREFIX.length);
+
+  const bucket = await getR2Bucket();
+  if (bucket) {
+    try {
+      await bucket.delete(pathname);
+    } catch (err) {
+      console.error("[residence-uploads] R2 delete failed:", err);
+    }
+    return;
+  }
 
   if (hasBlobToken()) {
     try {

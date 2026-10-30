@@ -1,0 +1,18 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "bjresidence-cron",
+  "main": "src/index.ts",
+  "compatibility_date": "2025-09-23",
+  "compatibility_flags": ["nodejs_compat"],
+  // Daily at 07:00 UTC — same schedule as vercel.json's cron, kept in sync
+  // manually since the two platforms have no shared config format.
+  "triggers": {
+    "crons": ["0 7 * * *"]
+  },
+  "vars": {
+    // Not secret — just which deployment to hit. Update once the Cloudflare
+    // Workers/Pages app has its real URL (workers.dev subdomain or the
+    // production custom domain, once DNS is cut over).
+    "TARGET_URL": "https://bjresidence.workers.dev/api/cron/residence-reminders"
+  }
+}

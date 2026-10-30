@@ -1,0 +1,33 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "bjresidence",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2025-09-23",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "services": [
+    {
+      "binding": "WORKER_SELF_REFERENCE",
+      "service": "bjresidence"
+    }
+  ],
+  "r2_buckets": [
+    {
+      // App data: JSON "database" blobs + binary documents, same pathnames
+      // Vercel Blob used (see src/lib/blob-store.ts, src/lib/*-uploads.ts).
+      "binding": "BJ_RESIDENCE_BUCKET",
+      "bucket_name": "bjresidence-data"
+    },
+    {
+      // Next's own incremental cache (ISR) — this binding name is required
+      // by @opennextjs/cloudflare's r2-incremental-cache override. Shares the
+      // same bucket under the "incremental-cache" key prefix, which can't
+      // collide with the app-data keys above (those are "data/..." / "uploads/...").
+      "binding": "NEXT_INC_CACHE_R2_BUCKET",
+      "bucket_name": "bjresidence-data"
+    }
+  ]
+}

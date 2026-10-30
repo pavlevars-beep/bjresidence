@@ -1,5 +1,7 @@
 # dependencies
 /node_modules
+cron-worker/node_modules
+cron-worker/.wrangler
 
 # next.js
 /.next/
@@ -27,3 +29,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# cloudflare (opennextjs)
+/.open-next/
+/.wrangler/
+.dev.vars
+worker-configuration.d.ts
+cloudflare-env.d.ts

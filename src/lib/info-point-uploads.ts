@@ -2,14 +2,16 @@ import { get, put } from "@vercel/blob";
 import { promises as fs } from "fs";
 import path from "path";
 import { randomUUID } from "crypto";
+import { getR2Bucket } from "./cloudflare-r2";
 
 /**
- * Storage for resident-submitted issue photos — private Vercel Blob in
- * production (never reachable by a public URL, only through this file's
- * functions using BLOB_READ_WRITE_TOKEN), a local disk folder in dev.
- * Scoped to just this one upload path rather than a general media library —
- * see the project's Info Point report for why file uploads elsewhere in
- * admin (place photos, device-guide images) stay URL-based instead.
+ * Storage for resident-submitted issue photos — never reachable by a public
+ * URL, only through this file's functions. Cloudflare R2 on the Workers
+ * deployment, private Vercel Blob on the Vercel deployment, a local disk
+ * folder in dev. Scoped to just this one upload path rather than a general
+ * media library — see the project's Info Point report for why file uploads
+ * elsewhere in admin (place photos, device-guide images) stay URL-based
+ * instead.
  */
 const uploadsDir = path.join(process.cwd(), "data", "uploads", "info-point");
 const BLOB_PREFIX = "uploads/info-point/";
@@ -38,6 +40,12 @@ export async function saveIssuePhoto(file: File): Promise<string> {
 
   const filename = `${randomUUID()}.${ext}`;
 
+  const bucket = await getR2Bucket();
+  if (bucket) {
+    await bucket.put(`${BLOB_PREFIX}${filename}`, await file.arrayBuffer(), { httpMetadata: { contentType: file.type } });
+    return filename;
+  }
+
   if (hasBlobToken()) {
     await put(`${BLOB_PREFIX}${filename}`, file, {
       access: "private",
@@ -62,6 +70,17 @@ export function isSafeUploadFilename(filename: string): boolean {
 
 export async function readIssuePhoto(filename: string): Promise<Buffer | null> {
   if (!isSafeUploadFilename(filename)) return null;
+
+  const bucket = await getR2Bucket();
+  if (bucket) {
+    try {
+      const obj = await bucket.get(`${BLOB_PREFIX}${filename}`);
+      if (!obj) return null;
+      return Buffer.from(await obj.arrayBuffer());
+    } catch {
+      return null;
+    }
+  }
 
   if (hasBlobToken()) {
     try {

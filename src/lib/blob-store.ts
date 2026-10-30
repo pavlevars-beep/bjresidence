@@ -1,21 +1,18 @@
 import { get, put } from "@vercel/blob";
 import { promises as fs } from "fs";
 import path from "path";
+import { getR2Bucket } from "./cloudflare-r2";
 
 /**
- * Tiny "JSON blob as a database" helper built on Vercel Blob — the durable
- * replacement for this project's original local-JSON-file pattern, which
- * silently failed to persist on Vercel's read-only serverless filesystem
- * (this was flagged repeatedly as a known limitation before this file
- * existed). Every JSON store in the project (info board, info point, issue
- * reports, availability) goes through this.
+ * Tiny "JSON blob as a database" helper — Cloudflare R2 on the Workers
+ * deployment, Vercel Blob on the Vercel deployment, a local JSON file under
+ * data/ in dev. Every JSON store in the project (info board, info point,
+ * issue reports, availability) goes through this. Same codebase, same keys,
+ * three backends selected at runtime — see cloudflare-r2.ts and the
+ * `hasBlobToken()` check below.
  *
- * Blobs are stored with `access: "private"` — they are never reachable by a
- * public URL, only through this helper using BLOB_READ_WRITE_TOKEN.
- *
- * Local dev without BLOB_READ_WRITE_TOKEN configured transparently falls
- * back to a local JSON file under data/, so `npm run dev` keeps working with
- * zero setup — only production needs the Blob store connected.
+ * Blobs/objects are never reachable by a public URL, only through this
+ * helper.
  */
 
 function hasBlobToken(): boolean {
@@ -27,6 +24,17 @@ function localFilePath(pathname: string): string {
 }
 
 export async function readJsonBlob<T>(pathname: string): Promise<T | null> {
+  const bucket = await getR2Bucket();
+  if (bucket) {
+    try {
+      const obj = await bucket.get(pathname);
+      if (!obj) return null;
+      return JSON.parse(new TextDecoder().decode(await obj.arrayBuffer())) as T;
+    } catch {
+      return null;
+    }
+  }
+
   if (hasBlobToken()) {
     try {
       // useCache defaults to true in the SDK, which reads through Vercel Blob's
@@ -53,6 +61,12 @@ export async function readJsonBlob<T>(pathname: string): Promise<T | null> {
 
 export async function writeJsonBlob<T>(pathname: string, data: T): Promise<void> {
   const json = JSON.stringify(data, null, 2);
+
+  const bucket = await getR2Bucket();
+  if (bucket) {
+    await bucket.put(pathname, json, { httpMetadata: { contentType: "application/json" } });
+    return;
+  }
 
   if (hasBlobToken()) {
     await put(pathname, json, {

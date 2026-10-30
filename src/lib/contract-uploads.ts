@@ -2,10 +2,11 @@ import { del, get, put } from "@vercel/blob";
 import { promises as fs } from "fs";
 import path from "path";
 import { randomUUID } from "crypto";
+import { getR2Bucket } from "./cloudflare-r2";
 
 /**
  * Private storage for contract templates, generated contracts, and signed
- * copies — same private-blob-with-local-fallback pattern as
+ * copies — same R2/Vercel-Blob/local-fallback pattern as
  * residence-uploads.ts. Never public; always served through an
  * authenticated streaming route.
  */
@@ -33,6 +34,11 @@ function localPath(pathname: string): string {
 }
 
 async function saveBuffer(pathname: string, buffer: Buffer, contentType: string): Promise<string> {
+  const bucket = await getR2Bucket();
+  if (bucket) {
+    await bucket.put(pathname, buffer, { httpMetadata: { contentType } });
+    return pathname;
+  }
   if (hasBlobToken()) {
     await put(pathname, buffer, { access: "private", addRandomSuffix: false, allowOverwrite: true, contentType });
     return pathname;
@@ -88,6 +94,17 @@ export async function readContractFile(pathname: string): Promise<{ buffer: Buff
     return null;
   }
 
+  const bucket = await getR2Bucket();
+  if (bucket) {
+    try {
+      const obj = await bucket.get(pathname);
+      if (!obj) return null;
+      return { buffer: Buffer.from(await obj.arrayBuffer()), contentType: obj.httpMetadata?.contentType || "application/octet-stream" };
+    } catch {
+      return null;
+    }
+  }
+
   if (hasBlobToken()) {
     try {
       const result = await get(pathname, { access: "private", useCache: false });
@@ -109,6 +126,16 @@ export async function readContractFile(pathname: string): Promise<{ buffer: Buff
 }
 
 export async function deleteContractFile(pathname: string): Promise<void> {
+  const bucket = await getR2Bucket();
+  if (bucket) {
+    try {
+      await bucket.delete(pathname);
+    } catch (err) {
+      console.error("[contract-uploads] R2 delete failed:", err);
+    }
+    return;
+  }
+
   if (hasBlobToken()) {
     try {
       await del(pathname);
