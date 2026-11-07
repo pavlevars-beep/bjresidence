@@ -35,6 +35,106 @@ export interface BlogPost {
 
 export const blogPosts: BlogPost[] = [
   {
+    slug: "fully-booked-waiting-list-belgrade",
+    seoTitle: "BJ Residence Is Fully Booked | Join the Waiting List",
+    title: "BJ Residence Is Fully Booked — How Our Waiting List Works",
+    description:
+      "All four cabins at BJ Residence are currently taken. Here's how our waiting list works, what to include when you apply, and what usually opens up a spot.",
+    excerpt:
+      "Our four cabins are all occupied right now. Here's what that means if you were planning to book, and how the waiting list works for both individuals and companies.",
+    category: "Availability",
+    coverImage: "/images/gallery/kabine4.webp",
+    publishedAt: "2026-11-07",
+    updatedAt: "2026-11-07",
+    readingTime: "4 min read",
+    sections: [
+      {
+        type: "p",
+        text:
+          "If you've landed on this page hoping to book a cabin at BJ Residence, here's the honest answer first: all four are currently occupied. We'd rather tell you that directly than have you fill out a form and wait for a reply that says the same thing. What follows is what we can actually offer instead — a waiting list that works, and a realistic sense of how it plays out.",
+      },
+
+      { type: "h2", text: "Why All Four Cabins Are Taken" },
+      {
+        type: "p",
+        text:
+          "BJ Residence is small by design — four private sleeping cabins sharing a kitchen, bathroom and common areas, not a large building with constant turnover. That's part of what residents tend to like about it, but it also means there's no slack capacity sitting empty most of the time. Once all four are booked for a given stretch, the next opening depends on someone's stay actually ending.",
+      },
+
+      { type: "h2", text: "How the Waiting List Works" },
+      {
+        type: "p",
+        text:
+          "There's no automated queue or booking system behind it — it's a list we keep, and we reach out directly as soon as a cabin frees up. Submitting the inquiry form below adds you to it. It costs nothing and doesn't commit you to anything; it just means we have your details on hand the moment there's space.",
+      },
+      {
+        type: "p",
+        text: "A few things help us match you to the right opening when one comes up:",
+      },
+      {
+        type: "ul",
+        items: [
+          "How flexible your move-in date is — someone who can start anytime has more openings available to them than someone who needs a specific week",
+          "How long you're planning to stay, even roughly",
+          "Whether it's for one person or more than one",
+          "A working phone number or email we can actually reach you on — we follow up directly rather than mass-messaging the list",
+        ],
+      },
+
+      { type: "h2", text: "What Usually Opens Up a Spot" },
+      {
+        type: "p",
+        text:
+          "Most residents stay on a monthly basis rather than booking a fixed, long-locked term, so turnover does happen — just not on a predictable schedule we can quote in advance. We're not going to invent a number here. If you need a firm answer sooner rather than later, the most useful thing you can do is join the list with a flexible date range rather than a single fixed one.",
+      },
+      { type: "relatedPost", slug: "monthly-accommodation-belgrade" },
+
+      { type: "h2", text: "For Companies Planning Ahead" },
+      {
+        type: "p",
+        text:
+          "The same waiting list applies to company arrangements for the full four-cabin capacity, not just individual bookings. If you're planning ahead for a team or project that won't start for a few weeks or months, it's worth getting on the list early with your expected timeline rather than waiting until closer to the date.",
+      },
+      { type: "relatedPost", slug: "employee-accommodation-belgrade" },
+      { type: "companyCta" },
+
+      { type: "h2", text: "Frequently Asked Questions" },
+      {
+        type: "faq",
+        items: [
+          {
+            q: "Can I still apply if BJ Residence is fully booked?",
+            a: "Yes — use the inquiry form to join the waiting list. We reach out directly as soon as a cabin opens up that matches your dates.",
+          },
+          {
+            q: "Is there a cost or commitment to joining the waiting list?",
+            a: "No. Submitting the form doesn't commit you to anything and doesn't cost anything — it just means we have your details when space opens.",
+          },
+          {
+            q: "How will I be notified if a spot opens up?",
+            a: "We'll contact you directly using the phone number or email you provide, rather than sending a general announcement to everyone on the list.",
+          },
+          {
+            q: "Can a company join the waiting list for the whole property?",
+            a: "Yes. The waiting list covers both individual bookings and company arrangements for the full four-cabin capacity — get in touch with your expected timeline.",
+          },
+          {
+            q: "Is there a way to skip the waiting list?",
+            a: "Not really — the list exists because we're genuinely full, not as a formality. The one thing that helps is flexibility: a wider date range gives us more chances to match you to an opening.",
+          },
+        ],
+      },
+
+      { type: "h2", text: "Join the Waiting List" },
+      {
+        type: "p",
+        text:
+          "If BJ Residence still fits what you're looking for, get in touch with your expected move-in window, how long you'd be staying, and how many people — we'll be in touch directly the moment a cabin opens up.",
+      },
+      { type: "cta" },
+    ],
+  },
+  {
     slug: "accommodation-foreign-workers-serbia",
     seoTitle: "Accommodation for Foreign Workers in Serbia | Employer Guide 2026",
     title: "Accommodation for Foreign Workers in Serbia: What Employers Need to Know",
