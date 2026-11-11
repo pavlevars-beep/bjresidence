@@ -7,7 +7,7 @@
   // Daily at 07:00 UTC — same schedule as vercel.json's cron, kept in sync
   // manually since the two platforms have no shared config format.
   "triggers": {
-    "crons": ["0 7 * * *"]
+    "crons": []
   },
   "vars": {
     // Not secret — just which deployment to hit. Update once the Cloudflare
