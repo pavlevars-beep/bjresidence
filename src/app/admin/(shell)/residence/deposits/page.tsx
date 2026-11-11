@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
 import { AdminLogin } from "@/components/admin/AdminLogin";
+import { DepositsList, type DepositRow } from "@/components/admin/residence/DepositsList";
 import { getPayments } from "@/lib/residence/payments-store";
 import { getResidents } from "@/lib/residence/residents-store";
 import { getStays } from "@/lib/residence/stays-store";
@@ -18,15 +18,34 @@ export default async function DepositsPage() {
   const [payments, residents, stays, cabins] = await Promise.all([getPayments(), getResidents(), getStays(), getCabins()]);
   const cabinById = new Map(cabins.map((c) => [c.id, c]));
 
-  const rows = residents
+  const rows: (DepositRow & { isActive: boolean })[] = residents
     .map((resident) => {
       const residentPayments = payments.filter((p) => p.residentId === resident.id);
       const paid = residentPayments.filter((p) => p.type === "deposit").reduce((s, p) => s + p.amount, 0);
       const returned = residentPayments.filter((p) => p.type === "deposit_return").reduce((s, p) => s + p.amount, 0);
       const held = paid - returned;
       const activeStay = stays.find((s) => s.residentId === resident.id && s.status === "active");
+      // Deposit returns commonly happen after move-out — fall back to the
+      // most recent stay on record so there's still a stay/cabin to attach
+      // the return payment to.
+      const residentStays = stays
+        .filter((s) => s.residentId === resident.id)
+        .sort((a, b) => b.moveInDate.localeCompare(a.moveInDate));
+      const relevantStay = activeStay ?? residentStays[0] ?? null;
       const cabinName = activeStay ? cabinById.get(activeStay.cabinId)?.name ?? null : null;
-      return { resident, paid, returned, held, cabinName, isActive: !!activeStay, missing: !!activeStay && held <= 0 };
+      return {
+        residentId: resident.id,
+        residentName: `${resident.firstName} ${resident.lastName}`,
+        paid,
+        returned,
+        held,
+        currency: relevantStay?.currency ?? "€",
+        cabinName,
+        stayId: relevantStay?.id ?? null,
+        cabinId: relevantStay?.cabinId ?? null,
+        isActive: !!activeStay,
+        missing: !!activeStay && held <= 0,
+      };
     })
     // Keep anyone with deposit history, plus every currently active resident
     // (even with zero deposit — that's exactly what needs surfacing here).
@@ -45,32 +64,7 @@ export default async function DepositsPage() {
         <p className="mt-1 text-sm text-ink/55">Ukupno na čuvanju: <span className="font-semibold text-ink">{totalHeld} €</span></p>
       </div>
 
-      {rows.length === 0 ? (
-        <p className="text-sm text-ink/50">Nema depozita.</p>
-      ) : (
-        <ul className="flex flex-col gap-2">
-          {rows.map(({ resident, paid, returned, held, cabinName, missing }) => (
-            <li key={resident.id} className="flex items-center justify-between gap-3 rounded-2xl border border-ink/10 bg-white p-3.5">
-              <div>
-                <Link href={`/admin/residence/residents/${resident.id}`} className="text-sm font-medium text-ink hover:underline">
-                  {resident.firstName} {resident.lastName}
-                </Link>
-                <p className="text-xs text-ink/50">
-                  {cabinName ?? "Bez kabine"}
-                  {missing ? "" : ` · Uplaćeno ${paid} €${returned > 0 ? ` · Vraćeno ${returned} €` : ""}`}
-                </p>
-              </div>
-              <span
-                className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-semibold ${
-                  missing ? "bg-red-50 text-red-700" : held > 0 ? "bg-olive-dark/10 text-olive-dark" : "bg-ink/5 text-ink/50"
-                }`}
-              >
-                {missing ? "Nedostaje depozit" : held > 0 ? `${held} € na čuvanju` : "Vraćen"}
-              </span>
-            </li>
-          ))}
-        </ul>
-      )}
+      <DepositsList rows={rows} />
     </div>
   );
 }

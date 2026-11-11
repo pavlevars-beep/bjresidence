@@ -22,6 +22,7 @@ export function PaymentForm({
   stayId,
   currency,
   initial,
+  defaultType,
   onSaved,
   onCancel,
 }: {
@@ -30,10 +31,11 @@ export function PaymentForm({
   stayId: string;
   currency: string;
   initial?: Payment;
+  defaultType?: PaymentType;
   onSaved: (payment: Payment) => void;
   onCancel: () => void;
 }) {
-  const [type, setType] = useState<PaymentType>(initial?.type ?? "rent");
+  const [type, setType] = useState<PaymentType>(initial?.type ?? defaultType ?? "rent");
   const [amount, setAmount] = useState(initial ? String(initial.amount) : "");
   const [paymentDate, setPaymentDate] = useState(initial?.paymentDate ?? todayISO());
   const [periodFrom, setPeriodFrom] = useState(initial?.periodFrom ?? "");

@@ -71,6 +71,10 @@ export function ResidentProfile({
   const activeStay = stays.find((s) => s.status === "active") ?? null;
   const activeCabin = activeStay ? cabinById.get(activeStay.cabinId) : null;
   const sortedStays = [...stays].sort((a, b) => b.moveInDate.localeCompare(a.moveInDate));
+  // Payments (deposit returns in particular) still need to be recorded after
+  // move-out, when there's no active stay — fall back to the most recent one
+  // on record so "Dodaj uplatu" stays available instead of disappearing.
+  const paymentStay = activeStay ?? sortedStays[0] ?? null;
   const sortedPayments = [...payments].sort((a, b) => b.paymentDate.localeCompare(a.paymentDate));
   const totalRentPaid = payments.filter((p) => p.type === "rent").reduce((s, p) => s + p.amount, 0);
   // Recomputed from the live payments list (not the server-provided initial
@@ -207,9 +211,11 @@ export function ResidentProfile({
           <p className="mt-1 text-sm text-ink/55">{activeCabin ? `Kabina ${activeCabin.name}` : "Bez dodeljene kabine"}</p>
         </div>
         <div className="flex flex-wrap gap-2">
+          {paymentStay && (
+            <Button type="button" variant="outline" onClick={() => setShowPaymentForm((v) => !v)}>Dodaj uplatu</Button>
+          )}
           {activeStay ? (
             <>
-              <Button type="button" variant="outline" onClick={() => setShowPaymentForm((v) => !v)}>Dodaj uplatu</Button>
               <Button type="button" variant="outline" onClick={() => setShowMoveCabin((v) => !v)}>Premesti kabinu</Button>
               <Button type="button" variant="outline" onClick={handleEndStay}>Završi boravak</Button>
             </>
@@ -227,12 +233,13 @@ export function ResidentProfile({
         </div>
       </div>
 
-      {showPaymentForm && activeStay && (
+      {showPaymentForm && paymentStay && (
         <PaymentForm
           residentId={resident.id}
-          cabinId={activeStay.cabinId}
-          stayId={activeStay.id}
-          currency={activeStay.currency}
+          cabinId={paymentStay.cabinId}
+          stayId={paymentStay.id}
+          currency={paymentStay.currency}
+          defaultType={activeStay ? "rent" : "deposit_return"}
           onSaved={(p) => {
             setPayments((prev) => [...prev, p]);
             setShowPaymentForm(false);
@@ -365,7 +372,7 @@ export function ResidentProfile({
           </div>
           <div>
             <p className="text-xs font-semibold uppercase tracking-wide text-ink/45">Depozit na čuvanju</p>
-            <p className="mt-1 text-lg font-semibold text-ink">{depositHeld} {activeStay?.currency ?? "€"}</p>
+            <p className="mt-1 text-lg font-semibold text-ink">{depositHeld} {paymentStay?.currency ?? "€"}</p>
           </div>
         </div>
       </SectionCard>
