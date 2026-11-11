@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, X, ZoomIn } from "lucide-react";
@@ -9,6 +9,18 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
+
+// Shared by the carousel and the lightbox so opening/swiping reuses the image
+// the browser already downloaded instead of fetching another size variant.
+const IMAGE_SIZES = "(max-width: 640px) 90vw, 70vh";
+
+// Function variants read AnimatePresence's latest `custom`, so an exiting photo
+// slides out the right way even when the direction just flipped.
+const slideVariants = {
+  enter: (dir: 1 | -1) => ({ x: dir * 80, opacity: 0 }),
+  center: { x: 0, opacity: 1 },
+  exit: (dir: 1 | -1) => ({ x: dir * -80, opacity: 0 }),
+};
 
 type FlatImage = {
   src: string;
@@ -24,6 +36,7 @@ export function Gallery() {
   const scrollerRef = useRef<HTMLDivElement>(null);
   const cardRefs = useRef<Record<string, HTMLButtonElement | null>>({});
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const [direction, setDirection] = useState<1 | -1>(1);
 
   const images: FlatImage[] = useMemo(() => {
     return categories.flatMap((cat) =>
@@ -50,6 +63,39 @@ export function Gallery() {
   }
 
   const lightboxImage = lightboxIndex !== null ? images[lightboxIndex] : null;
+
+  const step = useCallback(
+    (delta: 1 | -1) => {
+      setDirection(delta);
+      setLightboxIndex((i) => (i === null ? i : (i + delta + images.length) % images.length));
+    },
+    [images.length]
+  );
+
+  const closeLightbox = useCallback(() => {
+    // Leave the carousel on the photo the visitor ended on, not the one they opened.
+    if (lightboxIndex !== null) {
+      cardRefs.current[images[lightboxIndex].src]?.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+    }
+    setLightboxIndex(null);
+  }, [lightboxIndex, images]);
+
+  const isOpen = lightboxIndex !== null;
+  useEffect(() => {
+    if (!isOpen) return;
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "ArrowRight") step(1);
+      else if (e.key === "ArrowLeft") step(-1);
+      else if (e.key === "Escape") closeLightbox();
+    }
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [isOpen, step, closeLightbox]);
 
   return (
     <section id="accommodation" className="bg-beige/40 py-16 sm:py-20">
@@ -88,7 +134,7 @@ export function Gallery() {
                 src={img.src}
                 alt={img.caption}
                 fill
-                sizes="(max-width: 640px) 90vw, 70vh"
+                sizes={IMAGE_SIZES}
                 className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
                 priority={i < 2}
               />
@@ -124,55 +170,109 @@ export function Gallery() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[60] flex items-center justify-center bg-ink/85 p-4"
-            onClick={() => setLightboxIndex(null)}
+            className="fixed inset-0 z-[60] flex flex-col bg-ink/90"
+            onClick={closeLightbox}
           >
-            <button
-              aria-label={dict.gallery.close}
-              onClick={() => setLightboxIndex(null)}
-              className="absolute right-5 top-5 flex h-11 w-11 items-center justify-center rounded-full bg-cream/10 text-cream hover:bg-cream/20"
-            >
-              <X size={22} />
-            </button>
+            <div className="flex items-center justify-between px-4 pt-4 sm:px-5 sm:pt-5">
+              <span className="text-sm font-medium tabular-nums text-cream/70">
+                {lightboxIndex! + 1} / {images.length}
+              </span>
+              <button
+                aria-label={dict.gallery.close}
+                onClick={closeLightbox}
+                className="flex h-11 w-11 items-center justify-center rounded-full bg-cream/10 text-cream hover:bg-cream/20"
+              >
+                <X size={22} />
+              </button>
+            </div>
 
-            <button
-              aria-label="Prev"
-              onClick={(e) => {
-                e.stopPropagation();
-                setLightboxIndex((i) => (i === null ? i : (i - 1 + images.length) % images.length));
-              }}
-              className="absolute left-3 top-1/2 hidden -translate-y-1/2 items-center justify-center rounded-full bg-cream/10 p-3 text-cream hover:bg-cream/20 sm:flex"
-            >
-              <ChevronLeft size={24} />
-            </button>
-            <button
-              aria-label="Next"
-              onClick={(e) => {
-                e.stopPropagation();
-                setLightboxIndex((i) => (i === null ? i : (i + 1) % images.length));
-              }}
-              className="absolute right-3 top-1/2 hidden -translate-y-1/2 items-center justify-center rounded-full bg-cream/10 p-3 text-cream hover:bg-cream/20 sm:flex"
-            >
-              <ChevronRight size={24} />
-            </button>
+            <div className="relative flex flex-1 items-center justify-center overflow-hidden px-2 sm:px-16">
+              <AnimatePresence initial={false} custom={direction} mode="popLayout">
+                <motion.div
+                  key={lightboxImage.src}
+                  custom={direction}
+                  variants={slideVariants}
+                  initial="enter"
+                  animate="center"
+                  exit="exit"
+                  transition={{ duration: 0.22, ease: "easeOut" }}
+                  drag="x"
+                  dragConstraints={{ left: 0, right: 0 }}
+                  dragElastic={0.6}
+                  onDragEnd={(_, info) => {
+                    if (info.offset.x < -60 || info.velocity.x < -400) step(1);
+                    else if (info.offset.x > 60 || info.velocity.x > 400) step(-1);
+                  }}
+                  onClick={(e) => e.stopPropagation()}
+                  className="relative h-full max-h-[78vh] w-full max-w-4xl cursor-grab touch-pan-y active:cursor-grabbing"
+                >
+                  <Image
+                    src={lightboxImage.src}
+                    alt={lightboxImage.caption}
+                    fill
+                    sizes={IMAGE_SIZES}
+                    draggable={false}
+                    className="pointer-events-none select-none object-contain"
+                    priority
+                  />
+                </motion.div>
+              </AnimatePresence>
 
-            <motion.div
-              key={lightboxImage.src}
-              initial={{ scale: 0.96, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.98, opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              className="relative max-h-[82vh] w-full max-w-3xl"
+              <div className="hidden" aria-hidden>
+                {[1, -1].map((offset) => {
+                  const neighbor = images[(lightboxIndex! + offset + images.length) % images.length];
+                  return <Image key={neighbor.src} src={neighbor.src} alt="" width={neighbor.width} height={neighbor.height} sizes={IMAGE_SIZES} loading="eager" />;
+                })}
+              </div>
+
+              <button
+                aria-label="Prev"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  step(-1);
+                }}
+                className="absolute left-3 top-1/2 hidden -translate-y-1/2 items-center justify-center rounded-full bg-cream/10 p-3 text-cream hover:bg-cream/20 sm:flex"
+              >
+                <ChevronLeft size={24} />
+              </button>
+              <button
+                aria-label="Next"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  step(1);
+                }}
+                className="absolute right-3 top-1/2 hidden -translate-y-1/2 items-center justify-center rounded-full bg-cream/10 p-3 text-cream hover:bg-cream/20 sm:flex"
+              >
+                <ChevronRight size={24} />
+              </button>
+            </div>
+
+            <div
+              className="flex items-center justify-between gap-3 px-4 pb-6 pt-3 sm:justify-center"
               onClick={(e) => e.stopPropagation()}
             >
-              <div
-                className="relative mx-auto max-h-[75vh] w-full overflow-hidden rounded-2xl"
-                style={{ aspectRatio: `${lightboxImage.width} / ${lightboxImage.height}` }}
+              <button
+                aria-label="Prev"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  step(-1);
+                }}
+                className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-cream/10 text-cream active:bg-cream/25 sm:hidden"
               >
-                <Image src={lightboxImage.src} alt={lightboxImage.caption} fill className="object-contain" />
-              </div>
-              <p className="mt-4 text-center text-sm text-cream/80">{lightboxImage.caption}</p>
-            </motion.div>
+                <ChevronLeft size={24} />
+              </button>
+              <p className="text-center text-sm leading-snug text-cream/85">{lightboxImage.caption}</p>
+              <button
+                aria-label="Next"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  step(1);
+                }}
+                className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-cream/10 text-cream active:bg-cream/25 sm:hidden"
+              >
+                <ChevronRight size={24} />
+              </button>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
