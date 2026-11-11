@@ -1,14 +1,12 @@
 import type { Metadata, Viewport } from "next";
-import { Plus_Jakarta_Sans } from "next/font/google";
+// Self-hosted (pinned in package-lock) rather than next/font/google: fetching
+// from Google at build time let a Google Fonts update plus a stale build cache
+// produce mismatched class hashes between the HTML and the CSS, which silently
+// dropped the font site-wide.
+import "@fontsource-variable/plus-jakarta-sans";
 import "./globals.css";
 import { LanguageProvider } from "@/i18n/LanguageContext";
 import { LodgingSchema } from "@/components/Schema";
-
-const jakarta = Plus_Jakarta_Sans({
-  subsets: ["latin"],
-  variable: "--font-jakarta",
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://bjresidence.rs"),
@@ -47,7 +45,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="sr" className={jakarta.variable}>
+    <html lang="sr">
       <head>
         <LodgingSchema />
       </head>

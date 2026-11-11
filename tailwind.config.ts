@@ -27,7 +27,7 @@ const config: Config = {
         },
       },
       fontFamily: {
-        sans: ["var(--font-jakarta)", "system-ui", "sans-serif"],
+        sans: ['"Plus Jakarta Sans Variable"', "system-ui", "sans-serif"],
       },
       borderRadius: {
         xl: "1rem",
