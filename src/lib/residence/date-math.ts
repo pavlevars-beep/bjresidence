@@ -62,6 +62,28 @@ export function computeCurrentPeriod(
   };
 }
 
+/** Rent paid this many days (or fewer) before the period ends counts as renewing the next period. */
+export const EARLY_RENEWAL_WINDOW_DAYS = 10;
+
+/**
+ * Which rent period a payment made on `paymentDate` most plausibly covers.
+ * Paid within the last EARLY_RENEWAL_WINDOW_DAYS of the current period, or
+ * after it ended -> the next period (paying a few days early renews). Paid
+ * earlier than that -> the current period, since rent here is sometimes
+ * split (e.g. 50 + 210 at move-in) and a top-up must not skip a month.
+ */
+export function suggestRentPeriod(
+  currentPeriodStart: string,
+  currentPeriodEnd: string,
+  paymentDate: string
+): { periodFrom: string; periodTo: string } {
+  if (daysBetween(paymentDate, currentPeriodEnd) <= EARLY_RENEWAL_WINDOW_DAYS) {
+    const next = computeCurrentPeriod(currentPeriodStart, currentPeriodEnd);
+    return { periodFrom: next.currentPeriodStart, periodTo: next.currentPeriodEnd };
+  }
+  return { periodFrom: currentPeriodStart, periodTo: currentPeriodEnd };
+}
+
 function addOneDay(iso: string): string {
   const date = parseISODate(iso);
   date.setUTCDate(date.getUTCDate() + 1);

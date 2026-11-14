@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Pencil, Trash2 } from "lucide-react";
 import { Field, inputClass, SectionCard } from "@/components/admin/ui";
@@ -49,6 +49,8 @@ export function ResidentProfile({
   const router = useRouter();
   const [resident, setResident] = useState(initialResident);
   const [stays, setStays] = useState(initialStays);
+  // A rent payment can move the stay to a new period server-side; pick that up when router.refresh() delivers fresh props.
+  useEffect(() => setStays(initialStays), [initialStays]);
   const [payments, setPayments] = useState(initialPayments);
   const [documents, setDocuments] = useState(initialDocuments);
 
@@ -240,6 +242,7 @@ export function ResidentProfile({
           stayId={paymentStay.id}
           currency={paymentStay.currency}
           defaultType={activeStay ? "rent" : "deposit_return"}
+          currentPeriod={{ start: paymentStay.currentPeriodStart, end: paymentStay.currentPeriodEnd }}
           onSaved={(p) => {
             setPayments((prev) => [...prev, p]);
             setShowPaymentForm(false);

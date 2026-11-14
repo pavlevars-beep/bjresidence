@@ -1,6 +1,7 @@
 import { randomUUID } from "crypto";
 import { readCollection, writeCollection } from "./collection-store";
-import { advancePeriodFromPayment } from "./stays-store";
+import { advancePeriodFromPayment, getStay } from "./stays-store";
+import { suggestRentPeriod } from "./date-math";
 import type { Payment, PaymentType } from "./types";
 
 const BLOB_PATH = "data/residence/payments.json";
@@ -34,12 +35,32 @@ export type NewPaymentInput = {
 };
 
 /**
- * Appends a payment to the ledger. Recording a rent payment with an explicit
- * period also advances the Stay's paid-through period (and resets the
- * continuation decision / reminder dedupe) — the one place that side effect
- * happens, so it can't be duplicated or forgotten elsewhere.
+ * A rent payment that extends past the stay's paid-through date moves the
+ * stay forward (new period, decision reset, reminder dedupe cleared). Never
+ * moves it backwards, so a top-up for the current period or a corrected
+ * older entry leaves the stay — and the decision already made — alone.
+ */
+async function applyRentPeriodToStay(payment: Payment): Promise<void> {
+  if (payment.type !== "rent" || !payment.periodFrom || !payment.periodTo) return;
+  const stay = await getStay(payment.stayId);
+  if (!stay || payment.periodTo <= stay.currentPeriodEnd) return;
+  await advancePeriodFromPayment(payment.stayId, { periodFrom: payment.periodFrom, periodTo: payment.periodTo });
+}
+
+/**
+ * Appends a payment to the ledger. A rent payment entered without a period
+ * gets the most plausible one (see suggestRentPeriod), so paying a few days
+ * early renews the stay instead of leaving it flagged as due.
  */
 export async function createPayment(input: NewPaymentInput): Promise<Payment> {
+  if (input.type === "rent" && !(input.periodFrom && input.periodTo)) {
+    const stay = await getStay(input.stayId);
+    if (stay) {
+      const suggested = suggestRentPeriod(stay.currentPeriodStart, stay.currentPeriodEnd, input.paymentDate);
+      input = { ...input, ...suggested };
+    }
+  }
+
   const items = await getPayments();
   const payment: Payment = {
     id: randomUUID(),
@@ -58,10 +79,7 @@ export async function createPayment(input: NewPaymentInput): Promise<Payment> {
   };
 
   await writeCollection(BLOB_PATH, [...items, payment]);
-
-  if (payment.type === "rent" && payment.periodFrom && payment.periodTo) {
-    await advancePeriodFromPayment(payment.stayId, { periodFrom: payment.periodFrom, periodTo: payment.periodTo });
-  }
+  await applyRentPeriodToStay(payment);
 
   return payment;
 }
@@ -70,7 +88,7 @@ export type PaymentPatch = Partial<
   Pick<Payment, "type" | "amount" | "currency" | "paymentDate" | "periodFrom" | "periodTo" | "method" | "note">
 >;
 
-/** Plain field edit for correcting a mistaken entry — does not touch the Stay's period tracking. */
+/** Field edit for correcting an entry. Fixing a rent payment's period to cover a later month also moves the stay forward. */
 export async function updatePayment(id: string, patch: PaymentPatch): Promise<Payment | null> {
   const items = await getPayments();
   const index = items.findIndex((p) => p.id === id);
@@ -80,6 +98,7 @@ export async function updatePayment(id: string, patch: PaymentPatch): Promise<Pa
   const next = [...items];
   next[index] = updated;
   await writeCollection(BLOB_PATH, next);
+  await applyRentPeriodToStay(updated);
   return updated;
 }
 

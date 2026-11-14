@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { StayDecisionControl } from "./StayDecisionControl";
 import { formatDateDisplay } from "@/lib/residence/date-math";
 import type { Cabin, Resident, Stay } from "@/lib/residence/types";
@@ -22,7 +23,10 @@ const KIND_LABEL: Record<UpcomingRow["kind"], string> = {
 };
 
 export function UpcomingDecisionsList({ initial }: { initial: UpcomingRow[] }) {
+  const router = useRouter();
   const [rows, setRows] = useState(initial);
+  // After a decision, router.refresh() recomputes this list and the deadlines table below it.
+  useEffect(() => setRows(initial), [initial]);
 
   if (rows.length === 0) {
     return <p className="text-sm text-ink/50">Ništa ne zahteva pažnju u narednih 7 dana.</p>;
@@ -44,7 +48,10 @@ export function UpcomingDecisionsList({ initial }: { initial: UpcomingRow[] }) {
           <div className="mt-3">
             <StayDecisionControl
               stay={row.stay}
-              onUpdated={(updated) => setRows((prev) => prev.map((r) => (r.stay.id === updated.id ? { ...r, stay: updated } : r)))}
+              onUpdated={(updated) => {
+                setRows((prev) => prev.map((r) => (r.stay.id === updated.id ? { ...r, stay: updated } : r)));
+                router.refresh();
+              }}
             />
           </div>
         </div>
