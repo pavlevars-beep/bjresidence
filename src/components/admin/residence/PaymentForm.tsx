@@ -24,6 +24,7 @@ export function PaymentForm({
   currency,
   initial,
   defaultType,
+  defaultAmount,
   currentPeriod,
   onSaved,
   onCancel,
@@ -34,6 +35,8 @@ export function PaymentForm({
   currency: string;
   initial?: Payment;
   defaultType?: PaymentType;
+  /** Prefilled amount for a new payment — the stay's monthly rent, the usual case. */
+  defaultAmount?: number;
   /** The stay's current paid-through period — used to prefill which period a new rent payment covers. */
   currentPeriod?: { start: string; end: string };
   onSaved: (payment: Payment) => void;
@@ -45,7 +48,7 @@ export function PaymentForm({
   const initialSuggestion = suggestFor(initialDate);
 
   const [type, setType] = useState<PaymentType>(initial?.type ?? defaultType ?? "rent");
-  const [amount, setAmount] = useState(initial ? String(initial.amount) : "");
+  const [amount, setAmount] = useState(initial ? String(initial.amount) : defaultAmount ? String(defaultAmount) : "");
   const [paymentDate, setPaymentDate] = useState(initialDate);
   const [periodFrom, setPeriodFrom] = useState(initial?.periodFrom ?? initialSuggestion?.periodFrom ?? "");
   const [periodTo, setPeriodTo] = useState(initial?.periodTo ?? initialSuggestion?.periodTo ?? "");
@@ -59,7 +62,7 @@ export function PaymentForm({
       setPeriodTo(suggestion.periodTo);
     }
   }
-  const [method, setMethod] = useState(initial?.method ?? "");
+  const [method, setMethod] = useState(initial?.method ?? "Keš");
   const [note, setNote] = useState(initial?.note ?? "");
   const [status, setStatus] = useState<"idle" | "saving" | "error">("idle");
 

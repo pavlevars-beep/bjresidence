@@ -242,6 +242,7 @@ export function ResidentProfile({
           stayId={paymentStay.id}
           currency={paymentStay.currency}
           defaultType={activeStay ? "rent" : "deposit_return"}
+          defaultAmount={activeStay ? activeStay.monthlyRent : depositHeld > 0 ? depositHeld : undefined}
           currentPeriod={{ start: paymentStay.currentPeriodStart, end: paymentStay.currentPeriodEnd }}
           onSaved={(p) => {
             setPayments((prev) => [...prev, p]);
