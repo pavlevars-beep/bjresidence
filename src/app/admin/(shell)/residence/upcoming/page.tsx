@@ -44,7 +44,7 @@ export default async function UpcomingPage() {
         <AllStayDeadlinesList items={allDeadlines} />
       </SectionCard>
 
-      <SectionCard title="Čišćenje" description="Promena posteljine i peškira na svakih 15 dana od useljenja — nije praćeno kao 'urađeno', samo izračunato.">
+      <SectionCard title="Čišćenje" description="Sledeća promena posteljine i peškira — na svakih 15 dana od useljenja. Nema veze sa plaćanjem.">
         <CleaningScheduleList items={cleaning} />
       </SectionCard>
     </div>

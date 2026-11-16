@@ -198,17 +198,17 @@ export interface CleaningDueItem {
   stay: Stay;
   cabin: Cabin;
   resident: Resident;
-  /** The most recent 15-day change-cycle date (bedding/towels, per the contract's included-services clause). */
+  /** The next 15-day change-cycle date, today or later (bedding/towels, per the contract's included-services clause). */
   dueDate: string;
   daysRemaining: number;
-  overdue: boolean;
 }
 
 /**
- * Bedsheets/towels are contractually changed every 15 days from move-in —
- * this has no stored "last done" state (nothing tracks actual completion),
- * so it always surfaces the most recent 15-day checkpoint: upcoming if none
- * has passed yet, or the latest one (flagged overdue) once it has.
+ * Bedsheets/towels are contractually changed every 15 days from move-in.
+ * Nothing records a change as done, so this shows the next checkpoint
+ * (today or later). It used to show the latest *past* checkpoint as
+ * "kasni", which flagged every guest as late at all times and read like
+ * overdue rent.
  */
 export async function getCleaningSchedule(): Promise<CleaningDueItem[]> {
   const [cabins, stays, residents] = await Promise.all([getCabins(), getStays(), getResidents()]);
@@ -224,12 +224,11 @@ export async function getCleaningSchedule(): Promise<CleaningDueItem[]> {
     if (!cabin || !resident) continue;
 
     const daysSinceMoveIn = daysBetween(stay.moveInDate, today);
-    const cyclesPassed = Math.floor(daysSinceMoveIn / CLEANING_CYCLE_DAYS);
-    const currentCycle = cyclesPassed >= 1 ? cyclesPassed : 1;
-    const dueDate = addDays(stay.moveInDate, currentCycle * CLEANING_CYCLE_DAYS);
+    const nextCycle = Math.max(1, Math.ceil(daysSinceMoveIn / CLEANING_CYCLE_DAYS));
+    const dueDate = addDays(stay.moveInDate, nextCycle * CLEANING_CYCLE_DAYS);
     const daysRemaining = daysBetween(today, dueDate);
 
-    items.push({ stay, cabin, resident, dueDate, daysRemaining, overdue: daysRemaining < 0 });
+    items.push({ stay, cabin, resident, dueDate, daysRemaining });
   }
 
   return items.sort((a, b) => a.daysRemaining - b.daysRemaining);
