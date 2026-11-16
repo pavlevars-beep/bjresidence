@@ -15,7 +15,7 @@ import { StartStayModal } from "./StartStayModal";
 import { DocumentsList } from "./DocumentsList";
 import { DocumentOcrPanel, type ExtractedDocumentFields } from "./DocumentOcrPanel";
 import { ContractsSection } from "./ContractsSection";
-import { formatDateDisplay } from "@/lib/residence/date-math";
+import { formatDateDisplay, suggestRentPeriod } from "@/lib/residence/date-math";
 import type { Cabin, Contract, Payment, Resident, ResidentDocument, Stay } from "@/lib/residence/types";
 
 const PAYMENT_TYPE_LABEL: Record<string, string> = {
@@ -243,7 +243,10 @@ export function ResidentProfile({
           currency={paymentStay.currency}
           defaultType={activeStay ? "rent" : "deposit_return"}
           defaultAmount={activeStay ? activeStay.monthlyRent : depositHeld > 0 ? depositHeld : undefined}
-          currentPeriod={{ start: paymentStay.currentPeriodStart, end: paymentStay.currentPeriodEnd }}
+          suggestedPeriod={suggestRentPeriod(
+            paymentStay,
+            payments.filter((p) => p.stayId === paymentStay.id && p.type === "rent")
+          )}
           onSaved={(p) => {
             setPayments((prev) => [...prev, p]);
             setShowPaymentForm(false);

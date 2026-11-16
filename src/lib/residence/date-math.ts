@@ -62,26 +62,35 @@ export function computeCurrentPeriod(
   };
 }
 
-/** Rent paid this many days (or fewer) before the period ends counts as renewing the next period. */
-export const EARLY_RENEWAL_WINDOW_DAYS = 10;
+/** Older rent entries have no period; one paid this close before (or during) a period is counted toward it. */
+const LEGACY_PAYMENT_LEAD_DAYS = 10;
+
+type RentEntry = { amount: number; paymentDate: string; periodFrom: string | null; periodTo: string | null };
 
 /**
- * Which rent period a payment made on `paymentDate` most plausibly covers.
- * Paid within the last EARLY_RENEWAL_WINDOW_DAYS of the current period, or
- * after it ended -> the next period (paying a few days early renews). Paid
- * earlier than that -> the current period, since rent here is sometimes
- * split (e.g. 50 + 210 at move-in) and a top-up must not skip a month.
+ * Which period a new rent payment covers: the next month once the current
+ * period is fully paid (so paying early — days or weeks — renews), otherwise
+ * the current one, since rent here is sometimes split (e.g. 50 + 210 at
+ * move-in) and a top-up must not skip a month.
  */
 export function suggestRentPeriod(
-  currentPeriodStart: string,
-  currentPeriodEnd: string,
-  paymentDate: string
+  stay: { currentPeriodStart: string; currentPeriodEnd: string; monthlyRent: number },
+  rentPaymentsForStay: RentEntry[]
 ): { periodFrom: string; periodTo: string } {
-  if (daysBetween(paymentDate, currentPeriodEnd) <= EARLY_RENEWAL_WINDOW_DAYS) {
-    const next = computeCurrentPeriod(currentPeriodStart, currentPeriodEnd);
+  const { currentPeriodStart: start, currentPeriodEnd: end } = stay;
+  const paidForCurrent = rentPaymentsForStay
+    .filter((p) =>
+      p.periodFrom && p.periodTo
+        ? p.periodFrom <= end && p.periodTo >= start
+        : p.paymentDate >= addDays(start, -LEGACY_PAYMENT_LEAD_DAYS) && p.paymentDate <= end
+    )
+    .reduce((sum, p) => sum + p.amount, 0);
+
+  if (paidForCurrent >= stay.monthlyRent) {
+    const next = computeCurrentPeriod(start, end);
     return { periodFrom: next.currentPeriodStart, periodTo: next.currentPeriodEnd };
   }
-  return { periodFrom: currentPeriodStart, periodTo: currentPeriodEnd };
+  return { periodFrom: start, periodTo: end };
 }
 
 function addOneDay(iso: string): string {

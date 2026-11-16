@@ -49,15 +49,15 @@ async function applyRentPeriodToStay(payment: Payment): Promise<void> {
 
 /**
  * Appends a payment to the ledger. A rent payment entered without a period
- * gets the most plausible one (see suggestRentPeriod), so paying a few days
- * early renews the stay instead of leaving it flagged as due.
+ * gets the most plausible one (see suggestRentPeriod), so paying early
+ * renews the stay instead of leaving it flagged as due.
  */
 export async function createPayment(input: NewPaymentInput): Promise<Payment> {
   if (input.type === "rent" && !(input.periodFrom && input.periodTo)) {
     const stay = await getStay(input.stayId);
     if (stay) {
-      const suggested = suggestRentPeriod(stay.currentPeriodStart, stay.currentPeriodEnd, input.paymentDate);
-      input = { ...input, ...suggested };
+      const rentSoFar = (await getPaymentsForStay(stay.id)).filter((p) => p.type === "rent");
+      input = { ...input, ...suggestRentPeriod(stay, rentSoFar) };
     }
   }
 

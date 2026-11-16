@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { Field, inputClass } from "@/components/admin/ui";
 import { Button } from "@/components/ui/Button";
-import { EARLY_RENEWAL_WINDOW_DAYS, suggestRentPeriod } from "@/lib/residence/date-math";
 import type { Payment, PaymentType } from "@/lib/residence/types";
 
 const TYPE_OPTIONS: { value: PaymentType; label: string }[] = [
@@ -25,7 +24,7 @@ export function PaymentForm({
   initial,
   defaultType,
   defaultAmount,
-  currentPeriod,
+  suggestedPeriod,
   onSaved,
   onCancel,
 }: {
@@ -37,31 +36,17 @@ export function PaymentForm({
   defaultType?: PaymentType;
   /** Prefilled amount for a new payment — the stay's monthly rent, the usual case. */
   defaultAmount?: number;
-  /** The stay's current paid-through period — used to prefill which period a new rent payment covers. */
-  currentPeriod?: { start: string; end: string };
+  /** Which period a new rent payment covers (see suggestRentPeriod) — prefilled so the usual case needs no typing. */
+  suggestedPeriod?: { periodFrom: string; periodTo: string };
   onSaved: (payment: Payment) => void;
   onCancel: () => void;
 }) {
-  const suggestFor = (date: string) =>
-    !initial && currentPeriod ? suggestRentPeriod(currentPeriod.start, currentPeriod.end, date) : null;
-  const initialDate = initial?.paymentDate ?? todayISO();
-  const initialSuggestion = suggestFor(initialDate);
-
+  const prefill = initial ? null : suggestedPeriod;
   const [type, setType] = useState<PaymentType>(initial?.type ?? defaultType ?? "rent");
   const [amount, setAmount] = useState(initial ? String(initial.amount) : defaultAmount ? String(defaultAmount) : "");
-  const [paymentDate, setPaymentDate] = useState(initialDate);
-  const [periodFrom, setPeriodFrom] = useState(initial?.periodFrom ?? initialSuggestion?.periodFrom ?? "");
-  const [periodTo, setPeriodTo] = useState(initial?.periodTo ?? initialSuggestion?.periodTo ?? "");
-  const [periodEdited, setPeriodEdited] = useState(false);
-
-  function handlePaymentDateChange(date: string) {
-    setPaymentDate(date);
-    const suggestion = date && !periodEdited ? suggestFor(date) : null;
-    if (suggestion) {
-      setPeriodFrom(suggestion.periodFrom);
-      setPeriodTo(suggestion.periodTo);
-    }
-  }
+  const [paymentDate, setPaymentDate] = useState(initial?.paymentDate ?? todayISO());
+  const [periodFrom, setPeriodFrom] = useState(initial?.periodFrom ?? prefill?.periodFrom ?? "");
+  const [periodTo, setPeriodTo] = useState(initial?.periodTo ?? prefill?.periodTo ?? "");
   const [method, setMethod] = useState(initial?.method ?? "Keš");
   const [note, setNote] = useState(initial?.note ?? "");
   const [status, setStatus] = useState<"idle" | "saving" | "error">("idle");
@@ -110,19 +95,19 @@ export function PaymentForm({
           </select>
         </Field>
         <Field label="Iznos"><input type="number" value={amount} onChange={(e) => setAmount(e.target.value)} className={inputClass} /></Field>
-        <Field label="Datum uplate"><input type="date" value={paymentDate} onChange={(e) => handlePaymentDateChange(e.target.value)} className={inputClass} /></Field>
+        <Field label="Datum uplate"><input type="date" value={paymentDate} onChange={(e) => setPaymentDate(e.target.value)} className={inputClass} /></Field>
         <Field label="Način plaćanja"><input value={method} onChange={(e) => setMethod(e.target.value)} className={inputClass} /></Field>
         {type === "rent" && (
           <>
             <Field label="Period od">
-              <input type="date" value={periodFrom} onChange={(e) => { setPeriodEdited(true); setPeriodFrom(e.target.value); }} className={inputClass} />
+              <input type="date" value={periodFrom} onChange={(e) => setPeriodFrom(e.target.value)} className={inputClass} />
             </Field>
             <Field label="Period do">
-              <input type="date" value={periodTo} onChange={(e) => { setPeriodEdited(true); setPeriodTo(e.target.value); }} className={inputClass} />
+              <input type="date" value={periodTo} onChange={(e) => setPeriodTo(e.target.value)} className={inputClass} />
             </Field>
-            {currentPeriod && !initial && (
+            {prefill && (
               <p className="text-xs text-ink/50 sm:col-span-2">
-                Uplata u poslednjih {EARLY_RENEWAL_WINDOW_DAYS} dana perioda (ili kasnije) računa se za sledeći mesec i pomera rok. Ranija uplata se računa za tekući period (npr. doplata).
+                Ako je tekući mesec već plaćen, kirija se automatski upisuje za sledeći mesec i pomera rok. Ako nije (npr. doplata), za tekući.
               </p>
             )}
           </>
