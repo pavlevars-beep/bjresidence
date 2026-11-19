@@ -108,7 +108,60 @@ export function formatStayReminder(payload: {
     `Status: ${escapeHtml(payload.continuationStatus)}`,
     "",
     `Otvori admin: ${escapeHtml(payload.adminUrl)}`,
+    ...(payload.kind === "move_out" ? [] : ["", "Poruka za gosta stiže odmah ispod — prosledi je ili kopiraj."]),
   ].join("\n");
+}
+
+function guestFirstName(firstName: string): string {
+  // Names are often stored in passport capitals ("STEFAN MICHAEL") — greet with just "Stefan".
+  const first = firstName.trim().split(/\s+/)[0] ?? "";
+  return first.charAt(0).toUpperCase() + first.slice(1).toLowerCase();
+}
+
+function guestDate(iso: string): string {
+  return new Date(`${iso}T00:00:00Z`).toLocaleDateString("en-GB", { day: "numeric", month: "long", timeZone: "UTC" });
+}
+
+/**
+ * Ready-to-forward English message for the guest, sent as its own Telegram
+ * message right after the owner's reminder so it can be forwarded or copied
+ * as-is. `paidUntil` is the last paid day: the period expires the day after,
+ * and the next month's rent is due by `paidUntil`.
+ */
+export function formatGuestPaymentMessage(payload: {
+  firstName: string;
+  paidUntil: string;
+  daysRemaining: number;
+  monthlyRent: number;
+  currency: string;
+  askToConfirmStaying: boolean;
+}) {
+  const expires = new Date(`${payload.paidUntil}T00:00:00Z`);
+  expires.setUTCDate(expires.getUTCDate() + 1);
+  const expiresOn = guestDate(expires.toISOString().slice(0, 10));
+  const payBy = guestDate(payload.paidUntil);
+  const rent = `${payload.monthlyRent} ${payload.currency}`;
+
+  const when =
+    payload.daysRemaining < 0
+      ? `ended on ${expiresOn}`
+      : payload.daysRemaining === 0
+        ? `ends today (it expires on ${expiresOn})`
+        : payload.daysRemaining === 1
+          ? `ends tomorrow (it expires on ${expiresOn})`
+          : `ends in ${payload.daysRemaining} days (it expires on ${expiresOn})`;
+
+  const lines = [
+    `Hi ${escapeHtml(guestFirstName(payload.firstName))},`,
+    "",
+    `Your paid period at BJ Residence ${when}.`,
+    payload.daysRemaining < 0
+      ? `Please pay the rent for the next month (${escapeHtml(rent)}) as soon as possible.`
+      : `${payload.askToConfirmStaying ? "If you'd like to stay for another month, please" : "Please"} pay the rent (${escapeHtml(rent)}) by ${payBy}.`,
+  ];
+  if (payload.askToConfirmStaying) lines.push("If you're planning to move out, please let me know.");
+  lines.push("", "Thank you!");
+  return lines.join("\n");
 }
 
 export function formatIssueReport(payload: {

@@ -1,10 +1,12 @@
-import { sendTelegramMessage, formatStayReminder } from "../telegram";
+import { sendTelegramMessage, formatStayReminder, formatGuestPaymentMessage } from "../telegram";
 import { siteConfig } from "@/config/site";
 import { getUpcoming } from "./derive";
 import { getNotificationSettings } from "./notification-settings-store";
-import { getStays } from "./stays-store";
+import { getStay, getStays } from "./stays-store";
+import { getResident } from "./residents-store";
 import { readCollection, writeCollection } from "./collection-store";
-import type { Stay } from "./types";
+import { daysBetween, todayISO } from "./date-math";
+import type { Resident, Stay } from "./types";
 
 const STAYS_BLOB_PATH = "data/residence/stays.json";
 const REMINDER_WINDOW_DAYS = 7;
@@ -22,6 +24,27 @@ async function markReminderSent(stayId: string): Promise<void> {
   const next = [...items];
   next[index] = { ...next[index], reminder7dSentAt: new Date().toISOString() };
   await writeCollection(STAYS_BLOB_PATH, next);
+}
+
+function guestMessageFor(stay: Stay, resident: Resident): string {
+  return formatGuestPaymentMessage({
+    firstName: resident.firstName,
+    paidUntil: stay.currentPeriodEnd,
+    daysRemaining: daysBetween(todayISO(), stay.currentPeriodEnd),
+    monthlyRent: stay.monthlyRent,
+    currency: stay.currency,
+    askToConfirmStaying: stay.continuationStatus === "undecided",
+  });
+}
+
+/** On-demand: send just the ready-to-forward guest message for one stay (no dedupe — the owner asked for it). */
+export async function sendGuestMessage(stayId: string): Promise<boolean> {
+  const stay = await getStay(stayId);
+  if (!stay || stay.status !== "active") return false;
+  const resident = await getResident(stay.residentId);
+  if (!resident) return false;
+  await sendTelegramMessage(guestMessageFor(stay, resident));
+  return true;
 }
 
 export interface ReminderSweepResult {
@@ -81,6 +104,9 @@ export async function runReminderSweep(): Promise<ReminderSweepResult> {
         kind: item.kind,
       })
     );
+    if (item.kind !== "move_out") {
+      await sendTelegramMessage(guestMessageFor(stay, item.resident));
+    }
     await markReminderSent(stay.id);
     sent++;
   }

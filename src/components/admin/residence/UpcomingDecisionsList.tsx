@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { Send } from "lucide-react";
 import { StayDecisionControl } from "./StayDecisionControl";
 import { formatDateDisplay } from "@/lib/residence/date-math";
 import type { Cabin, Resident, Stay } from "@/lib/residence/types";
@@ -21,6 +22,36 @@ const KIND_LABEL: Record<UpcomingRow["kind"], string> = {
   payment_due: "Uplata dospeva",
   move_out: "Očekivano iseljenje",
 };
+
+function GuestMessageButton({ stayId }: { stayId: string }) {
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+
+  async function send() {
+    setStatus("sending");
+    try {
+      const res = await fetch("/api/admin/residence/reminders/guest-message", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ stayId }),
+      });
+      setStatus(res.ok ? "sent" : "error");
+    } catch {
+      setStatus("error");
+    }
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={send}
+      disabled={status === "sending"}
+      className="flex items-center gap-1.5 rounded-full border border-ink/15 px-3 py-1.5 text-xs font-medium text-ink/70 hover:bg-ink/5 disabled:opacity-50"
+    >
+      <Send size={13} />
+      {status === "sending" ? "Slanje..." : status === "sent" ? "Poslato na Telegram" : status === "error" ? "Greška — pokušaj ponovo" : "Poruka za gosta na Telegram"}
+    </button>
+  );
+}
 
 export function UpcomingDecisionsList({ initial }: { initial: UpcomingRow[] }) {
   const router = useRouter();
@@ -44,6 +75,7 @@ export function UpcomingDecisionsList({ initial }: { initial: UpcomingRow[] }) {
               </Link>
               <p className="text-sm text-ink/50">{formatDateDisplay(row.date)} · {row.daysRemaining <= 0 ? "Danas/isteklo" : `za ${row.daysRemaining} dana`}</p>
             </div>
+            {row.kind !== "move_out" && <GuestMessageButton stayId={row.stay.id} />}
           </div>
           <div className="mt-3">
             <StayDecisionControl
