@@ -13,15 +13,15 @@ const nextConfig = {
   // Cutover to Cloudflare: until bjresidence.rs nameservers point at
   // Cloudflare, the Vercel deployment only proxies every request to the
   // Cloudflare worker, so there is a single source of truth (R2) no matter
-  // which host a visitor's DNS resolves to. Only the temporary Blob export
-  // route still runs on Vercel. Remove together with the Vercel project.
+  // which host a visitor's DNS resolves to. Remove together with the Vercel
+  // project.
   async rewrites() {
     if (!process.env.VERCEL) return [];
     return {
       beforeFiles: [
         {
-          source: "/:path((?!api/admin/migration-export).*)",
-          destination: "https://bjresidence.pavlevars.workers.dev/:path",
+          source: "/:path*",
+          destination: "https://bjresidence.pavlevars.workers.dev/:path*",
         },
       ],
     };
