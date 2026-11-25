@@ -4,10 +4,9 @@
   "main": "src/index.ts",
   "compatibility_date": "2025-09-23",
   "compatibility_flags": ["nodejs_compat"],
-  // Daily at 07:00 UTC — same schedule as vercel.json's cron, kept in sync
-  // manually since the two platforms have no shared config format.
+  // Daily at 07:00 UTC (the Vercel cron was removed at cutover).
   "triggers": {
-    "crons": []
+    "crons": ["0 7 * * *"]
   },
   "vars": {
     // Not secret — just which deployment to hit. Update once the Cloudflare
